@@ -1,3 +1,4 @@
+import time
 from random import randint, SystemRandom
 
 triples = [[0, 1, 2],
@@ -14,9 +15,9 @@ class Game:
     def __init__(self):
         self.winner = 0
 
-        self.board1d = [0 for _ in range(81)]
-        self.board2d = [[0 for _ in range(9)] for _ in range(9)]
-        self.board2drows = [[0 for _ in range(9)] for _ in range(9)]
+        self.boards = {}
+        self.board = Board2D()
+        self.add_boards(board=self.board)
 
         self.board2dLeft = [[i for i in range(9)] for _ in range(9)]
 
@@ -31,9 +32,9 @@ class Game:
 
         filled = 0
         for triple in triples:
-            state = self.board2d[globalMove][triple[0]] * \
-                    self.board2d[globalMove][triple[1]] * \
-                    self.board2d[globalMove][triple[2]]
+            state = self.board.get(globalMove, triple[0]) * \
+                    self.board.get(globalMove, triple[1]) * \
+                    self.board.get(globalMove, triple[2])
             if state == 8:
                 filled = 2
                 break
@@ -72,18 +73,18 @@ class Game:
         self.winner = winner
 
     def runSimulation(self):
-        while self.winner == 0:
-            self.addRandom()
+        while self.addRandom():
+            pass
 
     def addMove(self, globalMove, localMove):
         if self.winner != 0:
             return False
-        self.moves.append([globalMove, localMove, self.gameLength%2+1])
+        self.moves.append([globalMove, localMove, self.gameLength % 2 + 1])
         self.board2dLeft[globalMove].remove(localMove)
 
-        self.board1d[9*globalMove+localMove] = self.moves[-1][2]
-        self.board2d[globalMove][localMove] = self.moves[-1][2]
-        self.board2drows[3*(globalMove//3)+(localMove//3)][3*(globalMove%3)+(localMove%3)] = self.moves[-1][2]
+        args = (globalMove, localMove, self.moves[-1][2])
+        for board in self.boards:
+            self.boards[board].set_move(*args)
 
         self.__checkFilled()
         return True
@@ -98,10 +99,73 @@ class Game:
 
         return self.addMove(globalMove, localMove)
 
+    def add_boards(self, **kwargs):
+        for key in kwargs:
+            self.boards[key] = kwargs[key]
+
+
+    def print(self, board="board"):
+        if board in self.boards:
+            self.boards[board].print()
+
+
+class Board1D:
+    def __init__(self):
+        self.board = [0 for _ in range(81)]
+
+    def get(self, globalMove, localMove):
+        return self.board[9 * globalMove + localMove]
+
+    def set_move(self, globalMove, localMove, player):
+        self.board[9 * globalMove + localMove] = player
+
+    def print(self):
+        for a in range(0, 3):
+            for b in range(0, 3):
+                for c in range(0, 3):
+                    for d in range(0, 3):
+                        print(self.board[9*(3*a+c)+3*b+d], end="")
+                    print("  ", end="")
+                print("")
+            print("")
+
+
+class Board2D:
+    def __init__(self):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
+
+    def get(self, globalMove, localMove):
+        return self.board[globalMove][localMove]
+
+    def set_move(self, globalMove, localMove, player):
+        self.board[globalMove][localMove] = player
+
+    def print(self):
+        for a in range(0, 3):
+            for b in range(0, 3):
+                for c in range(0, 3):
+                    for d in range(0, 3):
+                        print(self.board[3*a+c][3*b+d], end="")
+                    print("  ", end="")
+                print("")
+            print("")
+
+
+
+class Board2Drows:
+    def __init__(self):
+        self.board = [[0 for _ in range(9)] for _ in range(9)]
+
+    def get(self, globalMove, localMove):
+        return self.board[3 * (globalMove // 3) + (localMove // 3)][3 * (globalMove % 3) + (localMove % 3)]
+
+    def set_move(self, globalMove, localMove, player):
+        self.board[3 * (globalMove // 3) + (localMove // 3)][3 * (globalMove % 3) + (localMove % 3)] = player
+
     def print(self):
         for a in range(9):
             for b in range(9):
-                print(self.board2drows[a][b], end="")
+                print(self.board[a][b], end="")
                 if b == 2 or b == 5:
                     print("  ", end="")
             print()
@@ -109,9 +173,12 @@ class Game:
                 print("")
 
 
-
 g = Game()
+#g.add_boards(board1d=Board1D(), board2drows=Board2Drows())
+start_time = time.time()
 g.runSimulation()
+elapsed_time = time.time() - start_time
+print(elapsed_time)
 g.print()
 
 print(g.winner)
