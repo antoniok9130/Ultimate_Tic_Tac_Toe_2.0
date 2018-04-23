@@ -50,15 +50,15 @@ class UTTT:
 
         filled = 0
         for triple in triples:
-            state = self.board.get(globalMove, triple[0]) + \
-                    self.board.get(globalMove, triple[1]) + \
-                    self.board.get(globalMove, triple[2])
-            if state == 3:
-                filled = 2
-                break
-            elif state == -3:
-                filled = 1
-                break
+            if self.board.get(globalMove, triple[0]) == \
+                    self.board.get(globalMove, triple[1]) == \
+                    self.board.get(globalMove, triple[2]):
+                if self.board.get(globalMove, triple[0]) == 1:
+                    filled = 2
+                    break
+                elif self.board.get(globalMove, triple[0]) == -1:
+                    filled = 1
+                    break
 
         if filled != 0:
             self.grid3by3[globalMove] = filled
