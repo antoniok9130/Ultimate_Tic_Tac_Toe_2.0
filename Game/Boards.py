@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
+from typing import List
 from copy import deepcopy
 
-P1 = -1
-P2 = 1
+P1 = 1
+P2 = 2
 N = 0
-T = 2
+T = -1
 
 
 # doubles = [[0, 1],[1, 2],[0, 2],
