@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../Boards/Board.h"
+#include "Board.h"
 // #include "../Boards/Board2D.h"
 // #include "../Boards/Quadrants.h"
 
@@ -53,8 +53,8 @@ class Node {
     int getNextQuadrant();
     int getCapturedQuadrant();
 
-    bool moveEquals(const Move& move, bool backpropogate = false);
-    bool capturedQuadrantEquals(const int& quadrant, bool backpropogate = false);
+    bool moveEquals(const Move& move);
+    bool capturedQuadrantEquals(const int& quadrant, const bool& backpropogate = false);
     bool moveOrCapturedQuadrantEquals(const Move& move, const int& quadrant);
 
     double getUCT();

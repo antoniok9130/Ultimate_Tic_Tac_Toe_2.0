@@ -37,6 +37,9 @@ Node::Node(const Move& move, Node* parent, bool initialize)
       parent{parent},
       initialized{parent ? false : true} {
     if (parent) {
+        if (this->move && !capturedQuadrantEquals(this->move->second, true)) {
+            nextQuadrant = this->move->second;
+        }
         if (initialize) {
             if (this->winner == N) {
                 init();
@@ -46,13 +49,6 @@ Node::Node(const Move& move, Node* parent, bool initialize)
                 initialized = true;
             }
         }
-    } else {
-        if (this->move) {
-            // board->set(move->first, move->second, P1);
-        } else {
-            player = N;
-        }
-        initialized = true;
     }
 }
 
@@ -99,7 +95,7 @@ void Node::setMove() {
         buildQuadrant(currentQuadrant, move->first);
         int filled = check3InRow(currentQuadrant);
         if (filled != N) {
-            capturedQuadrant = T;
+            capturedQuadrant = filled;
             Quadrant allQuadrants = make_Quadrant();
             buildQuadrant(allQuadrants);
             winner = check3InRow(allQuadrants);
@@ -114,13 +110,12 @@ int Node::getWinner() { return winner; }
 int Node::getNextQuadrant() { return nextQuadrant; }
 int Node::getCapturedQuadrant() { return capturedQuadrant; }
 
-bool Node::moveEquals(const Move& move, bool backpropogate) {
-    return (this->move && this->move->first == move.first && this->move->second == move.second) ||
-           ((backpropogate && parent) ? parent->moveEquals(move, backpropogate) : false);
+bool Node::moveEquals(const Move& move) {
+    return (this->move && this->move->first == move.first && this->move->second == move.second);
 }
-bool Node::capturedQuadrantEquals(const int& quadrant, bool backpropogate) {
-    return (capturedQuadrant != N && capturedQuadrant != T && move && move->first == quadrant) ||
-           ((backpropogate && parent) ? parent->capturedQuadrantEquals(quadrant, backpropogate) : false);
+bool Node::capturedQuadrantEquals(const int& quadrant, const bool& backpropogate) {
+    return (capturedQuadrant != N && move && move->first == quadrant) ||
+           (backpropogate && parent ? parent->capturedQuadrantEquals(quadrant, backpropogate) : false);
 }
 bool Node::moveOrCapturedQuadrantEquals(const Move& move, const int& quadrant) {
     return moveEquals(move) || capturedQuadrantEquals(quadrant) ||

@@ -15,6 +15,16 @@ const int T = -1;
 Move::Move(int first, int second) : first{first}, second{second} {}
 Move::Move(const Move& other) : first{other.first}, second{other.second} {}
 Move::Move(Move&& other) : first{std::move(other.first)}, second{std::move(other.second)} {}
+Move& Move::operator=(const Move& other) {
+    first = other.first;
+    second = other.second;
+    return *this;
+}
+Move& Move::operator=(Move&& other) {
+    first = std::move(other.first);
+    second = std::move(other.second);
+    return *this;
+}
 
 string getBoardSymbol(const int& value) { return value == P1 ? "X" : (value == P2 ? "O" : "_"); }
 

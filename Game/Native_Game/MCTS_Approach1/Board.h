@@ -27,6 +27,8 @@ struct Move {
 	Move(int first, int second);
 	Move(const Move& other);
 	Move(Move&& other);
+	Move& operator=(const Move& other);
+	Move& operator=(Move&& other);
 };
 
 // class Board {

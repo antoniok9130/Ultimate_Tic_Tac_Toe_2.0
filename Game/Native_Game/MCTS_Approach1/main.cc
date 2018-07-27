@@ -3,8 +3,8 @@
 #include <sstream>
 #include <string>
 #include <utility>
-#include "MCTS/Game.h"
-#include "MCTS/Node.h"
+#include "Game.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -21,19 +21,19 @@ void play() {
             istringstream iss{s};
             int global, local;
             if (iss >> global) {
+                Move move{-1, -1};
                 if (!(iss >> local)) {
-                    Quadrant allQuadrants;
-                    game->buildQuadrant(allQuadrants);
-
-                    if (game->hasMove() && allQuadrants[game->getLocal()] == N) {
-                        local = global;
-                        global = game->getLocal();
-                    } else {
-                        continue;
-                    }
+					if (game->getNextQuadrant() == -1){
+						cout << "Need a global input" << endl;
+						continue;
+					}
+                    local = global;
+                    global = game->getLocal();
+                    move = Move{std::move(global), std::move(local)};
+                } else {
+                    move = Move{std::move(global), std::move(local)};
                 }
-                const Move move = Move{std::move(global), std::move(local)};
-                if (game->isLegal(move)) {
+                if (move.first >= 0 && move.first <= 8 && move.second >= 0 && move.second <= 8 && game->isLegal(move)) {
                     unique_ptr<Node> nextState = make_unique<Node>(move, game);
                     game->addChild(nextState);
                     game = game->getChildren().back().get();
@@ -51,7 +51,7 @@ void play() {
                     cout << "Not Valid Move:  " << move.first << " " << move.second << endl;
                 }
             } else {
-                break;
+                cout << "Please Enter move in quadrant:  " << game->getNextQuadrant() << endl;
             }
         }
         Board2D board = make_Board2D();

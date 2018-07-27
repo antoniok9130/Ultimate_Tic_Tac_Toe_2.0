@@ -6,7 +6,7 @@
 #define ULTIMATE_TIC_TAC_TOE_ZERO_GAME_H
 
 #include "memory"
-#include "../Boards/board.h"
+#include "board.h"
 
 class Node;
 
