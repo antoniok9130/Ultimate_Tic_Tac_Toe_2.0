@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O2 -std=c++14 -DDEBUG -Wall -MMD -Werror=vla
+CXXFLAGS = -Ofast -std=c++14 -DDEBUG -Wall -MMD -Werror=vla
 EXEC = UTTT
 # Boards/Board2D.o Boards/Quadrants.o 
 # MCTS/Game.o  main.o
