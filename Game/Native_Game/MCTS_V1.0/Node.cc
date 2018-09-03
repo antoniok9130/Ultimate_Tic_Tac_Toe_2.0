@@ -37,9 +37,6 @@ Node::Node(const Move& move, Node* parent, bool initialize)
       parent{parent},
       initialized{parent ? false : true} {
     if (parent) {
-        if (this->move && !capturedQuadrantEquals(this->move->second, true)) {
-            nextQuadrant = this->move->second;
-        }
         if (initialize) {
             if (this->winner == N) {
                 init();
@@ -49,6 +46,13 @@ Node::Node(const Move& move, Node* parent, bool initialize)
                 initialized = true;
             }
         }
+    } else {
+        if (this->move) {
+            // board->set(move->first, move->second, P1);
+        } else {
+            player = N;
+        }
+        initialized = true;
     }
 }
 
@@ -91,14 +95,12 @@ void Node::setMove(unique_ptr<Move>& move) {
 }
 void Node::setMove() {
     if (move && !moveSet) {
-        Quadrant currentQuadrant = make_Quadrant();
-        buildQuadrant(currentQuadrant, move->first);
-        int filled = check3InRow(currentQuadrant);
+        buildBoard2D();
+        int filled = check3InRow((*board)[move->first]);
         if (filled != N) {
-            capturedQuadrant = filled;
-            Quadrant allQuadrants = make_Quadrant();
-            buildQuadrant(allQuadrants);
-            winner = check3InRow(allQuadrants);
+            capturedQuadrant = T;
+            buildQuadrant();
+            winner = check3InRow(*quadrants);
         }
         moveSet = true;
     }
@@ -110,12 +112,13 @@ int Node::getWinner() { return winner; }
 int Node::getNextQuadrant() { return nextQuadrant; }
 int Node::getCapturedQuadrant() { return capturedQuadrant; }
 
-bool Node::moveEquals(const Move& move) {
-    return (this->move && this->move->first == move.first && this->move->second == move.second);
+bool Node::moveEquals(const Move& move, bool backpropogate) {
+    return (this->move && this->move->first == move.first && this->move->second == move.second) ||
+           ((backpropogate && parent) ? parent->moveEquals(move, backpropogate) : false);
 }
-bool Node::capturedQuadrantEquals(const int& quadrant, const bool& backpropogate) {
-    return (capturedQuadrant != N && move && move->first == quadrant) ||
-           (backpropogate && parent ? parent->capturedQuadrantEquals(quadrant, backpropogate) : false);
+bool Node::capturedQuadrantEquals(const int& quadrant, bool backpropogate) {
+    return (capturedQuadrant != N && capturedQuadrant != T && move && move->first == quadrant) ||
+           ((backpropogate && parent) ? parent->capturedQuadrantEquals(quadrant, backpropogate) : false);
 }
 bool Node::moveOrCapturedQuadrantEquals(const Move& move, const int& quadrant) {
     return moveEquals(move) || capturedQuadrantEquals(quadrant) ||
@@ -157,35 +160,61 @@ void Node::setNumChildren(unsigned int num) {
 }
 vector<unique_ptr<Node>>& Node::getChildren() { return children; }
 void Node::addChild(unique_ptr<Node>& move) { children.emplace_back(std::move(move)); }
-
-void Node::buildQuadrant(Quadrant& array) {
-    if (capturedQuadrant != N) {
-        array[move->first] = capturedQuadrant;
-    }
-    if (parent) {
-        parent->buildQuadrant(array);
-    }
-}
-void Node::buildQuadrant(Quadrant& array, const int& quadrant) {
-    if (move && move->first == quadrant) {
-        array[move->second] = player;
-    }
-    if (parent) {
-        parent->buildQuadrant(array, quadrant);
-    }
-}
-void Node::buildBoard2D(Board2D& array) {
-    if (move) {
-        array[move->first][move->second] = player;
-    }
-    if (parent) {
-        parent->buildBoard2D(array);
-    }
+void Node::setChild(unique_ptr<Node>& move) {
+    children.clear();
+    children.emplace_back(std::move(move));
 }
 
-// Quadrants& Node::getQuadrants() { return *quadrants; }
+void Node::buildQuadrant() {
+    if (!quadrants) {
+		quadrants = make_Quadrant();
+        if (parent && parent->quadrants) {
+            For(0, 9) { (*quadrants)[i] = (*parent->quadrants)[i]; }
+        } else {
+            Node* current = this;
+            do {
+                if (current->capturedQuadrant != N) {
+                    (*quadrants)[current->move->first] = current->capturedQuadrant;
+                }
+                current = current->parent;
+            } while (current != nullptr);
+        }
+    }
+}
+// void Node::buildQuadrant(Quadrant& array, const int& quadrant) {
+//     Node* current = this;
+//     do {
+//         if (current->move && current->move->first == quadrant) {
+//             array[current->move->second] = current->player;
+//         }
+//         current = current->parent;
+//     } while (current != nullptr);
+// }
+void Node::buildBoard2D() {
+    if (!board) {
+		board = make_Board2D();
+        if (parent && parent->board) {
+            For(0, 9) {
+                Forj(0, 9) { (*board)[i][j] = (*parent->board)[i][j]; }
+            }
+			if (move){
+				(*board)[move->first][move->second] = player;
+			}
+        } else {
+            Node* current = this;
+            do {
+                if (current->move) {
+                    (*board)[current->move->first][current->move->second] = player;
+                }
+                current = current->parent;
+            } while (current != nullptr);
+        }
+    }
+}
 
-// Board2D& Node::getBoard() { return *board; }
+Quadrant& Node::getQuadrants() { return *quadrants; }
+
+Board2D& Node::getBoard() { return *board; }
 
 // ostream& operator<<(ostream& out, Node& node) {
 //     out << node.getQuadrants() << endl;

@@ -11,6 +11,9 @@
 #include <string>
 #include <vector>
 
+#define For(a, b) for (int i = a; i < b; ++i)
+#define Forj(a, b) for (int j = a; i < b; ++j)
+
 extern const int P1;
 extern const int P2;
 extern const int N;
@@ -21,14 +24,14 @@ typedef std::array<Quadrant, 9> Board2D;
 typedef unsigned int uint;
 
 struct Move {
-	int first;
-	int second;
+    int first;
+    int second;
 
-	Move(int first, int second);
-	Move(const Move& other);
-	Move(Move&& other);
-	Move& operator=(const Move& other);
-	Move& operator=(Move&& other);
+    Move(int first, int second);
+    Move(const Move& other);
+    Move(Move&& other);
+    Move& operator=(const Move& other);
+    Move& operator=(Move&& other);
 };
 
 // class Board {
@@ -41,10 +44,7 @@ std::string getBoardSymbol(const int& value);
 
 int check3InRow(const Quadrant& quadrant);
 
-void getRemaining(Quadrant& quadrant, std::vector<int>& remaining);
-int& getRandomRemaining(std::vector<int>& remaining);
-bool remainingContains(std::vector<int>& remaining, const int& q);
-void removeFromRemaining(std::vector<int>& remaining, const int& n);
+int getRandomRemaining(Quadrant& quadrant);
 
 Quadrant make_Quadrant();
 Board2D make_Board2D();
@@ -52,7 +52,7 @@ Board2D make_Board2D();
 std::ostream& operator<<(std::ostream& out, Board2D& board);
 
 std::ostream& operator<<(std::ostream& out, std::vector<size_t>& v);
-template<typename T>
+template <typename T>
 std::ostream& operator<<(std::ostream& out, std::list<T>& l);
 
 #endif  // ULTIMATE_TIC_TAC_TOE_ZERO_BOARD_H

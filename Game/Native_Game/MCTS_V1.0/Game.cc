@@ -93,24 +93,20 @@ void select(Node* node) {
 void expand(Node* node) {
     if (node->getChildren().empty()) {
         list<Move> legalMoves;
-        Quadrant allQuadrants = make_Quadrant();
-        node->buildQuadrant(allQuadrants);
-        if (node->hasMove() && allQuadrants[node->getLocal()] == N) {
-            Quadrant nextQuadrant = make_Quadrant();
-            node->buildQuadrant(nextQuadrant, node->getLocal());
+        node->buildQuadrant();
+        node->buildBoard2D();
+        if (node->hasMove() && node->getQuadrants()[node->getLocal()] == N) {
             for (int i = 0; i < 9; ++i) {
-                if (nextQuadrant[i] == 0) {
+                if (node->getBoard()[node->getLocal()][i] == 0) {
                     int local = i;
                     legalMoves.emplace_back(Move{node->getLocal(), local});
                 }
             }
         } else {
-            Board2D board = make_Board2D();
-            node->buildBoard2D(board);
             for (int i = 0; i < 9; ++i) {
-                if (allQuadrants[i] == N) {
+                if (node->getQuadrants()[i] == N) {
                     for (int j = 0; j < 9; ++j) {
-                        if (board[i][j] == 0) {
+                        if (node->getBoard()[i][j] == 0) {
                             legalMoves.emplace_back(Move{i, j});
                         }
                     }
@@ -138,15 +134,15 @@ void expand(Node* node) {
 
 int runSimulation(Node* node) {
     node->init();
-    Board2D board = make_Board2D();
-    node->buildBoard2D(board);
+    node->buildBoard2D();
+    Board2D board = make_Board2D(node->getBoard());
     array<vector<int>, 9> remainingBoard;
     for (int i = 0; i < 9; ++i) {
         getRemaining(board[i], remainingBoard[i]);
     }
 
-    Quadrant quadrants = make_Quadrant();
-    node->buildQuadrant(quadrants);
+    node->buildQuadrant();
+    Quadrant quadrants = make_Quadrant(node->getQuadrants());
     vector<int> remainingQuadrants;
     getRemaining(quadrants, remainingQuadrants);
 

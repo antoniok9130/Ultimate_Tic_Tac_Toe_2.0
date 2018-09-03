@@ -5,8 +5,9 @@
 #ifndef ULTIMATE_TIC_TAC_TOE_ZERO_NODE_H
 #define ULTIMATE_TIC_TAC_TOE_ZERO_NODE_H
 
-#include <memory>
 #include <array>
+#include <iostream>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -72,10 +73,13 @@ class Node {
     void setNumChildren(unsigned int num);
     std::vector<std::unique_ptr<Node>>& getChildren();
     void addChild(std::unique_ptr<Node>& move);
+    void setChild(const Move& move);
 
-	void buildQuadrant(Quadrant& array);
-	void buildQuadrant(Quadrant& array, const int& quadrant);
-	void buildBoard2D(Board2D& array);
+    void buildQuadrant(Quadrant& array);
+    void buildQuadrant(Quadrant& array, const int& quadrant);
+    void buildBoard2D(Board2D& array);
+
+    std::ostream& printTrace(std::ostream& out);
 
     // Quadrants& getQuadrants();
 
@@ -83,5 +87,13 @@ class Node {
 };
 
 // std::ostream& operatora<<(std::ostream& out, Node& node);
+
+extern "C" {
+Node* Node_new();
+void Node_delete(Node* node);
+int Node_getWinner(Node* node);
+int Node_getNumWins(Node* node);
+int Node_getNumVisits(Node* node);
+}
 
 #endif  // ULTIMATE_TIC_TAC_TOE_ZERO_NODE_H
