@@ -143,8 +143,8 @@ public class MCTS_Game {
             }
         }
 
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() < thinkingTime+start){
+        long end = System.currentTimeMillis()+thinkingTime;
+        while (System.currentTimeMillis() < end){
             select(node); select(node); select(node);
             select(node); select(node); select(node);
             select(node); select(node); select(node);
