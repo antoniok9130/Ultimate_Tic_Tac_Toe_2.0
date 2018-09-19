@@ -4,7 +4,7 @@ import tensorflow as tf
 from numpy import array as np_array
 
 from Game.UTTT import UTTT
-from Model.ZeroNetwork import ZeroNetwork
+from Model.TensorFlow.ZeroNetwork import ZeroNetwork
 
 
 def instantiateModel(version="0.2"):

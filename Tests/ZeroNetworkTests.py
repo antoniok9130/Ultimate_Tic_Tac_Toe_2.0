@@ -1,5 +1,5 @@
 from Game.UTTT import UTTT
-from Model.ZeroNetwork import ZeroNetwork
+from Model.TensorFlow.ZeroNetwork import ZeroNetwork
 
 zn = ZeroNetwork()
 g = UTTT()

@@ -1,6 +1,6 @@
 from numpy import array as np_array
 
-import Model.ZeroNetwork as zn
+import Model.TensorFlow.ZeroNetwork as zn
 from Game.UTTT import UTTT
 
 

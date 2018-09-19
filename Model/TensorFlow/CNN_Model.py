@@ -1,6 +1,7 @@
 
-from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Dropout, Flatten, BatchNormalization, Activation
+from keras.models import Sequential
+
 
 def create_model():
     policy = Sequential()

@@ -1,6 +1,7 @@
+from numpy import array as np_array
+
 from Game.Boards import P1, P2
 from Game.Pure_MCTS.MCTS_Node import MCTS_Node
-from numpy import array as np_array
 
 
 def f1(i):
