@@ -1,4 +1,7 @@
 #cython: language_level=3, boundscheck=False
+import sys
+
+import numpy as np
 
 P1 = 1
 P2 = 2
@@ -12,26 +15,22 @@ triple8 = ((6, 7), (2, 5))
 
 pairs = (((1, 2), (3, 6), (4, 8)),
         ((0, 2), (4, 7)),
-        ((0, 1), (4, 6), (5, 8)),
+        ((0, 1), (5, 8), (4, 6)),
         ((0, 6), (4, 5)),
         ((0, 8), (1, 7), (2, 6), (3, 5)),
         ((2, 8), (3, 4)),
         ((0, 3), (2, 4), (7, 8)),
         ((1, 4), (6, 8)),
-        ((0, 4), (2, 5), (6, 7)))
+        ((6, 7), (2, 5), (0, 4)))
 
+def check3InRow(array): # , position = -1
+    # if (position > -1):
+    #     for pair in pairs[position]:
+    #         if (array[position] == array[pair[0]] and array[pair[0]] == array[pair[1]]):
+    #             return True
+    #
+    #     return False
 
-# @jit(cache=True)
-def check3InRowAt(array, position):    
-    for p0, p1 in pairs[position]:
-        if (array[position] == array[p0] and array[p0] == array[p1]):
-            return True
-
-    return False
-
-
-# @jit(int64(typeof(np.zeros(9))), nopython=True, cache=True)
-def check3InRow(array):
     checkTie = 1
     if (array[0] != N):
         for triple in triple0:
@@ -58,7 +57,6 @@ def check3InRow(array):
                                    array[5] != N and array[6] != N and array[7] != N) \
              else N
 
-# @jit(boolean(typeof(np.zeros(9))), nopython=True, cache=True)
 def checkTie(array):
     for i in array:
         if (i == N):
@@ -66,43 +64,17 @@ def checkTie(array):
 
     return True
 
+    
+def check3InRowAt(array, position):    
+    for p0, p1 in pairs[position]:
+        if (array[position] == array[p0] and array[p0] == array[p1]):
+            return True
 
-# @jit(nopython=True)
-def potential3inRow(array, position, player = None):
-    if player is None:
-        potential = N
-        for p0, p1 in pairs[position]:
-            if array[p0] != N and \
-                    array[p0] == array[p1]:
-                if potential != N and potential != array[p0]:
-                    return B
-
-                potential = array[p0]
-
-        return potential
-
-    else:
-        for p0, p1 in pairs[position]:
-            if array[p0] == player and \
-                    array[p0] == array[p1]:
-                return True
-
-        return False
-
-
-# @jit(void(typeof(np.zeros(9)), typeof(np.zeros(9)), int64))
-def updatePotential3inRow(potential, array, position):
-    player = array[position]
-    if player != N:
-        for pair in pairs[position]:
-            if player == array[pair[0]]:
-                potential[pair[1]] |= player
-            elif player == array[pair[1]]:
-                potential[pair[0]] |= player
+    return False
 
 
 
-# @jit(cache=True) # (int64[:], optional(boolean)),
+
 def getBoardSymbol(value, simple = True):
     if (value == P1):
         return "X"
@@ -114,15 +86,14 @@ def getBoardSymbol(value, simple = True):
     return "_" if simple else " "
 
 
-# @jit(boolean(int64[:]), nopython=True, cache=True)
-# def getRandomRemaining(quadrant):
-#     for r in np.random.randint(low=0, high=9, size=25):
-#         if (quadrant[r] == N):
-#             return r
-#
-#     print("Could not find Random Remaining for: ", quadrant)
-#     print(quadrant[0] == N)
-#     raise Exception("")
+def getRandomRemaining(quadrant):
+    for r in np.random.randint(low=0, high=9, size=25):
+        if (quadrant[r] == N):
+            return r
+
+    print("Could not find Random Remaining for: ", quadrant)
+    print(quadrant[0] == N)
+    raise Exception("")
 
 
 
@@ -130,7 +101,6 @@ verticalSpace = "     │   │    ║    │   │    ║    │   │    "
 verticalDivide = "  ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── "
 bigVerticalDivide = " ═════════════╬═════════════╬═════════════"
 
-# @jit(void(typeof(np.zeros((9, 9))), typeof(np.zeros(9)), optional(boolean)), cache=True)
 def printBoard(board, quadrant, simple = False):
     if simple:
         for a in range(3) :

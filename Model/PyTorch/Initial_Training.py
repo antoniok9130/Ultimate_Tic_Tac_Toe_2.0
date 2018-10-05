@@ -1,9 +1,13 @@
 
+import sys
+sys.path.append("..\..\Game\Python")
+
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.optim as optim
+
 from UTTT_Logic import N, P1, P2, check3InRowAt, check3InRow
+from random import shuffle
+from Model import *
 
 
 def board_to_input(board):
@@ -40,11 +44,7 @@ def board_to_input(board):
 # elif quadrants[g] == P2:
 #     array[171 + g] = 1
 
-
 with open("./Data/RecordedGames.txt") as recordedGames:
-
-    model = torch.load("./ModelInstances/test1_trained")
-    model = model.double()
 
     data = []
 
@@ -70,51 +70,72 @@ with open("./Data/RecordedGames.txt") as recordedGames:
             quadrants[g] = check3InRowAt(board[g], l)
 
             rotated = np.copy(board)
-            game_data.append(rotated)
+            game_data.append((rotated, i))
+            flipped = np.fliplr(board)
+            game_data.append((flipped, i))
             for _ in range(3):
                 rotated = np.rot90(rotated)
-                game_data.append(rotated)
-
-            flipped = np.fliplr(board)
-            game_data.append(flipped)
-            for _ in range(3):
+                game_data.append((rotated, i))
                 flipped = np.rot90(flipped)
-                game_data.append(flipped)
+                game_data.append((flipped, i))
 
 
             i += 2
 
         winner = check3InRow(quadrants)
 
-        for d in game_data:
-            data.append((board_to_input(d), np.array([1., 0.] if winner == P1 else [0., 1.])))
+        for state, length in game_data:
+            reward = 0.5+0.5*(length+1)/len(game)
+            penalty = 1-reward
 
+            data.append([board_to_input(state), np.array([reward, penalty] if winner == P1 else [penalty, reward])])
+
+
+
+
+    shuffle(data)
+
+    data = np.reshape(data, [-1, 50, 2])
     print(len(data))
 
-    criterion = nn.MSELoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    input, label = zip(*data[0])
+    print(type(np.array(input)))
+    print(type(np.array(label)))
+    # print(data[0])
+
+    model = UTTT_Model()
+    model.load_state_dict(torch.load("./ModelInstances/uttt_model1"))
+    model.eval()
+
+
+
+    criterion = torch.nn.MSELoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+
 
     running_loss = 0.0
-    for i, data in enumerate(data):
+    for i, d in enumerate(data):
         # get the inputs
-        input, label = data
+        input, label = zip(*d)
 
-        input_tensor = torch.from_numpy(input)
-        output_tensor = torch.from_numpy(label)
+        input_tensor = torch.from_numpy(np.array(input))
+        # output_tensor = torch.tensor(np.array(label)).long()
+        output_tensor = torch.from_numpy(np.array(label))
+        # output_tensor = torch.autograd.Variable(torch.tensor(np.array(label)).long(), requires_grad = False)
 
         # zero the parameter gradients
         optimizer.zero_grad()
 
         # forward + backward + optimize
-        outputs = model(input_tensor)
+        outputs = model.forward(input_tensor)
         loss = criterion(outputs, output_tensor)
         loss.backward()
         optimizer.step()
 
         # print statistics
         running_loss += loss.item()
-        if i % 1000 == 1999:  # print every 2000 mini-batches
-            print('loss:  {0}'.format(running_loss / 2000))
+        if i % 25 == 0:  # print every 2000 mini-batches
+            print('loss:  {0}'.format(running_loss / 25))
             running_loss = 0.0
 
-    torch.save(model, "./ModelInstances/test1_trained2")
+    torch.save(model.state_dict(), "./ModelInstances/uttt_model1_trained")

@@ -1,0 +1,12 @@
+.vscode/
+.idea/*
+Java/weka.jar
+Java/.idea/*
+venv/
+*__pycache__
+Game/Cython/*.c
+Game/Cython/*.pyd
+Game/Cython/build/*
+Model/Pytorch/Data/*.c
+Model/Pytorch/Data/*.pyd
+Model/Pytorch/Data/build/
