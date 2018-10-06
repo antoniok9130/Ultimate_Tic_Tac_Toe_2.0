@@ -18,16 +18,16 @@ iteration = 1
 total_generate_time = 0
 total_training_time = 0
 
-criterion = torch.nn.MSELoss()
+criterion = torch.nn.BCELoss()
 
 while True:
 
     model1 = UTTT_Model()
-    model1.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model1"))
+    model1.load_state_dict(torch.load("./ModelInstances/uttt_genetic2_model1"))
     model1.eval()
 
     model2 = UTTT_Model()
-    model2.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model2"))
+    model2.load_state_dict(torch.load("./ModelInstances/uttt_genetic2_model2"))
     model2.eval()
         
     mcts = MCTS(model1, model2)
@@ -66,23 +66,29 @@ while True:
     data = []
 
     for state, length in game_data:
-        reward = 0.5+0.5*(length+1)/i
+        reward = 0.5+0.5*(length+1)/(i * (2 if node.getWinner() == T else 1))
         penalty = 1-reward
+        expected = [reward, penalty]
 
         if node.getWinner() == P1:
-            data.append([board_to_input(state), np.array([reward, penalty])])
+            data.append([board_to_input(state), np.array(expected)])
         
         elif node.getWinner() == P2:
-            data.append([board_to_input(state), np.array([penalty, reward])])
+            data.append([board_to_input(state), np.array(expected[::-1])])
 
         else:
-            expected = [reward, penalty]
             shuffle(expected)
             data.append([board_to_input(state), np.array(expected)])
 
 
     shuffle(data)
-    # data = np.reshape(data, [-1, 50, 2])
+    batches = [[]]
+    
+    for d in data:
+        if len(batches[-1]) >= 32:
+            batches.append([])
+
+        batches[-1].append(d)
 
     end = current_time_milli()
     generate_time = (end-start)
@@ -90,45 +96,53 @@ while True:
     start = current_time_milli()
     
     model = UTTT_Model()
-    model.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model"+str(node.getWinner()  if node.getWinner() != T else randint(1, 2))))
+    if node.getWinner() != T:
+        model.load_state_dict(torch.load("./ModelInstances/uttt_genetic2_model"+str(node.getWinner())))
+    else:
+        model.load_state_dict(torch.load("./ModelInstances/uttt_genetic2_model"+str(randint(1, 2))))
+
     model.eval()
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    # get the inputs
-    input_data, label = zip(*data)
-
-    input_tensor = torch.from_numpy(np.array(input_data))
-    output_tensor = torch.from_numpy(np.array(label))
     
-    # zero the parameter gradients
-    optimizer.zero_grad()
+    running_loss = 0
+    for batch in batches:
+        # get the inputs
+        input_data, label = zip(*batch)
 
-    # forward + backward + optimize
-    outputs = model.forward(input_tensor)
-    loss = criterion(outputs, output_tensor)
-    loss.backward()
-    optimizer.step()
+        input_tensor = torch.from_numpy(np.array(input_data))
+        output_tensor = torch.from_numpy(np.array(label))
+        
+        # zero the parameter gradients
+        optimizer.zero_grad()
 
-    # print statistics
-    running_loss = loss.item()
+        # forward + backward + optimize
+        outputs = model.forward(input_tensor)
+        loss = criterion(outputs, output_tensor)
+        loss.backward()
+        optimizer.step()
 
-    save_model2_to_model1 = False
-    if node.getWinner() == P2 or (node.getWinner() != P1 and randint(1, 2) == 2):
-        save_model2_to_model1 = True
-        torch.save(model2.state_dict(), "./ModelInstances/uttt_genetic_model1")
+        # print statistics
+        running_loss += loss.item()
 
-    torch.save(model.state_dict(), "./ModelInstances/uttt_genetic_model2")
+    running_loss /= len(batches)
+
+    save_model2_to_model1 = node.getWinner() == P2 or (node.getWinner() != P1 and randint(1, 2) == 2)
+
+    if save_model2_to_model1:
+        torch.save(model2.state_dict(), "./ModelInstances/uttt_genetic2_model1")
+
+    torch.save(model.state_dict(), "./ModelInstances/uttt_genetic2_model2")
 
     if iteration%25 == 0:
         try:
             timestamp = str(current_time_milli())
             if save_model2_to_model1:
-                torch.save(model2.state_dict(), "./ModelInstances/Cache/uttt_genetic_model1_"+timestamp)
-            
+                torch.save(model2.state_dict(), "./ModelInstances/Cache/uttt_genetic2_model1_"+timestamp)
             else:
-                torch.save(model1.state_dict(), "./ModelInstances/Cache/uttt_genetic_model1_"+timestamp)
+                torch.save(model1.state_dict(), "./ModelInstances/Cache/uttt_genetic2_model1_"+timestamp)
             
-            torch.save(model.state_dict(), "./ModelInstances/Cache/uttt_genetic_model2_"+timestamp)
+            torch.save(model.state_dict(), "./ModelInstances/Cache/uttt_genetic2_model2_"+timestamp)
         except Exception:
             pass
 
@@ -141,7 +155,7 @@ while True:
     print("   ", "Winner:         ", node.getWinner())
     print("   ", "Game Length:    ", i)
     print("   ", "Loss:           ", running_loss)
-    print("   ", "Generate Time:   {0:.3f}    Avg:  {1:.3f}".format(generate_time, total_generate_time/float(1000*iteration)))
+    print("   ", "Generate Time:   {0:.3f}    Avg:  {1:.3f}".format(generate_time/1000.0, total_generate_time/float(1000*iteration)))
     print("   ", "Training Time:   {0:.3f}    Avg:  {1:.3f}".format((end-start)/1000.0, total_training_time/float(1000*iteration)))
 
     iteration += 1
