@@ -33,13 +33,25 @@ def board_to_input(board):
     return array
 
 class NN_MCTS:
-    def __init__(self, model=None):
-        self.model = model
-        if self.model is None:
-            self.model = torch.load("./ModelInstances/test1_trained")
+    def __init__(self, model1=None, model2=None):
+        self.model1 = model1
+        self.model2 = model2
+
+        if self.model1 is None:
+            self.model1 = UTTT_Model()
+            self.model1.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model1"))
+            self.model1.eval()
+
+        if self.model2 is None:
+            self.model2 = UTTT_Model()
+            self.model2.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model2"))
+            self.model2.eval()
+
+        self.player = None
 
     def getMove(self, node, iterations=1600):
         AIPlayer = P2 if node.getPlayer() == P1 else P1
+        self.player = AIPlayer
         quadrants = np.zeros(9, dtype=int)
         node.buildQuadrant(quadrants)
         if node.getNextQuadrant() != -1:
@@ -159,7 +171,11 @@ class NN_MCTS:
         
         input_tensor = torch.from_numpy(board_to_input(board))
 
-        return list(self.model.forward(input_tensor).detach().numpy())
+        if self.player == P1:
+            return list(self.model1.forward(input_tensor).detach().numpy())
+
+        else:
+            return list(self.model2.forward(input_tensor).detach().numpy())
 
 
 

@@ -18,16 +18,19 @@ iteration = 1
 total_generate_time = 0
 total_training_time = 0
 
-model = UTTT_Model()
-model.load_state_dict(torch.load("./ModelInstances/uttt_model1_trained"))
-model.eval()
-    
-mcts = MCTS(model)
-
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 while True:
+
+    model1 = UTTT_Model()
+    model1.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model1"))
+    model1.eval()
+
+    model2 = UTTT_Model()
+    model2.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model2"))
+    model2.eval()
+        
+    mcts = MCTS(model1, model2)
 
     start = current_time_milli()
 
@@ -76,11 +79,15 @@ while True:
     total_generate_time += generate_time
     start = current_time_milli()
     
-    
-    # get the inputs
-    input, label = zip(*data)
+    model = UTTT_Model()
+    model.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model"+str(node.getWinner())))
+    model.eval()
 
-    input_tensor = torch.from_numpy(np.array(input))
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+    # get the inputs
+    input_data, label = zip(*data)
+
+    input_tensor = torch.from_numpy(np.array(input_data))
     output_tensor = torch.from_numpy(np.array(label))
     
     # zero the parameter gradients
@@ -95,12 +102,13 @@ while True:
     # print statistics
     running_loss = loss.item()
 
+    torch.save(model1.state_dict() if node.getWinner() == P1 else model2.state_dict(), "./ModelInstances/uttt_genetic_model1")
+    torch.save(model.state_dict(), "./ModelInstances/uttt_genetic_model2")
+
     end = current_time_milli()  
 
 
     total_training_time += (end-start)
-
-    torch.save(model.state_dict(), "./ModelInstances/uttt_model1_trained")
 
     print(f"Iteration {iteration} took {(generate_time+end-start)/1000.0} seconds to complete")
     print("   ", "Winner:         ", node.getWinner())
