@@ -1,6 +1,6 @@
 
 import sys
-sys.path.append("..\..\Game\Python")
+sys.path.append("../../Game/Python")
 
 from UTTT_Logic import *
 from NN_MCTS_Node import NN_MCTS_Node as Node
@@ -102,7 +102,8 @@ while True:
 
     torch.save(model.state_dict(), "./ModelInstances/uttt_model1_trained")
 
-    print(f"Iteration {iteration} took {(end-start)/1000.0} seconds to complete")
+    print(f"Iteration {iteration} took {(generate_time+end-start)/1000.0} seconds to complete")
+    print("   ", "Winner:         ", node.getWinner())
     print("   ", "Game Length:    ", i)
     print("   ", "Loss:           ", running_loss)
     print("   ", "Generate Time:   {0:.3f}    Avg:  {1:.3f}".format(generate_time, total_generate_time/float(1000*iteration)))
