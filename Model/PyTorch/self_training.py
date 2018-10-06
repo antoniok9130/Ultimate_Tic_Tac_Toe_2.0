@@ -6,7 +6,7 @@ from UTTT_Logic import *
 from NN_MCTS_Node import NN_MCTS_Node as Node
 from NN_MCTS import NN_MCTS as MCTS, board_to_input
 from Model import UTTT_Model
-from random import shuffle
+from random import shuffle, randint
 
 import time
 import torch
@@ -69,7 +69,17 @@ while True:
         reward = 0.5+0.5*(length+1)/i
         penalty = 1-reward
 
-        data.append([board_to_input(state), np.array([reward, penalty] if node.getWinner() == P1 else [penalty, reward])])
+        if node.getWinner() == P1:
+            data.append([board_to_input(state), np.array([reward, penalty])])
+        
+        elif node.getWinner() == P2:
+            data.append([board_to_input(state), np.array([penalty, reward])])
+
+        else:
+            expected = [reward, penalty]
+            shuffle(expected)
+            data.append([board_to_input(state), np.array(expected)])
+
 
     shuffle(data)
     # data = np.reshape(data, [-1, 50, 2])
@@ -80,7 +90,7 @@ while True:
     start = current_time_milli()
     
     model = UTTT_Model()
-    model.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model"+str(node.getWinner())))
+    model.load_state_dict(torch.load("./ModelInstances/uttt_genetic_model"+str(node.getWinner()  if node.getWinner() != T else randint(1, 2))))
     model.eval()
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
@@ -102,8 +112,25 @@ while True:
     # print statistics
     running_loss = loss.item()
 
-    torch.save(model1.state_dict() if node.getWinner() == P1 else model2.state_dict(), "./ModelInstances/uttt_genetic_model1")
+    save_model2_to_model1 = False
+    if node.getWinner() == P2 or (node.getWinner() != P1 and randint(1, 2) == 2):
+        save_model2_to_model1 = True
+        torch.save(model2.state_dict(), "./ModelInstances/uttt_genetic_model1")
+
     torch.save(model.state_dict(), "./ModelInstances/uttt_genetic_model2")
+
+    if iteration%25 == 0:
+        try:
+            timestamp = str(current_time_milli())
+            if save_model2_to_model1:
+                torch.save(model2.state_dict(), "./ModelInstances/Cache/uttt_genetic_model1_"+timestamp)
+            
+            else:
+                torch.save(model1.state_dict(), "./ModelInstances/Cache/uttt_genetic_model1_"+timestamp)
+            
+            torch.save(model.state_dict(), "./ModelInstances/Cache/uttt_genetic_model2_"+timestamp)
+        except Exception:
+            pass
 
     end = current_time_milli()  
 
