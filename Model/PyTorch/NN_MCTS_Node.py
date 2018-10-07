@@ -28,7 +28,8 @@ class NN_MCTS_Node(UTTT_Node):
         self.numVisits += 1
 
         if self.parent is not None:
-            self.UCT = (self.winProb - self.loseProb) + self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
+            # (self.winProb - self.loseProb) + 
+            self.UCT = self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
 
 
     def getUCT(self):

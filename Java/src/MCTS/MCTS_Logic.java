@@ -41,6 +41,38 @@ public class MCTS_Logic {
             }
         }
 	}
+
+    public static Tools.Pair<Boolean, int[]> isPotentialWin(MCTS_Node node, int AIPlayer){
+        int[] quadrants = new int[9];
+        node.buildQuadrant(quadrants);
+        if (node.getNextQuadrant() != -1){
+            if (potential3inRow(quadrants, node.getNextQuadrant(), AIPlayer)){
+                int[] quadrant = new int[9];
+                node.buildQuadrant(quadrant, node.getNextQuadrant());
+                for (int i = 0; i<9; ++i){
+                    if (quadrant[i] == N && MCTS_Logic.potential3inRow(quadrant, i, AIPlayer)){
+//                            System.out.println("Instant Win!");
+                        return new Tools.Pair<>(true, new int[]{node.getNextQuadrant(), i});
+                    }
+                }
+            }
+        }
+        else{
+            for (int i = 0; i<9; ++i){
+                if (quadrants[i] == N && potential3inRow(quadrants, i, AIPlayer)){
+                    int[] quadrant = new int[9];
+                    node.buildQuadrant(quadrant, i);
+                    for (int j = 0; j<9; ++j){
+                        if (quadrant[j] == N && potential3inRow(quadrant, j, AIPlayer)){
+//                                System.out.println("Instant Win!");
+                            return new Tools.Pair<>(true, new int[]{i, j});
+                        }
+                    }
+                }
+            }
+        }
+        return new Tools.Pair<>(false, null);
+    }
 	
 
 }

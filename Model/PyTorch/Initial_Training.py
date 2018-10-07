@@ -5,7 +5,7 @@ sys.path.append("..\..\Game\Python")
 import numpy as np
 import torch
 
-from UTTT_Logic import N, P1, P2, check3InRowAt, check3InRow
+from UTTT_Logic import N, P1, P2, T, check3InRowAt, check3InRow
 from random import shuffle
 from Model import *
 
@@ -85,57 +85,72 @@ with open("./Data/RecordedGames.txt") as recordedGames:
         winner = check3InRow(quadrants)
 
         for state, length in game_data:
-            reward = 0.5+0.5*(length+1)/len(game)
+            reward = 0.5+0.5*(length+1)/(i * (2 if winner == T else 1))
             penalty = 1-reward
+            expected = [reward, penalty]
 
-            data.append([board_to_input(state), np.array([reward, penalty] if winner == P1 else [penalty, reward])])
+            if winner == P1:
+                data.append([board_to_input(state), np.array(expected)])
+            
+            elif winner == P2:
+                data.append([board_to_input(state), np.array(expected[::-1])])
+
+            else:
+                shuffle(expected)
+                data.append([board_to_input(state), np.array(expected)])
 
 
 
 
     shuffle(data)
 
-    data = np.reshape(data, [-1, 50, 2])
-    print(len(data))
+    batches = [[]]
 
-    input, label = zip(*data[0])
-    print(type(np.array(input)))
-    print(type(np.array(label)))
+    for d in data:
+        if len(batches[-1]) >= 32:
+            batches.append([])
+
+        batches[-1].append(d)
+
+    print(len(batches))
+
+    # input, label = zip(*data[0])
+    # print(type(np.array(input)))
+    # print(type(np.array(label)))
     # print(data[0])
 
-    model = UTTT_Model()
-    model.load_state_dict(torch.load("./ModelInstances/uttt_model1"))
-    model.eval()
+    model = UTTT_Model("./ModelInstances/uttt_genetic4_model1")
 
 
 
-    criterion = torch.nn.MSELoss()
+    criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-
+    epochs = 2
     running_loss = 0.0
-    for i, d in enumerate(data):
-        # get the inputs
-        input, label = zip(*d)
+    for epoch in range(epochs):
+        for i, batch in enumerate(batches):
+            # get the inputs
+            input, label = zip(*batch)
 
-        input_tensor = torch.from_numpy(np.array(input))
-        # output_tensor = torch.tensor(np.array(label)).long()
-        output_tensor = torch.from_numpy(np.array(label))
-        # output_tensor = torch.autograd.Variable(torch.tensor(np.array(label)).long(), requires_grad = False)
+            input_tensor = torch.from_numpy(np.array(input))
+            # output_tensor = torch.tensor(np.array(label)).long()
+            output_tensor = torch.from_numpy(np.array(label))
+            # output_tensor = torch.autograd.Variable(torch.tensor(np.array(label)).long(), requires_grad = False)
 
-        # zero the parameter gradients
-        optimizer.zero_grad()
+            # zero the parameter gradients
+            optimizer.zero_grad()
 
-        # forward + backward + optimize
-        outputs = model.forward(input_tensor)
-        loss = criterion(outputs, output_tensor)
-        loss.backward()
-        optimizer.step()
+            # forward + backward + optimize
+            outputs = model.forward(input_tensor)
+            loss = criterion(outputs, output_tensor)
+            loss.backward()
+            optimizer.step()
 
-        # print statistics
-        running_loss += loss.item()
-        if i % 25 == 0:  # print every 2000 mini-batches
-            print('loss:  {0}'.format(running_loss / 25))
-            running_loss = 0.0
+            # print statistics
+            running_loss += loss.item()
+            if i % 25 == 0:  # print every 2000 mini-batches
+                print('loss:  {0}'.format(running_loss / 25))
+                running_loss = 0.0
 
-    torch.save(model.state_dict(), "./ModelInstances/uttt_model1_trained")
+    torch.save(model.state_dict(), "./ModelInstances/uttt_genetic4_model1")
