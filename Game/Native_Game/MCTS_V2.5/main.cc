@@ -4,13 +4,13 @@
 #include <iostream>
 #include <memory>
 // #include <mutex>
-#include <sstream>
-#include <string>
-// #include <thread>
 #include <array>
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
+#include <string>
+#include <thread>
 #include <utility>
 #include "Board.h"
 #include "Game.h"
@@ -20,7 +20,7 @@ using namespace std;
 
 // std::mutex m;
 // std::condition_variable cv;
-Node* game = nullptr;
+// Node* game = nullptr;
 // bool playInBackground = false;
 
 // void backgroundPlay(Node* game, bool& continuePlaying) {
@@ -61,20 +61,20 @@ void analyze() {
     }
 }
 
-Node* AI_move(Node* node, int iterations) { // double thinkingTime
-    cout << "    Player " << (node->getPlayer() == P1 ? P2 : P1) << " getting move" << endl;
-    Move move = getMove(node, iterations-node->getNumVisits()); // thinkingTime
-    cout << "    Search Space Size:  " << node->getNumVisits() << endl;
-    cout << "    G:  " << move.first << "     L:  " << move.second << endl;
+Node* AI_move(Node* node, int iterations, std::ostream& logout=cout) {  // double thinkingTime
+    logout << "    Player " << (node->getPlayer() == P1 ? P2 : P1) << " getting move" << endl;
+    Move move = getMove(node, iterations - node->getNumVisits());  // thinkingTime
+    logout << "    Search Space Size:  " << node->getNumVisits() << endl;
+    logout << "    G:  " << move.first << "     L:  " << move.second << endl;
     node->setChild(move);
     node = node->getChildren().back().get();
-    cout << "    W:  " << node->getNumWins() << "    V:  " << node->getNumVisits() << endl;
-    cout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl << endl;
+    logout << "    W:  " << node->getNumWins() << "    V:  " << node->getNumVisits() << endl;
+    logout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl << endl;
     return node;
 }
 
-void selfPlay() {
-    game = new Node();
+void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
+    // game = new Node();
     try {
         while (game->getWinner() == N) {
             // Board2D board = make_Board2D();
@@ -83,27 +83,51 @@ void selfPlay() {
             // game->buildQuadrant(quadrants);
             // print(cout, board, quadrants);
 
-            game = AI_move(game, 2000000);
+            game = AI_move(game, 2000000, logout);
         }
-        cout << "    Winner:  " << game->getWinner() << endl;
+        logout << "    Winner:  " << game->getWinner() << endl;
         // Board2D board = make_Board2D();
         // game->buildBoard2D(board);
         // cout << board;
         // game->printTrace(cout) << endl;
 
-        std::ofstream outfile;
-        outfile.open("RecordedGames.txt", std::ios_base::app);
-        game->printTrace(outfile) << endl;
+        game->printTrace(recordout) << endl;
 
     } catch (...) {
-        cerr << "Failed to complete game" << endl;
+        logout << "Failed to complete game" << endl;
     }
-    delete game;
+}
+
+void iterateSelfPlay(const string& logPath, const string& recordPath) {
+    
+    std::ofstream logout;
+    logout.open(logPath, std::ios_base::app);
+
+    std::ofstream recordout;
+    recordout.open(recordPath, std::ios_base::app);
+
+    int iteration = 1;
+    while (true) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                logout << "Iteration " << iteration << ":" << endl;
+
+                Node* node = new Node();
+                Node* game = node;
+                game->setChild(Move{i, j});
+                game = game->getChild(0).get();
+                selfPlay(game, logout, recordout);
+                delete node;
+
+                ++iteration;
+            }
+        }
+    }
 }
 
 void play() {
-    game = new Node();
-    select(game);
+    Node* node = new Node();
+    Node* game = node;
     string s;
     try {
         int player = 0;
@@ -188,15 +212,17 @@ void play() {
     } catch (const char* s) {
         cerr << s << endl;
     }
-    delete game;
+    delete node;
 }
 
 int main(int argc, char** argv) {
-    try{
+    try {
         srand(time(NULL));
 
         bool analysis = false;
         bool selfplay = false;
+        string logPath;
+        string recordPath;
         for (int i = 0; i < argc; ++i) {
             string arg{argv[i]};
             if (arg == "-a") {
@@ -204,16 +230,25 @@ int main(int argc, char** argv) {
                 break;
             } else if (arg == "-s") {
                 selfplay = true;
+                if (i+2 >= argc){
+                    cerr << "No paths supplied" << endl;
+                    return 1;
+                }
+                logPath = string{argv[i+1]};
+                recordPath = string{argv[i+2]};
+
                 break;
             }
         }
         if (analysis) {
             analyze();
         } else if (selfplay) {
-            for (int i = 1; true; ++i){
-                cout << "Iteration " << i << ":" << endl;
-                selfPlay();
-            }
+            iterateSelfPlay(logPath, recordPath);
+            // std::thread t1(iterateSelfPlay, "Thread1_log.txt");
+            // std::thread t2(iterateSelfPlay, "Thread2_log.txt");
+            
+            // t1.join();
+            // t2.join();
         } else {
             // Board2D board = make_Board2D();
             // Quadrant quadrants = make_Quadrant();
@@ -225,6 +260,7 @@ int main(int argc, char** argv) {
 
             play();
         }
-    }catch(...){}
+    } catch (...) {
+    }
     return 0;
 }

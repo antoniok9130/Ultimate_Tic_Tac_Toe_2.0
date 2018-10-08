@@ -34,8 +34,8 @@ class Node {
     // Node(const Node& other);
 
     // Node(Node* parent = nullptr, bool initialize = true);
-    Node(int moveGlobal, int moveLocal, Node* parent = nullptr, bool initialize = true);
-    Node(const Move& move, Node* parent = nullptr, bool initialize = true);
+    Node(const int& moveGlobal, const int& moveLocal, Node* parent, const bool& initialize = true);
+    Node(const Move& move, Node* parent = nullptr, const bool& initialize = true);
 
     void init();
 

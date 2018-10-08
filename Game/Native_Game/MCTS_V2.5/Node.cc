@@ -28,9 +28,9 @@ Node::Node() {}
 //       initialized{true},
 //       moveSet{false} {}
 
-Node::Node(int moveGlobal, int moveLocal, Node* parent, bool initialize)
-    : Node{Move{std::move(moveGlobal), std::move(moveLocal)}, parent, initialize} {}
-Node::Node(const Move& move, Node* parent, bool initialize)
+Node::Node(const int& moveGlobal, const int& moveLocal, Node* parent, const bool& initialize)
+    : Node{Move{moveGlobal, moveLocal}, parent, initialize} {}
+Node::Node(const Move& move, Node* parent, const bool& initialize)
     : winner{parent ? parent->winner : N},
       player{parent ? (parent->player == P1 ? P2 : P1) : P1},
       length{parent ? (parent->length + 1) : 1},
@@ -162,18 +162,23 @@ vector<unique_ptr<Node>>& Node::getChildren() { return children; }
 unique_ptr<Node>& Node::getChild(const int& i) { return children[i]; }
 void Node::addChild(unique_ptr<Node>& move) { children.emplace_back(std::move(move)); }
 void Node::setChild(const Move& move) {
-	for (auto& child : children){
-		if (child->move->first == move.first && child->move->second == move.second){
-			Node* moveChild = child.get();
-			child.release();
-			children.clear();
-			children.emplace_back(unique_ptr<Node>(moveChild));
-			return;
-		}
-	}
-	ostringstream err;
-	err << "Could not find child with move:  " << move.first << " " << move.second;
-	throw err.str();
+    for (auto& child : children) {
+        if (child->move->first == move.first && child->move->second == move.second) {
+            Node* moveChild = child.get();
+            child.release();
+            children.clear();
+            children.emplace_back(unique_ptr<Node>(moveChild));
+            return;
+        }
+    }
+    if (isLegal(move)) {
+        children.clear();
+        children.emplace_back(make_unique<Node>(move.first, move.second, this, true));
+        return;
+    }
+    ostringstream err;
+    err << "Could not find child with move:  " << move.first << " " << move.second;
+    throw err.str();
 }
 
 void Node::buildQuadrant(Quadrant& array) {
@@ -223,7 +228,6 @@ std::ostream& Node::printTrace(std::ostream& out) {
 //     out << node.getBoard() << endl;
 //     return out;
 // }
-
 
 // Node* Node_new() { return new Node(); }
 // void Node_delete(Node* node) { delete node; }
