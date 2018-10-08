@@ -1,1 +1,1 @@
-Game.o: Game.cc Game.h board.h Node.h Board.h
+Game.o: Game.cc Game.h Board.h Node.h
