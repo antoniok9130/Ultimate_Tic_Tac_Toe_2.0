@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 import numpy as np
 import random
 
@@ -13,86 +14,58 @@ class UTTT_Model(torch.nn.Module):
 
         super(UTTT_Model, self).__init__()
 
-        D_in = 180
-        # D_h1 = 80 # 120
-        # D_h2 = 2 # 80
-        D_out = 2
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=16, kernel_size=2).double()
+        self.pool = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=16, out_channels=64, kernel_size=3).double()
+        self.fc1 = torch.nn.Linear(64 * 2 * 2, 128).double()
+        self.fc2 = torch.nn.Linear(128, 64).double()
+        self.fc3 = torch.nn.Linear(64, 2).double()
         
-        self.linear1 = torch.nn.Linear(D_in, D_out).double()
-        self.relu1   = torch.nn.ReLU()
-        # self.linear2_1 = torch.nn.Linear(D_h1, D_h2).double()
-        # self.linear2_2 = torch.nn.Linear(D_h1, D_h2).double()
-        # self.linear2_3 = torch.nn.Linear(D_h1, D_h2).double()
-        # self.relu2   = torch.nn.ReLU()
-        # self.linear3_1 = torch.nn.Linear(D_h2, D_out).double()
-        # self.linear3_2 = torch.nn.Linear(D_h2, D_out).double()
-        # self.linear3_3 = torch.nn.Linear(D_h2, D_out).double()
-        # self.relu3   = torch.nn.ReLU()
         self.softmax = torch.nn.Softmax(dim=-1)
+
 
         if state_dict_path is not None:
             self.load_state_dict(torch.load(state_dict_path))
             self.eval()
-
-        else:
-            def init_weights(layer):
-                if type(layer) == torch.nn.Linear:
-                    torch.nn.init.xavier_normal_(layer.weight)
-                    layer.bias.data.fill_(0.01)
-
-            self.apply(init_weights)
 
     
     def save_weights(self, state_dict_path):
         torch.save(self.state_dict(), state_dict_path)
 
 
-    def forward(self, input):
-        out = self.linear1(input)
-        out = self.relu1(out)
+    def forward(self, x):
 
-        # choice = random.randint(0, 2)
-        # if choice == 0:
-        #     out = self.linear2_1(out)
-        # elif choice == 1:
-        #     out = self.linear2_2(out)
-        # else:
-        #     out = self.linear2_3(out)
+        x = self.pool(F.relu(self.conv1(x)))
+        x = F.relu(self.conv2(x))
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
 
-        # out = self.relu2(out)
+        return self.softmax(x)
 
-        # choice = random.randint(0, 2)
-        # if choice == 0:
-        #     out = self.linear3_1(out)
-        # elif choice == 1:
-        #     out = self.linear3_2(out)
-        # else:
-        #     out = self.linear3_3(out)
+    def predict(self, x):
 
-        # out = self.relu3(out)
-
-        return self.softmax(out)
+        return self.forward(x).detach().numpy()[0]
 
 
 if __name__ == "__main__":
 
-    tensor = torch.tensor([1.]*180, dtype=torch.double)
+    tensor = torch.tensor(torch.from_numpy(np.random.rand(1, 1, 9, 9)), dtype=torch.double)
 
     model1 = UTTT_Model()
 
-    print(model1.forward(tensor))
-    print(model1.forward(tensor).detach().numpy())
-    print(list(model1.parameters())[0])
+    print(model1.predict(tensor))
+    # print(list(model1.parameters())[0][0])
 
-    model1.save_weights("./ModelInstances/uttt_genetic4_model1")
+    model1.save_weights("./ModelInstances/uttt_conv1_model")
 
-    model2 = UTTT_Model()
+    # model2 = UTTT_Model()
 
-    print(model2.forward(tensor))
-    print(model2.forward(tensor).detach().numpy())
-    print(list(model2.parameters())[0])
+    # print(model2.forward(tensor))
+    # # print(list(model2.parameters())[0][0])
 
-    model2.save_weights("./ModelInstances/uttt_genetic4_model2")
+    # model2.save_weights("./ModelInstances/uttt_conv1_model2")
 
     # output_tensor = torch.from_numpy(np.array([0.5, 0.5]))
     

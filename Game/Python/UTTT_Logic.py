@@ -3,11 +3,16 @@ import sys
 
 import numpy as np
 
+# P1 = 1
+# P2 = 2
+# N = 0
+# T = -1
+# B = 3 # Note that (P1 | P2) == B
+
 P1 = 1
-P2 = 2
+P2 = -1
 N = 0
-T = -1
-B = 3 # Note that (P1 | P2) == B
+T = -2
 
 triple0 = ((1, 2), (3, 6))
 triple4 = ((3, 5), (1, 7), (0, 8), (2, 6))
