@@ -127,10 +127,12 @@ with open("./Data/RecordedGames.txt") as recordedGames:
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-    epochs = 2
+    epochs = 30
+    iteration_length = 300
     iteration = 0
     running_loss = 0.0
     for epoch in range(epochs):
+        print("Epoch:  ", epoch+1)
         for _input_, _label_ in zip(training_inputs, training_labels):
             input_tensor = torch.from_numpy(_input_).to(device)
             label_tensor = torch.from_numpy(_label_).to(device)
@@ -144,8 +146,8 @@ with open("./Data/RecordedGames.txt") as recordedGames:
             running_loss += loss.item()
 
             iteration += 1
-            if iteration >= 150:
-                print("Loss:  ", running_loss/150)
+            if iteration >= iteration_length:
+                print("    Loss:  ", running_loss/iteration_length)
                 running_loss = 0.0
                 iteration = 0
 
