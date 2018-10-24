@@ -11,7 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/weka.jar!/" />
+          <root url="jar://$MODULE_DIR$/Ultimate Tic Tac Toe.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

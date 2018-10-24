@@ -20,7 +20,7 @@ class UTTT_Node:
         self.moveSet = False
 
         if parent is None:
-            self.player = P1
+            self.player = N
             self.length = 1
             self.initialized = True
 
@@ -109,6 +109,9 @@ class UTTT_Node:
     
     def getNextQuadrant(self):
         return self.nextQuadrant
+
+    def getCapturedQuadrant(self):
+        return self.capturedQuadrant
 
 
     def __len__(self):

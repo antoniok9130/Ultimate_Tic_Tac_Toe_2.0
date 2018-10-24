@@ -104,9 +104,9 @@ public class MCTS_Game {
     }
     public static int[] getMove(final MCTS_Node node, int numIterations) {
         int AIPlayer = node.getPlayer() == P1 ? P2 : P1;
-        Tools.Pair<Boolean, int[]> pair = MCTS_Logic.isPotentialWin(node, AIPlayer);
-        if (pair.a){
-            return pair.b;
+        int[] move = MCTS_Logic.isPotentialWin(node, AIPlayer);
+        if (move != null){
+            return move;
         }
 
 

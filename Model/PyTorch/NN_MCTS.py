@@ -12,7 +12,7 @@ from NN_MCTS_Node import *
 
 
 def board_to_input(board):
-    array = np.zeros(180, dtype=np.double)
+    array = np.zeros(81, dtype=np.double)
 
     for i in range(9):
         for j in range(9):
@@ -21,16 +21,9 @@ def board_to_input(board):
             if spot == P1:
                 array[9*i+j] = 1.
             elif spot == P2:
-                array[90+9*i+j] = 1.
+                array[9*i+j] = -1.
 
-        quadrant = check3InRow(board[i])
-
-        if quadrant == P1:
-            array[81+i] = 1.
-        elif quadrant == P2:
-            array[171+i] = 1.
-
-    return array
+    return np.reshape(array, (-1, 1, 9, 9))
 
 class NN_MCTS:
     def __init__(self, model1=None, model2=None):
@@ -49,7 +42,7 @@ class NN_MCTS:
 
         self.player = None
 
-    def getMove(self, node, iterations=1600):
+    def getMove(self, node, iterations=3200):
         AIPlayer = P2 if node.getPlayer() == P1 else P1
         self.player = AIPlayer
         quadrants = np.zeros(9, dtype=int)
@@ -172,10 +165,10 @@ class NN_MCTS:
         input_tensor = torch.from_numpy(board_to_input(board))
 
         if self.player == P1:
-            return list(self.model1.forward(input_tensor).detach().numpy())
+            return list(self.model1.predict(input_tensor))
 
         else:
-            return list(self.model2.forward(input_tensor).detach().numpy())
+            return list(self.model2.predict(input_tensor))
 
 
 

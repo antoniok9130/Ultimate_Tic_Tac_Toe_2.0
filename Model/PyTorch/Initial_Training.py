@@ -35,7 +35,6 @@ T = 0
 
 #     return array
 
-
 data = []
 
 with open("./Data/RecordedGames.txt") as recordedGames:
@@ -45,6 +44,7 @@ with open("./Data/RecordedGames.txt") as recordedGames:
         game = list(recordedGame.strip())
 
         board = np.zeros((9, 9))
+        state = np.zeros((2, 9, 9))
 
         i = 0
         player = N
@@ -56,8 +56,9 @@ with open("./Data/RecordedGames.txt") as recordedGames:
             l = int(game[i+1])
 
             board[g][l] = player
+            state[0 if player == P1 else 1][g][l] = 1
 
-            game_data.append((np.copy(board), i))
+            game_data.append((np.copy(state), i))
 
             i += 2
 
@@ -76,95 +77,99 @@ with open("./Data/RecordedGames.txt") as recordedGames:
                 expected = [0.5, 0.5]
 
             data.append((state, expected))
-            data.append((np.rot90(state), expected))
-            data.append((np.rot90(np.rot90(state)), expected))
-            data.append((np.rot90(np.rot90(np.rot90(state))), expected))
+            data.append((np.rot90(state, axes=(-2,-1)), expected))
+            data.append((np.rot90(state, k=2, axes=(-2,-1)), expected))
+            data.append((np.rot90(state, k=3, axes=(-2,-1)), expected))
             data.append((np.fliplr(state), expected))
             data.append((np.rot90(np.fliplr(state)), expected))
-            data.append((np.rot90(np.rot90(np.fliplr(state))), expected))
-            data.append((np.rot90(np.rot90(np.rot90(np.fliplr(state)))), expected))
-
-    shuffle(data)
-
-    batch_size = 32
-    training_inputs = [[]]
-    training_labels = [[]]
-    test_inputs = []
-    test_labels = []
-
-    for _input_, _label_ in data:
-        if len(test_inputs) < len(data)*0.2:
-            test_inputs.append(_input_)
-            test_labels.append(0 if _label_[0] > _label_[1] else 1)
-        
-        else:
-            if len(training_inputs[-1]) >= batch_size:
-                training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
-                training_labels[-1] = np.array(training_labels[-1])
-                training_inputs.append([])
-                training_labels.append([])
-
-            training_inputs[-1].append(_input_)
-            training_labels[-1].append(_label_)
-
-    training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
-    training_labels[-1] = np.array(training_labels[-1])
-
-    test_inputs = np.reshape(test_inputs, (-1, 1, 9, 9))
-    test_labels = np.array(test_labels)
-
-    print("Number of Data points:        ", len(data))
-    print("Number of Training batches:   ", len(training_inputs))
-    print("Number of Test Points:        ", len(test_inputs))
-    print()
+            data.append((np.rot90(np.fliplr(state), k=2, axes=(-2,-1)), expected))
+            data.append((np.rot90(np.fliplr(state), k=3, axes=(-2,-1)), expected))
 
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print("Training on:  ", device)
+shuffle(data)
 
-    model = UTTT_Model("./ModelInstances/uttt_conv1_model").to(device)
+batch_size = 32
+training_inputs = [[]]
+training_labels = [[]]
+test_inputs = []
+test_labels = []
 
-    criterion = torch.nn.BCELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+for _input_, _label_ in data:
+    if len(test_inputs) < len(data)*0.15:
+        test_inputs.append(_input_)
+        test_labels.append(0 if _label_[0] > _label_[1] else 1)
+    
+    else:
+        if len(training_inputs[-1]) >= batch_size:
+            training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 2, 9, 9))
+            # training_inputs[-1] = np.array(training_inputs[-1])
+            training_labels[-1] = np.array(training_labels[-1])
+            training_inputs.append([])
+            training_labels.append([])
 
-    epochs = 30
-    iteration_length = 300
-    iteration = 0
-    running_loss = 0.0
-    for epoch in range(epochs):
-        print("Epoch:  ", epoch+1)
-        for _input_, _label_ in zip(training_inputs, training_labels):
-            input_tensor = torch.from_numpy(_input_).to(device)
-            label_tensor = torch.from_numpy(_label_).to(device)
+        training_inputs[-1].append(_input_)
+        training_labels[-1].append(_label_)
 
-            optimizer.zero_grad()
+training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 2, 9, 9))
+# training_inputs[-1] = np.array(training_inputs[-1])
+training_labels[-1] = np.array(training_labels[-1])
 
-            outputs = model.forward(input_tensor)
-            loss = criterion(outputs, label_tensor)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
+test_inputs = np.reshape(test_inputs, (-1, 2, 9, 9))
+# test_inputs = np.array(test_inputs)
+test_labels = np.array(test_labels)
 
-            iteration += 1
-            if iteration >= iteration_length:
-                print("    Loss:  ", running_loss/iteration_length)
-                running_loss = 0.0
-                iteration = 0
+print("Number of Data points:        ", len(data))
+print("Number of Training batches:   ", len(training_inputs))
+print("Number of Test Points:        ", len(test_inputs))
+print()
 
-    model = model.cpu()
 
-    model.save_weights("./ModelInstances/uttt_conv1_model")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print("Training on:  ", device)
 
-    correct = 0
-    with torch.no_grad():
-        input_tensor = torch.from_numpy(test_inputs)
-        label_tensor = torch.from_numpy(test_labels).long()
+model = UTTT_Model("./ModelInstances/uttt_conv1_model").to(device)
+
+criterion = torch.nn.BCELoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+
+epochs = 40
+iteration_length = 400
+iteration = 0
+running_loss = 0.0
+for epoch in range(epochs):
+    print("Epoch:  ", epoch+1)
+    for _input_, _label_ in zip(training_inputs, training_labels):
+        input_tensor = torch.from_numpy(_input_).to(device)
+        label_tensor = torch.from_numpy(_label_).to(device)
+
+        optimizer.zero_grad()
 
         outputs = model.forward(input_tensor)
-        print(input_tensor.shape)
-        print(outputs.shape)
-        print(label_tensor.shape)
-        _, predicted = torch.max(outputs.data, 1)
-        correct += (predicted == label_tensor).sum().item()
+        loss = criterion(outputs, label_tensor)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
 
-    print("Accuracy:   ", correct/len(test_inputs))
+        iteration += 1
+        if iteration >= iteration_length:
+            print("    Loss:  ", running_loss/iteration_length)
+            running_loss = 0.0
+            iteration = 0
+
+model = model.cpu()
+
+model.save_weights("./ModelInstances/uttt_conv1_model")
+
+correct = 0
+with torch.no_grad():
+    input_tensor = torch.from_numpy(test_inputs)
+    label_tensor = torch.from_numpy(test_labels).long()
+
+    outputs = model.forward(input_tensor)
+    print(input_tensor.shape)
+    print(outputs.shape)
+    print(label_tensor.shape)
+    _, predicted = torch.max(outputs.data, 1)
+    correct += (predicted == label_tensor).sum().item()
+
+print("Accuracy:   ", correct/len(test_inputs))

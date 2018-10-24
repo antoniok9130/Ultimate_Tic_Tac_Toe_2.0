@@ -108,6 +108,9 @@ public class UTTT_Logic {
     public static boolean getRandomBoolean(){
         return fastrand.nextBoolean();
     }
+    public static int getRandomInt(int i){
+        return fastrand.nextInt(i);
+    }
 
     private static final String verticalSpace = "     │   │    ║    │   │    ║    │   │    ";
     private static final String verticalDivide = "  ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── ";

@@ -14,7 +14,7 @@ class UTTT_Model(torch.nn.Module):
 
         super(UTTT_Model, self).__init__()
 
-        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=16, kernel_size=2).double()
+        self.conv1 = torch.nn.Conv2d(in_channels=2, out_channels=16, kernel_size=2).double()
         self.pool = torch.nn.MaxPool2d(kernel_size=2, stride=2)
         self.conv2 = torch.nn.Conv2d(in_channels=16, out_channels=64, kernel_size=3).double()
         self.fc1 = torch.nn.Linear(64 * 2 * 2, 128).double()
@@ -51,7 +51,7 @@ class UTTT_Model(torch.nn.Module):
 
 if __name__ == "__main__":
 
-    tensor = torch.tensor(torch.from_numpy(np.random.rand(1, 1, 9, 9)), dtype=torch.double)
+    tensor = torch.tensor(torch.from_numpy(np.random.rand(1, 2, 9, 9)), dtype=torch.double)
 
     model1 = UTTT_Model()
 

@@ -37,7 +37,7 @@ public class UTTT_MCTS extends Application {
 
             @Override
             protected int[] get_AI_move() {
-                return MCTS_Game.getMove(game, (long)(difficulty*1000));
+                return MCTS_Game.getMove(game, 2000000);
             }
         };
         uttt_app.start();

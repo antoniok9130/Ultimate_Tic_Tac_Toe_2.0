@@ -97,23 +97,25 @@ public class MCTS_Game {
 //
 //    private static int numTasks = 0;
 
-    public static int[] getMove(final MCTS_Node node){
-        return getMove(node, 5000); // 3 seconds
-    }
-    public static int[] getMove(final MCTS_Node node, long thinkingTime) {
-        int AIPlayer = node.getPlayer() == P1 ? P2 : P1;
-        Tools.Pair<Boolean, int[]> pair = MCTS_Logic.isPotentialWin(node, AIPlayer);
-        if (pair.a){
-            return pair.b;
-        }
 
-        long end = System.currentTimeMillis()+thinkingTime;
-        while (System.currentTimeMillis() < end){
-            select(node); select(node); select(node);
-            select(node); select(node); select(node);
-            select(node); select(node); select(node);
-            select(node); select(node); select(node);
-            select(node); select(node); select(node);
+    public static int[] getMove(final MCTS_Node node){
+        return getMove(node, 1000000); // 3 seconds
+    }
+    public static int[] getMove(final MCTS_Node node, int iterations) {
+        int AIPlayer = node.getPlayer() == P1 ? P2 : P1;
+        int[] move = MCTS_Logic.isPotentialWin(node, AIPlayer);
+        if (move != null){
+            return move;
+        }
+        if (node.length() == 1){
+            move = getPreAnalyzedMove(node.getMove());
+            node.setChild(move);
+            iterations /= 2;
+        }
+        iterations -= node.numVisits();
+        System.out.println("Num Iterations:  "+iterations);
+        for (int i = 0; i<iterations; ++i){
+            select(node);
         }
         if (node.numVisits() == 0){
             throw new NullPointerException("No Move found...");
