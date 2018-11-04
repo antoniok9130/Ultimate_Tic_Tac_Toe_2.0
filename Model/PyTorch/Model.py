@@ -14,12 +14,12 @@ class UTTT_Model(torch.nn.Module):
 
         super(UTTT_Model, self).__init__()
 
-        self.conv1 = torch.nn.Conv2d(in_channels=2, out_channels=16, kernel_size=2).double()
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=16, kernel_size=2).double()
         self.pool = torch.nn.MaxPool2d(kernel_size=2, stride=2)
         self.conv2 = torch.nn.Conv2d(in_channels=16, out_channels=64, kernel_size=3).double()
         self.fc1 = torch.nn.Linear(64 * 2 * 2, 128).double()
-        self.fc2 = torch.nn.Linear(128, 64).double()
-        self.fc3 = torch.nn.Linear(64, 2).double()
+        self.fc2 = torch.nn.Linear(128, 81).double()
+        # self.fc3 = torch.nn.Linear(64, 2).double()
         
         self.softmax = torch.nn.Softmax(dim=-1)
 
@@ -40,7 +40,7 @@ class UTTT_Model(torch.nn.Module):
         x = x.view(-1, 16 * 4 * 4)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        # x = self.fc3(x)
 
         return self.softmax(x)
 
@@ -51,14 +51,14 @@ class UTTT_Model(torch.nn.Module):
 
 if __name__ == "__main__":
 
-    tensor = torch.tensor(torch.from_numpy(np.random.rand(1, 2, 9, 9)), dtype=torch.double)
+    tensor = torch.tensor(torch.from_numpy(np.random.rand(1, 1, 9, 9)), dtype=torch.double)
 
     model1 = UTTT_Model()
 
     print(model1.predict(tensor))
     # print(list(model1.parameters())[0][0])
 
-    model1.save_weights("./ModelInstances/uttt_conv1_model")
+    model1.save_weights("./ModelInstances/policy1_model")
 
     # model2 = UTTT_Model()
 
