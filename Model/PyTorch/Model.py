@@ -58,7 +58,7 @@ if __name__ == "__main__":
     print(model1.predict(tensor))
     # print(list(model1.parameters())[0][0])
 
-    model1.save_weights("./ModelInstances/policy1_model")
+    model1.save_weights("./ModelInstances/policy1/policy1_model")
 
     # model2 = UTTT_Model()
 

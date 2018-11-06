@@ -1,6 +1,7 @@
 
 import sys
 sys.path.append("..\..\Game\Python")
+import subprocess as sp
 
 import numpy as np
 import torch
@@ -62,17 +63,33 @@ with open("./Data/RecordedGames.txt") as recordedGames:
     
         for state, move in game_data:
 
+            # expected = np.zeros((9, 9), dtype=np.long)
+            # expected[move[0]][move[1]] = 1
+
+            # data.append((state, expected))
+            # data.append((np.rot90(state), np.rot90(expected)))
+            # data.append((np.rot90(state, k=2), np.rot90(expected, k=2)))
+            # data.append((np.rot90(state, k=3), np.rot90(expected, k=3)))
+            # data.append((np.fliplr(state), np.fliplr(expected)))
+            # data.append((np.rot90(np.fliplr(state)), np.rot90(np.fliplr(expected))))
+            # data.append((np.rot90(np.fliplr(state), k=2), np.rot90(np.fliplr(expected), k=2)))
+            # data.append((np.rot90(np.fliplr(state), k=3), np.rot90(np.fliplr(expected), k=3)))
+
+
             expected = np.zeros((9, 9))
             expected[move[0]][move[1]] = 1
 
-            data.append((state, expected))
-            data.append((np.rot90(state), np.rot90(expected)))
-            data.append((np.rot90(state, k=2), np.rot90(expected, k=2)))
-            data.append((np.rot90(state, k=3), np.rot90(expected, k=3)))
-            data.append((np.fliplr(state), np.fliplr(expected))
-            data.append((np.rot90(np.fliplr(state)), np.rot90(np.fliplr(expected))))
-            data.append((np.rot90(np.fliplr(state), k=2), np.rot90(np.fliplr(expected), k=2)))
-            data.append((np.rot90(np.fliplr(state), k=3), np.rot90(np.fliplr(expected), k=3)))
+            def transform(var):
+                return np.reshape(var, (81,)).argmax()
+
+            data.append((state, transform(expected)))
+            data.append((np.rot90(state), transform(np.rot90(expected))))
+            data.append((np.rot90(state, k=2), transform(np.rot90(expected, k=2))))
+            data.append((np.rot90(state, k=3), transform(np.rot90(expected, k=3))))
+            data.append((np.fliplr(state), transform(np.fliplr(expected))))
+            data.append((np.rot90(np.fliplr(state)), transform(np.rot90(np.fliplr(expected)))))
+            data.append((np.rot90(np.fliplr(state), k=2), transform(np.rot90(np.fliplr(expected), k=2))))
+            data.append((np.rot90(np.fliplr(state), k=3), transform(np.rot90(np.fliplr(expected), k=3))))
 
 
 shuffle(data)
@@ -89,15 +106,18 @@ for _input_, _label_ in data:
         test_labels.append(_label_)
     
     else:
-        training_inputs[-1].append(_input_)
-        training_labels[-1].append(_label_)
-
         if len(training_inputs[-1]) >= batch_size:
             training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
             training_labels[-1] = np.array(training_labels[-1])
             training_inputs.append([])
             training_labels.append([])
 
+        training_inputs[-1].append(_input_)
+        training_labels[-1].append(_label_)
+
+
+training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
+training_labels[-1] = np.array(training_labels[-1])
 
 test_inputs = np.reshape(test_inputs, (-1, 1, 9, 9))
 # test_inputs = np.array(test_inputs)
@@ -112,15 +132,18 @@ print()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Training on:  ", device)
 
-model = UTTT_Model("./ModelInstances/uttt_conv1_model").to(device)
+model_name = "policy1/policy1_model"
+
+model = UTTT_Model(f"./ModelInstances/{model_name}").to(device)
 
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-epochs = 30
+epochs = 300
 iteration_length = 400
 iteration = 0
 running_loss = 0.0
+latest_loss = 0
 for epoch in range(epochs):
     print("Epoch:  ", epoch+1)
     for _input_, _label_ in zip(training_inputs, training_labels):
@@ -137,24 +160,25 @@ for epoch in range(epochs):
 
         iteration += 1
         if iteration >= iteration_length:
-            print("    Loss:  ", running_loss/iteration_length)
+            latest_loss = running_loss/iteration_length
+            print("    Loss:  ", latest_loss)
             running_loss = 0.0
             iteration = 0
 
-model = model.cpu()
+    model.cpu().save_weights(f"./ModelInstances/{model_name}_epoch_{epoch}")
+    
+    correct = 0
+    with torch.no_grad():
+        input_tensor = torch.from_numpy(test_inputs)
+        label_tensor = torch.from_numpy(test_labels).long()
 
-model.save_weights("./ModelInstances/uttt_conv1_model")
+        outputs = model.cpu().forward(input_tensor)
+        _, predicted = torch.max(outputs.data, 1)
+        correct += (predicted == label_tensor).sum().item()
 
-correct = 0
-with torch.no_grad():
-    input_tensor = torch.from_numpy(test_inputs)
-    label_tensor = torch.from_numpy(test_labels).long()
+    accuracy = correct/len(test_inputs)
+    print("Accuracy:   ", accuracy)
 
-    outputs = model.forward(input_tensor)
-    print(input_tensor.shape)
-    print(outputs.shape)
-    print(label_tensor.shape)
-    _, predicted = torch.max(outputs.data, 1)
-    correct += (predicted == label_tensor).sum().item()
-
-print("Accuracy:   ", correct/len(test_inputs))
+    sp.call(f"echo \"Epoch {epoch}:\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
+    sp.call(f"echo \"    Loss:      {latest_loss}\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
+    sp.call(f"echo \"    Accuracy:  {accuracy}\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
