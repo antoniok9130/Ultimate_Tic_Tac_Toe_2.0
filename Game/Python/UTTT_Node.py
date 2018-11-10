@@ -7,7 +7,7 @@ class UTTT_Node:
     
     def __init__(self, move = None, parent = None, initialize = False):
         self.winner = N
-        self.player = N
+        # self.player = N
         self.nextQuadrant = -1
         self.capturedQuadrant = N
         self.length = 0
@@ -20,13 +20,13 @@ class UTTT_Node:
         self.moveSet = False
 
         if parent is None:
-            self.player = N
-            self.length = 1
+            # self.player = N
+            self.length = 0
             self.initialized = True
 
         else:
             self.winner = parent.winner
-            self.player = P2 if parent.player == P1 else P1
+            # self.player = P2 if parent.player == P1 else P1
             self.length = parent.length+1
 
             if move is not None and not self.capturedQuadrantEquals(move[1], True):
@@ -103,22 +103,22 @@ class UTTT_Node:
         return self.move[1]
 
     
-    def getWinner(self):
-        return self.winner
+    # def getWinner(self):
+    #     return self.winner
 
     
-    def getNextQuadrant(self):
-        return self.nextQuadrant
+    # def getNextQuadrant(self):
+    #     return self.nextQuadrant
 
-    def getCapturedQuadrant(self):
-        return self.capturedQuadrant
+    # def getCapturedQuadrant(self):
+    #     return self.capturedQuadrant
 
 
     def __len__(self):
         return self.length
 
-    def getPlayer(self):
-        return self.player
+    # def getPlayer(self):
+    #     return self.player
 
     def getParent(self):
         return self.parent
@@ -154,7 +154,10 @@ class UTTT_Node:
 
 
     
-    def buildQuadrant(self, array, quadrant = None):
+    def buildQuadrant(self, array=None, quadrant = None):
+        if array is None:
+            array = np.zeros(9)
+
         current = self
         if quadrant is None:
             while True:
@@ -169,25 +172,32 @@ class UTTT_Node:
         else:
             while True:
                 if current.move is not None and current.move[0] == quadrant:
-                    array[current.move[1]] = current.player
+                    array[current.move[1]] = 2-(current.length%2)
 
                 current = current.parent
 
                 if current is None:
                     break
 
+        return array
+
 
     
-    def buildBoard2D(self, array):
+    def buildBoard2D(self, array=None):
+        if array is None:
+            array = np.zeros((9, 9))
+
         current = self
         while True:
             if current.move is not None:
-                array[current.move[0]][current.move[1]] = current.player
+                array[current.move[0]][current.move[1]] = 2-(current.length%2)
 
             current = current.parent
 
             if current is None:
                 break
+
+        return array
 
 
 
