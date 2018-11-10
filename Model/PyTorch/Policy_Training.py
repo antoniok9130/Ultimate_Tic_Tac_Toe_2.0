@@ -29,10 +29,12 @@ optimizer = torch.optim.SGD(policy.parameters(), lr=0.005, momentum=0.9)
 running_loss = 0
 num_losses = 0
 
-start = current_time_milli()
-
+epoch = 1
 for i in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
     for j in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
+
+        start = current_time_milli()
+
         node = UTTT_Node()
 
         node.setChild((i, j))
@@ -59,7 +61,7 @@ for i in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
             inputs = []
             labels = []
             for i in best_children:
-                inputs.append(extract_features(node.getChild(i).buildQuadrant(), node.buildBoard2D()))
+                inputs.append(extract_features(node.getChild(i).buildQuadrant(), node.getChild(i).buildBoard2D()))
 
                 move = node.getChild(i).move
                 labels.append(np.array([9*move[0]+move[1]]))
@@ -80,10 +82,13 @@ for i in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
             node = node.getChild(0)
             
 
-end = current_time_milli()
+        end = current_time_milli()
 
-print("Time:  ", ((end-start)/1000.0))
-print("Loss:  ", (running_loss/num_losses))
+        print("Time:  ", ((end-start)/1000.0))
+        print("Loss:  ", (running_loss/num_losses))
 
+        running_loss = 0
+        num_losses = 0
 
-policy.save_weights(policy_name)
+        policy.save_weights(policy_name+"_epoch_"+epoch)
+        epoch += 1
