@@ -1,6 +1,6 @@
 from math import sqrt, log
 
-from UTTT_Node import *
+from ..Node import *
 
 
 class MCTS_Node(UTTT_Node):

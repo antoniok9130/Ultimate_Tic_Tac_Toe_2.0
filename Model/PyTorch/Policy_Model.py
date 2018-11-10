@@ -1,17 +1,13 @@
+
 import sys
-sys.path.append("..\..\Game\Python")
+sys.path.append("..\\..\\")
 
 import torch
 import torch.nn.functional as F
 import numpy as np
 import random
 
-from UTTT_Logic import *
-from UTTT_Node import *
-
-# import time
-#
-# current_time_milli = lambda: int(round(time.time() * 1000))
+from UTTT import *
 
 '''
 Policy Idea:
@@ -47,25 +43,25 @@ def extract_features(quadrants, board):
         P2 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
     ])
     features.extend([
-        P1 == board[i][j] for i in range(9) for j in range(9)
+        board[i][j] == P1 for i in range(9) for j in range(9)
     ])
     features.extend([
-        P2 == board[i][j] for i in range(9) for j in range(9)
+        board[i][j] == P2 for i in range(9) for j in range(9)
     ])
     features.extend([
-        P1 == board[i][j] == board[i][k] for i in range(9) for j in range(9) for k in range(9) if j < k
+        board[i][j] == board[i][k] == P1 for i in range(9) for j in range(9) for k in range(j)
     ])
     features.extend([
-        P2 == board[i][j] == board[i][k] for i in range(9) for j in range(9) for k in range(9) if j < k
+        board[i][j] == board[i][k] == P2 for i in range(9) for j in range(9) for k in range(j)
     ])
 
-    return np.array(features)*1
+    return np.array(features)*1.0
 
 
 
 class Policy_Model(torch.nn.Module):
 
-    def __init__(self, state_dict_path=None):
+    def __init__(self, state_dict_path=None, gamma = 0.95, exploreProb = 0):
 
         super(Policy_Model, self).__init__()
 
@@ -75,13 +71,16 @@ class Policy_Model(torch.nn.Module):
         
         self.softmax = torch.nn.Softmax(dim=-1)
 
+        self.gamma = gamma
+        self.exploreProb = exploreProb
+
 
         if state_dict_path is not None:
             self.load_state_dict(torch.load(state_dict_path))
             self.eval()
 
     
-    def save_weights(self, state_dict_path):
+    def save_weights(self, state_dict_path: str):
         torch.save(self.state_dict(), state_dict_path)
 
 
@@ -97,39 +96,23 @@ class Policy_Model(torch.nn.Module):
         return self.forward(torch.tensor(torch.from_numpy(x), dtype=torch.double)).detach().numpy()
 
 
-def compute_reward(state: UTTT_Node, policy: Policy_Model, explore_prob=0):
-    """
-    Parameters
-    ----------
-    state : UTTT_Node
-        The game state
-    """
-    winner = state.winner
-
-    quadrants = state.buildQuadrant()
-    board     = state.buildBoard2D()
-
-    move = state.move
-    player = 2-(state.length%2)
-
-    time_step = 0
-
-    while winner == N:        
-
+    def getMove(self, previousMove, quadrants, board):
         legal_moves = []
-        if move is not None and quadrants[move[1]] == N:
-            g = move[1]
+        if previousMove is not None and quadrants[previousMove[1]] == N:
+            g = previousMove[1]
             legal_moves = [9*g+l for l in range(9) if board[g][l] == N]
         
         else:
-            legal_moves = [9*g+l for g in range(9) for l in range(9) if board[g][l] == N]
+            legal_moves = [9*g+l for g in range(9) if quadrants[g] == N for l in range(9) if board[g][l] == N]
 
+        if len(legal_moves) <= 0:
+            raise Exception("No Legal Moves")
         
-        if random.random() < explore_prob:
+        if random.random() < self.exploreProb:
             move = random.choice(legal_moves)
 
         else:
-            action_probabilities = policy.predict(extract_features(quadrants, board))
+            action_probabilities = self.predict(extract_features(quadrants, board))
 
             max_prob = -1
             best_moves = []
@@ -142,24 +125,14 @@ def compute_reward(state: UTTT_Node, policy: Policy_Model, explore_prob=0):
                     best_moves.append(legal_move)
 
             move = random.choice(best_moves)
-                
-        g = int(move//9)
-        l = move%9
-        board[g][l] = player
 
-        move = (g, l)
+        return int(move//9), move%9
 
-        if check3InRowAt(board[g], l):
-            quadrants[g] = player
 
-            if check3InRowAt(quadrants, g):
-                winner = player
+def compute_reward(state: UTTT_Node, policy: Policy_Model):
+    winner, time_step = simulation(state, policy.getMove)
 
-        player = P2 if player == P1 else P1
-        time_step += 1
-
-    return (1 if winner == P2 else -1)*(0.95**time_step)
-
+    return (1 if winner == state.getPlayer() else -1)*(policy.gamma**time_step)
 
 
 if __name__ == "__main__":
@@ -167,6 +140,8 @@ if __name__ == "__main__":
     policy = Policy_Model()
 
     print(compute_reward(UTTT_Node(), policy))
+
+    policy.save_weights("./ModelInstances/policy2/policy2_model")
 
     # tensor = torch.tensor(torch.from_numpy(np.random.rand(1002)), dtype=torch.double)
     # tensor = torch.tensor(torch.from_numpy(np.zeros((1002))), dtype=torch.double)

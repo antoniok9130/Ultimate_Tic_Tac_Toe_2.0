@@ -1,6 +1,6 @@
 import numpy as np
 
-from UTTT_Logic import *
+from .Logic import *
 
 class UTTT_Node:
 
@@ -53,8 +53,7 @@ class UTTT_Node:
             self.move = move
 
         if self.move is not None and not self.moveSet:
-            currentQuadrant = np.zeros(9, dtype=int)
-            self.buildQuadrant(currentQuadrant, self.move[0])
+            currentQuadrant = self.buildQuadrant(quadrant=self.move[0])
             self.capturedQuadrant = check3InRow(currentQuadrant)
 
             if self.capturedQuadrant != N:
@@ -117,8 +116,8 @@ class UTTT_Node:
     def __len__(self):
         return self.length
 
-    # def getPlayer(self):
-    #     return self.player
+    def getPlayer(self):
+        return 2-(self.length%2)
 
     def getParent(self):
         return self.parent
@@ -126,8 +125,8 @@ class UTTT_Node:
     def hasChildren(self):
         return self.children is not None
 
-    def getChildren(self):
-        return self.children
+    # def getChildren(self):
+    #     return self.children
 
     def initChildren(self):
         self.children = []
@@ -156,7 +155,7 @@ class UTTT_Node:
     
     def buildQuadrant(self, array=None, quadrant = None):
         if array is None:
-            array = np.zeros(9)
+            array = np.zeros(9, dtype=int)
 
         current = self
         if quadrant is None:
@@ -185,7 +184,7 @@ class UTTT_Node:
     
     def buildBoard2D(self, array=None):
         if array is None:
-            array = np.zeros((9, 9))
+            array = np.zeros((9, 9), dtype=int)
 
         current = self
         while True:

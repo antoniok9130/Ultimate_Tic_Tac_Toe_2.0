@@ -1,184 +1,89 @@
 
 import sys
-sys.path.append("..\..\Game\Python")
+sys.path.append("..\\..\\")
 import subprocess as sp
 
 import numpy as np
 import torch
 
-from UTTT_Logic import *
-from random import shuffle
-from Model import *
-
-T = 0
-
-# def board_to_input(board):
-#     array = np.zeros(180, dtype=np.double)
-
-#     for i in range(9):
-#         for j in range(9):
-#             spot = board[i][j]
-
-#             if spot == P1:
-#                 array[9*i+j] = 1.
-#             elif spot == P2:
-#                 array[90+9*i+j] = 1.
-
-#         quadrant = check3InRow(board[i])
-
-#         if quadrant == P1:
-#             array[81+i] = 1.
-#         elif quadrant == P2:
-#             array[171+i] = 1.
-
-#     return array
-
-data = []
-
-with open("./Data/RecordedGames.txt") as recordedGames:
-
-    for recordedGame in recordedGames:
-        game_data = []
-        game = list(recordedGame.strip())
-
-        board = np.zeros((9, 9))
-
-        i = 0
-        player = N
-        while i < len(game):
-
-            player = P2 if player == P1 else P1
-
-            g = int(game[i])
-            l = int(game[i+1])
-
-            if player == 2:
-                game_data.append((np.copy(board), (g, l)))
-
-            board[g][l] = player
-
-            i += 2
-
-        winner = check3InRow([check3InRow(quadrant) for quadrant in board])
-    
-        for state, move in game_data:
-
-            # expected = np.zeros((9, 9), dtype=np.long)
-            # expected[move[0]][move[1]] = 1
-
-            # data.append((state, expected))
-            # data.append((np.rot90(state), np.rot90(expected)))
-            # data.append((np.rot90(state, k=2), np.rot90(expected, k=2)))
-            # data.append((np.rot90(state, k=3), np.rot90(expected, k=3)))
-            # data.append((np.fliplr(state), np.fliplr(expected)))
-            # data.append((np.rot90(np.fliplr(state)), np.rot90(np.fliplr(expected))))
-            # data.append((np.rot90(np.fliplr(state), k=2), np.rot90(np.fliplr(expected), k=2)))
-            # data.append((np.rot90(np.fliplr(state), k=3), np.rot90(np.fliplr(expected), k=3)))
+from UTTT.Logic import *
+from random import shuffle, randint, choice
+from Policy_Model import *
 
 
-            expected = np.zeros((9, 9))
-            expected[move[0]][move[1]] = 1
+import time
 
-            def transform(var):
-                return np.reshape(var, (81,)).argmax()
-
-            data.append((state, transform(expected)))
-            data.append((np.rot90(state), transform(np.rot90(expected))))
-            data.append((np.rot90(state, k=2), transform(np.rot90(expected, k=2))))
-            data.append((np.rot90(state, k=3), transform(np.rot90(expected, k=3))))
-            data.append((np.fliplr(state), transform(np.fliplr(expected))))
-            data.append((np.rot90(np.fliplr(state)), transform(np.rot90(np.fliplr(expected)))))
-            data.append((np.rot90(np.fliplr(state), k=2), transform(np.rot90(np.fliplr(expected), k=2))))
-            data.append((np.rot90(np.fliplr(state), k=3), transform(np.rot90(np.fliplr(expected), k=3))))
-
-
-shuffle(data)
-
-batch_size = 32
-training_inputs = [[]]
-training_labels = [[]]
-test_inputs = []
-test_labels = []
-
-for _input_, _label_ in data:
-    if len(test_inputs) < len(data)*0.15:
-        test_inputs.append(_input_)
-        test_labels.append(_label_)
-    
-    else:
-        if len(training_inputs[-1]) >= batch_size:
-            training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
-            training_labels[-1] = np.array(training_labels[-1])
-            training_inputs.append([])
-            training_labels.append([])
-
-        training_inputs[-1].append(_input_)
-        training_labels[-1].append(_label_)
-
-
-training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 1, 9, 9))
-training_labels[-1] = np.array(training_labels[-1])
-
-test_inputs = np.reshape(test_inputs, (-1, 1, 9, 9))
-# test_inputs = np.array(test_inputs)
-test_labels = np.array(test_labels)
-
-print("Number of Data points:        ", len(data))
-print("Number of Training batches:   ", len(training_inputs))
-print("Number of Test Points:        ", len(test_inputs))
-print()
+current_time_milli = lambda: int(round(time.time() * 1000))
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Training on:  ", device)
 
-model_name = "policy1/policy1_model"
-
-model = UTTT_Model(f"./ModelInstances/{model_name}").to(device)
+policy_name = "./ModelInstances/policy2/policy2_model"
+policy = Policy_Model(state_dict_path=policy_name, exploreProb = 0.05)
 
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+optimizer = torch.optim.SGD(policy.parameters(), lr=0.005, momentum=0.9)
 
-epochs = 300
-iteration_length = 400
-iteration = 0
-running_loss = 0.0
-latest_loss = 0
-for epoch in range(epochs):
-    print("Epoch:  ", epoch+1)
-    for _input_, _label_ in zip(training_inputs, training_labels):
-        input_tensor = torch.from_numpy(_input_).to(device)
-        label_tensor = torch.from_numpy(_label_).to(device)
 
-        optimizer.zero_grad()
+running_loss = 0
+num_losses = 0
 
-        outputs = model.forward(input_tensor)
-        loss = criterion(outputs, label_tensor)
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item()
+start = current_time_milli()
 
-        iteration += 1
-        if iteration >= iteration_length:
-            latest_loss = running_loss/iteration_length
-            print("    Loss:  ", latest_loss)
-            running_loss = 0.0
-            iteration = 0
+for i in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
+    for j in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
+        node = UTTT_Node()
 
-    model.cpu().save_weights(f"./ModelInstances/{model_name}_epoch_{epoch}")
-    
-    correct = 0
-    with torch.no_grad():
-        input_tensor = torch.from_numpy(test_inputs)
-        label_tensor = torch.from_numpy(test_labels).long()
+        node.setChild((i, j))
+        node = node.getChild(0)
+        node.init()
 
-        outputs = model.cpu().forward(input_tensor)
-        _, predicted = torch.max(outputs.data, 1)
-        correct += (predicted == label_tensor).sum().item()
+        while node.winner == N:
 
-    accuracy = correct/len(test_inputs)
-    print("Accuracy:   ", accuracy)
+            expand(node, simulate=False)
 
-    sp.call(f"echo \"Epoch {epoch}:\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
-    sp.call(f"echo \"    Loss:      {latest_loss}\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
-    sp.call(f"echo \"    Accuracy:  {accuracy}\" >> ./ModelInstances/{model_name}_log.txt", shell=True)
+            best_children = []
+            best_reward = -10
+            for i, child in enumerate(node.children):
+                child.init()
+                reward = compute_reward(child, policy)
+
+                if reward > best_reward:
+                    best_children = [i]
+                    best_reward = reward
+
+                elif reward == best_reward:
+                    best_children.append(i)
+
+            inputs = []
+            labels = []
+            for i in best_children:
+                inputs.append(extract_features(node.getChild(i).buildQuadrant(), node.buildBoard2D()))
+
+                move = node.getChild(i).move
+                labels.append(np.array([9*move[0]+move[1]]))
+
+            optimizer.zero_grad()
+
+            inputs = torch.from_numpy(np.reshape(np.array(inputs), (-1, 900)))
+            labels = torch.from_numpy(np.reshape(np.array(labels), (-1, ))).long()
+
+            outputs = policy.forward(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+            num_losses += 1   
+
+            node.setChild(node.getChild(choice(best_children)).move)
+            node = node.getChild(0)
+            
+
+end = current_time_milli()
+
+print("Time:  ", ((end-start)/1000.0))
+print("Loss:  ", (running_loss/num_losses))
+
+
+policy.save_weights(policy_name)

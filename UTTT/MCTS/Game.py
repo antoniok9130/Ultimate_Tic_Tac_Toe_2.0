@@ -3,8 +3,8 @@ import time
 
 import numpy as np
 
-from Game.Numba.MCTS_Logic import *
-from Game.Numba.MCTS_Node import *
+from ..Logic import *
+from .Node import *
 
 
 def getMove(node, thinkingTime = 5):
@@ -97,7 +97,7 @@ def select(node):
 
 
 
-def expand(node):
+def expand(node, simulate=True):
     if not node.hasChildren():
         numChildren = 0
         legalMoves = []
@@ -107,18 +107,13 @@ def expand(node):
         if node.hasMove() and allQuadrants[node.getLocal()] == N:
             nextQuadrant = np.zeros(9, dtype=int)
             node.buildQuadrant(nextQuadrant, node.getLocal())
-            for i, q in enumerate(nextQuadrant):
-                if q == N:
-                    legalMoves.append((node.getLocal(), i))
+            legalMoves = [(node.getLocal(), i) for i, q in enumerate(nextQuadrant) if q == N]
 
         else:
             board = np.zeros((9, 9))
             node.buildBoard2D(board)
-            for i, aQ in enumerate(allQuadrants):
-                if aQ == N:
-                    for j in range(9):
-                        if board[i][j] == 0:
-                            legalMoves.append([i, j])
+            legalMoves = [(node.getLocal(), i) for i, aQ in enumerate(allQuadrants) if aQ == N 
+                                               for j in range(9) if board[i][j] == N]
 
         if len(legalMoves) > 0:
             node.initChildren()
@@ -126,8 +121,9 @@ def expand(node):
             for i, legalMove in enumerate(legalMoves):
                 node.addChild(MCTS_Node(legalMove, node, False))
 
-            random = node.getChild(np.random.choice(len(node.getChildren()), size=1)[0])
-            backpropogate(random, runSimulation(random))
+            if simulate:
+                random = node.getChild(np.random.choice(len(node.getChildren()), size=1)[0])
+                backpropogate(random, runSimulation(random))
 
 
 
