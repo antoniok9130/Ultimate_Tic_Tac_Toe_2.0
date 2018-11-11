@@ -1,4 +1,4 @@
-from math import sqrt, log
+from numpy import sqrt, log
 
 from ..Node import *
 
@@ -22,7 +22,7 @@ class MCTS_Node(UTTT_Node):
     def getUCT(self):
         if self.oldUCT:
             if self.parent is not None and self.numVisits != 0:
-                self.UCT = self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
+                self.UCT = calculateUCT(self.numWins, self.numVisits, self.parent.getNumVisits())
             else:
                 self.UCT = 100
             self.oldUCT = False
@@ -46,3 +46,8 @@ class MCTS_Node(UTTT_Node):
 
     def getConfidence(self):
         return self.numWins/self.numVisits
+
+
+@jit(cache=True, nopython=True)
+def calculateUCT(numWins, numVisits, parent_numVisits):
+    return numWins/numVisits + sqrt(2*log(parent_numVisits)/numVisits)

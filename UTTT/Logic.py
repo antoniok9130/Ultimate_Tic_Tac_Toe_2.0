@@ -1,8 +1,9 @@
 # import sys
 
 from numba import jit
-from numpy import array as np_array, zeros as np_zeros, intc
+from numpy import array as np_array, zeros as np_zeros, intc, flatnonzero
 from numpy.random import seed as np_seed, choice as np_choice, randint as randint
+import numpy as np
 
 from .utils import *
 
@@ -61,13 +62,47 @@ def check3InRow(array):
                               array[5] != N and array[6] != N and array[7] != N) \
              else N
 
-    
-def check3InRowAt(array, position):
-    for p0, p1 in pairs[position]:
-        if (array[position] == array[p0] and array[p0] == array[p1]):
-            return True
 
-    return False
+@jit(cache=True, nopython=True)
+def check3InRowAt(array, position):
+    # for i, pair in enumerate(pairs):
+    #     print(f"if position == {i}:")
+    #     print(f"    return {' or '.join(f'array[{i}] == array[{p0}] == array[{p1}]' for p0, p1 in pair)}\n")
+
+    if position == 0:
+        return array[0] == array[1] == array[2] or array[0] == array[3] == array[6] or array[0] == array[4] == array[8]
+
+    if position == 1:
+        return array[1] == array[0] == array[2] or array[1] == array[4] == array[7]
+
+    if position == 2:
+        return array[2] == array[0] == array[1] or array[2] == array[5] == array[8] or array[2] == array[4] == array[6]
+
+    if position == 3:
+        return array[3] == array[0] == array[6] or array[3] == array[4] == array[5]
+
+    if position == 4:
+        return array[4] == array[0] == array[8] or array[4] == array[1] == array[7] or array[4] == array[2] == array[6] or array[4] == array[3] == array[5]
+
+    if position == 5:
+        return array[5] == array[2] == array[8] or array[5] == array[3] == array[4]
+
+    if position == 6:
+        return array[6] == array[0] == array[3] or array[6] == array[2] == array[4] or array[6] == array[7] == array[8]
+
+    if position == 7:
+        return array[7] == array[1] == array[4] or array[7] == array[6] == array[8]
+
+    if position == 8:
+        return array[8] == array[6] == array[7] or array[8] == array[2] == array[5] or array[8] == array[0] == array[4]
+
+    # for p0, p1 in pairs[position]:
+    #     if (array[position] == array[p0] and array[p0] == array[p1]):
+    #         return True
+
+    # return False
+
+
 
 
 def potential3inRow(array, position, player = None):
@@ -139,15 +174,30 @@ def getBoardSymbol(value, simple = True):
 
 
 np_seed(current_time_milli()%(2**32-1))
+
+@jit(cache=True, nopython=True)
 def getRandomRemaining(quadrant):
-    choices = randint(9, size=90)
-    for r in choices:
+    choices = randint(9)
+    i = 0
+    while i < 900:
+        r = randint(9)
         if (quadrant[r] == N):
             return r
+        i += 1
 
-    raise Exception("Could not find Random Remaining for: "+str(quadrant)+" amongst "+str(choices))
+    raise Exception("Could not find Random Remaining")
+
+    # return np_choice(flatnonzero(quadrant == N))
+    
+    # choices = randint(9, size=36)
+    # for r in choices:
+    #     if (quadrant[r] == N):
+    #         return r
+
+    # return np_choice(flatnonzero(quadrant == N))
 
 
+# runs faster without numba
 def checkInstantWin(potentialQuadrants, quadrants, board, g, player):
     if quadrants[g] == N and potentialQuadrants[g] == player or potentialQuadrants[g] == B:
         for l in range(9):
