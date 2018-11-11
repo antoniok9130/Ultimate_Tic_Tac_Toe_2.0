@@ -7,51 +7,6 @@ from ..Logic import *
 from .Node import *
 
 
-def getMove(node, thinkingTime = 5):
-    AIPlayer = P2 if node.getPlayer() == P1 else P1
-    quadrants = np.zeros(9, dtype=int)
-    node.buildQuadrant(quadrants)
-    if node.getNextQuadrant() != -1:
-        if potential3inRow(quadrants, node.getNextQuadrant(), AIPlayer):
-            quadrant = np.zeros(9, dtype=int)
-            node.buildQuadrant(quadrant, node.getNextQuadrant())
-            for i, q in enumerate(quadrant):
-                if q == N and potential3inRow(quadrant, i, AIPlayer):
-                    time.sleep(1)
-                    print("Instant Win!")
-                    return [node.getNextQuadrant(), i]
-
-    else:
-        for i, q in enumerate(quadrants):
-            if q == N and potential3inRow(quadrants, i, AIPlayer):
-                quadrant = np.zeros(9, dtype=int)
-                node.buildQuadrant(quadrant, i)
-                for j, q1 in enumerate(quadrant):
-                    if q1 == N and potential3inRow(quadrant, j, AIPlayer):
-                        time.sleep(1)
-                        print("Instant Win!")
-                        return [i, j]
-
-
-    # thinkingTime *= 1000
-    end = time.time()+thinkingTime
-
-    print("{0} + {1} = {2}".format(time.time(), thinkingTime, end))
-    while (time.time() < end):
-        select(node)
-        select(node)
-        select(node)
-        select(node)
-        select(node)
-
-    if node.getNumVisits() == 0:
-        raise Exception("No Move found...")
-
-    print("Search Space Size:  {0}".format(node.getNumVisits()))
-    return getChildVisitedMost(node).getMove()
-
-
-
 def getChildVisitedMost(node):
     mostVisited = 0
     index = -1
@@ -77,29 +32,37 @@ def getChildHighestUCT(node):
     return node.getChild(index)
 
 
+def backpropogate(node: UTTT_Node, winner):
 
-def select(node):
-    if not node.hasChildren():
-        node.init()
+    current = node
+    while current is not None:
+        current.incrementWins()
+        current.incrementVisits()
+        current = current.parent
+        if current is not None:
+            current.incrementVisits()
+            current = current.parent
 
-        if node.getWinner() != N:
-            backpropogate(node, node.getWinner())
 
-        elif node.hasMove() and node.getNumVisits() == 0:
-            backpropogate(node, runSimulation(node))
-
-        else:
-            expand(node)
+def randomPolicy(move, quadrants, board):
+    if move is not None and quadrants[move[1]] == N:
+        move[0] = move[1]
 
     else:
-        select(getChildHighestUCT(node))
+        move[0] = getRandomRemaining(quadrants)
+
+    move[1] = getRandomRemaining(board[move[0]])
+
+    return move
 
 
+def runSimulation(node):
+    winner, length = simulation(node, randomPolicy)
+    return winner
 
 
-def expand(node, simulate=True):
+def expand(node, simulate=True, runSimulation=runSimulation):
     if not node.hasChildren():
-        numChildren = 0
         legalMoves = []
         allQuadrants = np.zeros(9, dtype=int)
         node.buildQuadrant(allQuadrants)
@@ -119,94 +82,47 @@ def expand(node, simulate=True):
             node.initChildren()
 
             for i, legalMove in enumerate(legalMoves):
-                node.addChild(MCTS_Node(legalMove, node, False))
+                node.addChild(node.__class__(legalMove, node, False))
 
             if simulate:
                 random = node.getChild(np.random.choice(len(node.getChildren()), size=1)[0])
                 backpropogate(random, runSimulation(random))
 
 
+def select(node, select=select, runSimulation=runSimulation):
+    if not node.hasChildren():
+        node.init()
 
+        if node.getWinner() != N:
+            backpropogate(node, node.getWinner())
 
-def runSimulation(node):
-    node.init()
-    board = np.zeros((9, 9))
-    node.buildBoard2D(board)
-    quadrants = np.zeros(9, dtype=int)
-    node.buildQuadrant(quadrants)
-
-    numRemainingQuadrants = 0
-    numRemainingBoard = np.zeros(9, dtype=int)
-    potentialQuadrants = np.zeros(9, dtype=int)
-
-    for i, quadrant in enumerate(quadrants):
-        if quadrant == N:
-            numRemainingQuadrants += 1
-            potentialQuadrants[i] = potential3inRow(quadrants, i)
-            for j in range(9):
-                if board[i][j] == N:
-                    numRemainingBoard[i] += 1
-
-    move = node.getMove()
-    if move is None:
-        move = [-1, -1]
-
-    player = node.getPlayer()
-    winner = node.getWinner()
-
-    while winner == N:
-        if move[1] != -1 and quadrants[move[1]] == N:
-            move[0] = move[1]
+        elif node.hasMove() and node.getNumVisits() == 0:
+            backpropogate(node, runSimulation(node))
 
         else:
-            move[0] = getRandomRemaining(quadrants)
+            expand(node, runSimulation=runSimulation)
 
-        if potentialQuadrants[move[0]] == player or potentialQuadrants[move[0]] == B:
-            for i in range(9):
-                if board[move[0]][i] == N and potential3inRow(board[move[0]], i, player):
-                    return player
-
-        move[1] = getRandomRemaining(board[move[0]])
-        player = P1 if player == P2 else P2
-        board[move[0]][move[1]] = player
-        numRemainingBoard[move[0]] -= 1
-
-        if check3InRow(board[move[0]], move[1]):
-            quadrants[move[0]] = player
-            numRemainingQuadrants -= 1
-
-            updatePotential3inRow(potentialQuadrants, quadrants, move[0])
-
-            if check3InRow(quadrants, move[0]):
-                winner = player
-                return player
-
-            elif numRemainingQuadrants <= 0:
-                winner = T
-                return T
-
-        elif numRemainingBoard[move[0]] <= 0:
-            quadrants[move[0]] = T
-            numRemainingQuadrants -= 1
-
-            if numRemainingQuadrants <= 0:
-                winner = T
-                return T
-
-    return winner
+    else:
+        select(getChildHighestUCT(node), select=select, runSimulation=runSimulation)
 
 
 
+def getMove(node, iterations=3200, select=select, runSimulation=runSimulation):
+    move = isNextWin(node)
+    if move is not None:
+        time.sleep(1)
+        print("Instant Win!")
+        return move
+
+    i = 0
+    while (i < iterations):
+        select(node, select=select, runSimulation=runSimulation)
+        i += 1
+
+    if node.getNumVisits() == 0:
+        raise Exception("No Move found...")
+
+    print("Search Space Size:  {0}".format(node.getNumVisits()))
+    return getChildVisitedMost(node).getMove()
 
 
-
-def backpropogate(node, winner):
-    if node.getPlayer() == winner:
-        node.incrementWins()
-
-    node.incrementVisits()
-
-    if node.getParent() is not None:
-        backpropogate(node.getParent(), winner)
-
-    node.updateUCT()

@@ -11,14 +11,22 @@ class MCTS_Node(UTTT_Node):
         self.numWins = 0
         self.numVisits = 0
         self.UCT = 100
+        self.oldUCT = True
 
 
-    def updateUCT(self):
-        if self.parent is not None and self.numVisits != 0:
-            self.UCT = self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
+    # def updateUCT(self):
+    #     if self.parent is not None and self.numVisits != 0:
+    #         self.UCT = self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
 
 
     def getUCT(self):
+        if self.oldUCT:
+            if self.parent is not None and self.numVisits != 0:
+                self.UCT = self.numWins/self.numVisits + sqrt(2*log(self.parent.getNumVisits())/self.numVisits)
+            else:
+                self.UCT = 100
+            self.oldUCT = False
+
         return self.UCT
 
     def getNumWins(self):
@@ -29,9 +37,11 @@ class MCTS_Node(UTTT_Node):
 
     def incrementWins(self, num = 1):
         self.numWins += num
+        self.oldUCT = True
 
     def incrementVisits(self, num = 1):
         self.numVisits += num
+        self.oldUCT = True
 
 
     def getConfidence(self):

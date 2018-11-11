@@ -108,6 +108,25 @@ def updatePotential3inRow(potential, array, position):
                 potential[pair[0]] |= player
 
 
+def isNextWin(node):
+    AIPlayer = P2 if node.getPlayer() == P1 else P1
+    quadrants = node.buildQuadrant()
+    if node.getNextQuadrant() != -1:
+        if potential3inRow(quadrants, node.getNextQuadrant(), AIPlayer):
+            quadrant = node.buildQuadrant(quadrant=node.getNextQuadrant())
+            for i, q in enumerate(quadrant):
+                if q == N and potential3inRow(quadrant, i, AIPlayer):
+                    return [node.getNextQuadrant(), i]
+
+    else:
+        for i, q in enumerate(quadrants):
+            if q == N and potential3inRow(quadrants, i, AIPlayer):
+                quadrant = node.buildQuadrant(quadrant=i)
+                for j, q1 in enumerate(quadrant):
+                    if q1 == N and potential3inRow(quadrant, j, AIPlayer):
+                        return [i, j]
+
+    return None
 
 
 def getBoardSymbol(value, simple = True):
@@ -146,6 +165,7 @@ def simulation(state, policy):
     ----------
     state : UTTT_Node
         The game state
+    policy
     """
     winner = state.winner
 
