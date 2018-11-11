@@ -11,10 +11,6 @@ from random import shuffle, randint, choice
 from Policy_Model import *
 
 
-import time
-
-current_time_milli = lambda: int(round(time.time() * 1000))
-
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Training on:  ", device)

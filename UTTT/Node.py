@@ -1,4 +1,6 @@
 import numpy as np
+from numba import jit
+import numba
 
 from .Logic import *
 
@@ -52,14 +54,15 @@ class UTTT_Node:
         if move is not None and self.move is None:
             self.move = move
 
-        if self.move is not None and not self.moveSet:
+        if not self.moveSet and self.move is not None:
             currentQuadrant = self.buildQuadrant(quadrant=self.move[0])
             self.capturedQuadrant = check3InRow(currentQuadrant)
 
             if self.capturedQuadrant != N:
-                allQuadrants = np.zeros(9, dtype=int)
-                self.buildQuadrant(allQuadrants)
+                allQuadrants = self.buildQuadrant()
                 self.winner = check3InRow(allQuadrants)
+
+            self.moveSet = True
 
 
     
@@ -91,7 +94,7 @@ class UTTT_Node:
 
     
     def getMove(self):
-        return None if self.move is None else (self.move[0], self.move[1])
+        return None if self.move is None else [self.move[0], self.move[1]]
 
     
     def getGlobal(self):
@@ -153,9 +156,8 @@ class UTTT_Node:
 
 
     
-    def buildQuadrant(self, array=None, quadrant = None):
-        if array is None:
-            array = np.zeros(9, dtype=int)
+    def buildQuadrant(self, quadrant = None):
+        array = np.zeros(9, dtype=np.intc)
 
         current = self
         if quadrant is None:
@@ -181,10 +183,8 @@ class UTTT_Node:
         return array
 
 
-    
-    def buildBoard2D(self, array=None):
-        if array is None:
-            array = np.zeros((9, 9), dtype=int)
+    def buildBoard2D(self):
+        array = np.zeros((9, 9), dtype=np.intc)
 
         current = self
         while True:
@@ -199,6 +199,5 @@ class UTTT_Node:
         return array
 
 
-
-if __name__ == "__main__":
-    node = UTTT_Node()
+# if __name__ == "__main__":
+#     print(numba.typeof(UTTT_Node))

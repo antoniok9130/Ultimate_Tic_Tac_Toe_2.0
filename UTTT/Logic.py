@@ -1,7 +1,11 @@
-#cython: language_level=3, boundscheck=False
-import sys
+# import sys
 
-import numpy as np
+from numba import jit
+from numpy import array as np_array, zeros as np_zeros, intc
+from numpy.random import seed as np_seed, choice as np_choice, randint as randint
+
+from .utils import *
+
 
 P1 = 1
 P2 = 2
@@ -9,66 +13,56 @@ N = 0
 T = -1
 B = (P1 | P2) # Note that (P1 | P2) == B
 
-if B == P1 or B == P2:
-    raise Exception("B == P1 or B == P2")
+if B == P1 or B == P2 or B == N or B == T:
+    raise Exception("B == P1 or B == P2 or B == N or B == T")
 
-triple0 = ((1, 2), (3, 6))
-triple4 = ((3, 5), (1, 7), (0, 8), (2, 6))
-triple8 = ((6, 7), (2, 5))
+triple0 = np_array([[1, 2], [3, 6]])
+triple4 = np_array([[3, 5], [1, 7], [0, 8], [2, 6]])
+triple8 = np_array([[6, 7], [2, 5]])
 
-pairs = (((1, 2), (3, 6), (4, 8)),
-        ((0, 2), (4, 7)),
-        ((0, 1), (5, 8), (4, 6)),
-        ((0, 6), (4, 5)),
-        ((0, 8), (1, 7), (2, 6), (3, 5)),
-        ((2, 8), (3, 4)),
-        ((0, 3), (2, 4), (7, 8)),
-        ((1, 4), (6, 8)),
-        ((6, 7), (2, 5), (0, 4)))
+pairs = np_array([[[1, 2], [3, 6], [4, 8]],
+                  [[0, 2], [4, 7]],
+                  [[0, 1], [5, 8], [4, 6]],
+                  [[0, 6], [4, 5]],
+                  [[0, 8], [1, 7], [2, 6], [3, 5]],
+                  [[2, 8], [3, 4]],
+                  [[0, 3], [2, 4], [7, 8]],
+                  [[1, 4], [6, 8]],
+                  [[6, 7], [2, 5], [0, 4]]])
 
-def check3InRow(array): # , position = -1
-    # if (position > -1):
-    #     for pair in pairs[position]:
-    #         if (array[position] == array[pair[0]] and array[pair[0]] == array[pair[1]]):
-    #             return True
-    #
-    #     return False
+def check3InRow(array):
 
-    checkTie = 1
+    checkTie = True
     if (array[0] != N):
         for triple in triple0:
             if (array[0] == array[triple[0]] and array[triple[0]] == array[triple[1]]):
                 return array[0]
+
     else:
-        checkTie = 0
+        checkTie = False
 
     if (array[4] != N):
         for triple in triple4:
             if (array[4] == array[triple[0]] and array[triple[0]] == array[triple[1]]):
                 return array[4]
+
     else:
-        checkTie = 0
+        checkTie = False
 
     if (array[8] != N):
         for triple in triple8:
             if (array[8] == array[triple[0]] and array[triple[0]] == array[triple[1]]):
                 return array[8]
-    else:
-        checkTie = 0
 
-    return T if (checkTie == 1 and array[1] != N and array[2] != N and array[3] != N and
-                                   array[5] != N and array[6] != N and array[7] != N) \
+    else:
+        checkTie = False
+
+    return T if (checkTie and array[1] != N and array[2] != N and array[3] != N and
+                              array[5] != N and array[6] != N and array[7] != N) \
              else N
 
-def checkTie(array):
-    for i in array:
-        if (i == N):
-            return False
-
-    return True
-
     
-def check3InRowAt(array, position):    
+def check3InRowAt(array, position):
     for p0, p1 in pairs[position]:
         if (array[position] == array[p0] and array[p0] == array[p1]):
             return True
@@ -78,24 +72,28 @@ def check3InRowAt(array, position):
 
 def potential3inRow(array, position, player = None):
     if player is None:
-        potential = N
-        for p0, p1 in pairs[position]:
-            if array[p0] != N and \
-                    array[p0] == array[p1]:
-                if potential != N and potential != array[p0]:
-                    return B
-
-                potential = array[p0]
-
-        return potential
-
+        return potential3inRow_np(array, position)
     else:
-        for p0, p1 in pairs[position]:
-            if array[p0] == player and \
-                    array[p0] == array[p1]:
-                return True
+        return potential3inRow_wp(array, position, player)
 
-        return False
+def potential3inRow_np(array, position):
+    potential = N
+    for p0, p1 in pairs[position]:
+        if array[p0] != N and array[p0] == array[p1]:
+            if potential != N and potential != array[p0]:
+                potential = B
+                break
+
+            potential = array[p0]
+
+    return potential
+
+def potential3inRow_wp(array, position, player):
+    for p0, p1 in pairs[position]:
+        if array[p0] == player and array[p0] == array[p1]:
+            return True
+
+    return False
 
 
 def updatePotential3inRow(potential, array, position):
@@ -111,12 +109,12 @@ def updatePotential3inRow(potential, array, position):
 def isNextWin(node):
     AIPlayer = P2 if node.getPlayer() == P1 else P1
     quadrants = node.buildQuadrant()
-    if node.getNextQuadrant() != -1:
-        if potential3inRow(quadrants, node.getNextQuadrant(), AIPlayer):
-            quadrant = node.buildQuadrant(quadrant=node.getNextQuadrant())
+    if node.nextQuadrant != -1:
+        if potential3inRow(quadrants, node.nextQuadrant, AIPlayer):
+            quadrant = node.buildQuadrant(quadrant=node.nextQuadrant)
             for i, q in enumerate(quadrant):
                 if q == N and potential3inRow(quadrant, i, AIPlayer):
-                    return [node.getNextQuadrant(), i]
+                    return [node.nextQuadrant, i]
 
     else:
         for i, q in enumerate(quadrants):
@@ -140,14 +138,14 @@ def getBoardSymbol(value, simple = True):
     return "_" if simple else " "
 
 
+np_seed(current_time_milli()%(2**32-1))
 def getRandomRemaining(quadrant):
-    for r in np.random.randint(low=0, high=9, size=25):
+    choices = randint(9, size=90)
+    for r in choices:
         if (quadrant[r] == N):
             return r
 
-    print("Could not find Random Remaining for: ", quadrant)
-    print(quadrant[0] == N)
-    raise Exception("")
+    raise Exception("Could not find Random Remaining for: "+str(quadrant)+" amongst "+str(choices))
 
 
 def checkInstantWin(potentialQuadrants, quadrants, board, g, player):
@@ -173,8 +171,8 @@ def simulation(state, policy):
     board     = state.buildBoard2D()
 
     numRemainingQuadrants = 0
-    numRemainingBoard = np.zeros(9, dtype=int)
-    potentialQuadrants = np.zeros(9, dtype=int)
+    numRemainingBoard = np_zeros(9, dtype=intc)
+    potentialQuadrants = np_zeros(9, dtype=intc)
 
     for i, quadrant in enumerate(quadrants):
         if quadrant == N:
@@ -205,7 +203,10 @@ def simulation(state, policy):
                 break
 
         try:
-            g, l = policy(move, quadrants, board)
+            if numRemainingBoard[move[1]] > 0:
+                g, l = policy(move, quadrants, board)
+            else:
+                g, l = policy(None, quadrants, board)
         except:
             print(move)
             print(quadrants)
@@ -216,11 +217,12 @@ def simulation(state, policy):
         board[g][l] = player
         numRemainingBoard[g] -= 1
 
-        move = (g, l)
+        move = [g, l]
 
         if check3InRowAt(board[g], l):
             quadrants[g] = player
             numRemainingQuadrants -= 1
+            numRemainingBoard[g] = 0
 
             updatePotential3inRow(potentialQuadrants, quadrants, g)
 
@@ -235,6 +237,7 @@ def simulation(state, policy):
         elif numRemainingBoard[g] <= 0:
             quadrants[g] = T
             numRemainingQuadrants -= 1
+            numRemainingBoard[g] = 0
 
             if numRemainingQuadrants == 0:
                 winner = T

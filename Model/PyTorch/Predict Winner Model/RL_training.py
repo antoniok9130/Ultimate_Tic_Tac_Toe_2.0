@@ -5,14 +5,19 @@ sys.path.append("..\..\Game\Python")
 import numpy as np
 import torch
 
-from UTTT_Logic import check3InRowAt, check3InRow
+from UTTT import *
 from random import shuffle
-from Model import *
+from Policy_Model import *
 
 P1 = 1
 P2 = -1
 N = 0
 T = 0
+
+def NN_simulation():
+    pass
+
+getMove(node, iterations=3200, simulation=NN_simulation)
 
 # def board_to_input(board):
 #     array = np.zeros(180, dtype=np.double)

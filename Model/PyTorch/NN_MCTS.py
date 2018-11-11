@@ -1,5 +1,3 @@
-import time
-
 import numpy as np
 import torch
 
@@ -24,14 +22,9 @@ class NN_MCTS:
 
         self.player = None
 
-        self.getChildHighestUCT = getChildHighestUCT
-        self.getChildVisitedMost = getChildVisitedMost
-        self.select = select
-        self.expand = expand
-
 
     def getMove(self, node, iterations=3200):
-        getMove(node, iterations=iterations, select=self.select, runSimulation=self.runSimulation)
+        getMove(node, iterations=iterations, simulation=self.runSimulation)
 
 
 
