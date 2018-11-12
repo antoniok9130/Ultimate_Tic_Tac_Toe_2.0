@@ -22,6 +22,9 @@ percentile = 1
 space = ceil(100/percentile)
 division = ceil(num_records/space)
 
+numP1Wins = 0
+numP2Wins = 0
+numTies = 0
 
 with open(file_name) as recordedGames:
 
@@ -35,7 +38,7 @@ with open(file_name) as recordedGames:
             percent += 1
             milestone += division
             print("[{}] {}%".format(("#"*percent).ljust(space), percent*percentile), end="\r")
-            # sys.stdout.flush()
+            sys.stdout.flush()
 
         
         game_data = []
@@ -70,10 +73,13 @@ with open(file_name) as recordedGames:
 
             if winner == P1:
                 expected = 1 # [reward, penalty]
+                numP1Wins += 1
             elif winner == P2:
                 expected = 2 # [penalty, reward]
+                numP2Wins += 1
             else:
                 expected = 0
+                numTies += 1
 
             for k in range(4):
                 data.append((
@@ -92,10 +98,10 @@ with open(file_name) as recordedGames:
                 ))
 
     percent += 1
-    print("[{}] {}%".format(("#"*percent).ljust(space), percent*percentile))
+    print("[{}] {}%     ".format(("#"*percent), 100))
             
 
-
+print("Shuffling Data")
 shuffle(data)
 
 batch_size = 32
@@ -128,6 +134,10 @@ test_inputs = np.reshape(test_inputs, (-1, 900))
 # test_inputs = np.array(test_inputs)
 test_labels = np.array(test_labels)
 
+print("Number of Player 1 Wins:      ", numP1Wins)
+print("Number of Player 2 Wins:      ", numP2Wins)
+print("Number of Ties:               ", numTies)
+print()
 print("Number of Data points:        ", len(data))
 print("Number of Training batches:   ", len(training_inputs))
 print("Number of Test Points:        ", len(test_inputs), "\n")

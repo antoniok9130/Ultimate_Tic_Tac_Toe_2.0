@@ -10,7 +10,7 @@ from Predict_Model import *
 
 model = Predict_Model("../ModelInstances/predict1/predict1_model_epoch_35")
 
-@jit(cache=True) # , nopython=True)
+@jit
 def modelSimulation(quadrants, board, winner, move, player):
     '''
     Parameters
@@ -36,15 +36,24 @@ def modelSimulation(quadrants, board, winner, move, player):
     
     if winner != N:
         return winner, 0
+    
+    if move is not None and quadrants[move[1]] == N:
+        if potential3inRow_wp(quadrants, move[1], player):
+            return player, 1 # next move
+    else:
+        for g in range(9):
+            if quadrants[g] == N and potential3inRow_wp(quadrants, g, player):
+                return player, 1 # next move
 
     prediction = model.predict(extract_features(quadrants, board))
     winner = prediction.argmax()
+    # print(prediction)
     if winner == 0:
-        return T, 0
+        return T, 2 # at least two into the future
     if winner == 1:
-        return P1, 0
+        return P1, 2 # at least two into the future
     if winner == 2:
-        return P2, 0
+        return P2, 2 # at least two into the future
         
 
 play_MCTS(iterations=3200, simulation=modelSimulation)

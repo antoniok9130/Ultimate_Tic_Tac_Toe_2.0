@@ -620,57 +620,66 @@ def simulation(quadrants, board, winner, move, player, policy):
 
 
 
-verticalSpace = "     │   │    ║    │   │    ║    │   │    "
-verticalDivide = "  ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── "
-bigVerticalDivide = " ═════════════╬═════════════╬═════════════"
+# verticalSpace = "     │   │    ║    │   │    ║    │   │    "
+# verticalDivide = "  ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── "
+# bigVerticalDivide = " ═════════════╬═════════════╬═════════════"
 
 def printBoard(board, quadrant, simple = False):
     if simple:
-        for a in range(3) :
-            for b in range(3) :
-                for c in range(3) :
-                    for d in range(3):
-                        print(getBoardSymbol(board[3 * a + c][3 * b + d], simple), end="")
+        print('''
+          {b00}{b01}{b02}  {b10}{b11}{b12}  {b20}{b21}{b22}   
+          {b03}{b04}{b05}  {b13}{b14}{b15}  {b23}{b24}{b25}             
+          {b06}{b07}{b08}  {b16}{b17}{b18}  {b26}{b27}{b28}         {q0}{q1}{q2}
+                                                                    {q3}{q4}{q5}
+          {b30}{b31}{b32}  {b40}{b41}{b42}  {b50}{b51}{b52}         {q6}{q7}{q8}     
+          {b33}{b34}{b35}  {b43}{b44}{b45}  {b53}{b54}{b55}
+          {b36}{b37}{b38}  {b46}{b47}{b48}  {b56}{b57}{b58}
 
-                    print("  ", end="")
-
-                if (a == 0) :
-                    print("   ", end="")
-                    for d in range(3):
-                        print(getBoardSymbol(quadrant[3 * b + d], simple))
-
-                print()
-
-            print()
+          {b60}{b61}{b62}  {b70}{b71}{b72}  {b80}{b81}{b82}
+          {b63}{b64}{b65}  {b73}{b74}{b75}  {b83}{b84}{b85}
+          {b66}{b67}{b68}  {b76}{b77}{b78}  {b86}{b87}{b88}
+        '''.format(
+            **{
+                f"b{i}{j}": getBoardSymbol(board[i][j], simple) for i in range(9) for j in range(9)
+            },
+            **{
+                f"q{i}": getBoardSymbol(quadrant[i], simple) for i in range(9)
+            }
+        ))
 
     else :
-        print()
-        for a in range(3):
-            if (a != 0):
-                print(bigVerticalDivide)
-
-            print(verticalSpace)
-            for b in range(3):
-                if (b != 0):
-                    print(verticalDivide)
-
-                print("  ", end="")
-                for c in range(3):
-                    if (c != 0):
-                        print(" ║ ", end="")
-
-                    for d in range(3):
-                        if (d != 0):
-                            print("│", end="")
-
-                        print(" "+getBoardSymbol(board[3 * a + c][3 * b + d], simple)+" ", end="")
-
-
-                print(" ")
-
-            print(verticalSpace)
-
-        print()
+        print('''
+            │   │    ║    │   │    ║    │   │    
+          {b00} │ {b01} │ {b02}  ║  {b10} │ {b11} │ {b12}  ║  {b20} │ {b21} │ {b22}   
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+          {b03} │ {b04} │ {b05}  ║  {b13} │ {b14} │ {b15}  ║  {b23} │ {b24} │ {b25}                ║   ║  
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───             {q0} ║ {q1} ║ {q2}
+          {b06} │ {b07} │ {b08}  ║  {b16} │ {b17} │ {b18}  ║  {b26} │ {b27} │ {b28}            ════╬═══╬════
+            │   │    ║    │   │    ║    │   │                {q3} ║ {q4} ║ {q5}
+        ═════════════╬═════════════╬═════════════          ════╬═══╬════
+            │   │    ║    │   │    ║    │   │                {q6} ║ {q7} ║ {q8}
+          {b30} │ {b31} │ {b32}  ║  {b40} │ {b41} │ {b42}  ║  {b50} │ {b51} │ {b52}                ║   ║  
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── 
+          {b33} │ {b34} │ {b35}  ║  {b43} │ {b44} │ {b45}  ║  {b53} │ {b54} │ {b55}
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+          {b36} │ {b37} │ {b38}  ║  {b46} │ {b47} │ {b48}  ║  {b56} │ {b57} │ {b58}
+            │   │    ║    │   │    ║    │   │   
+        ═════════════╬═════════════╬═════════════
+            │   │    ║    │   │    ║    │   │   
+          {b60} │ {b61} │ {b62}  ║  {b70} │ {b71} │ {b72}  ║  {b80} │ {b81} │ {b82}
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+          {b63} │ {b64} │ {b65}  ║  {b73} │ {b74} │ {b75}  ║  {b83} │ {b84} │ {b85}
+         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+          {b66} │ {b67} │ {b68}  ║  {b76} │ {b77} │ {b78}  ║  {b86} │ {b87} │ {b88}
+            │   │    ║    │   │    ║    │   │   
+        '''.format(
+            **{
+                f"b{i}{j}": getBoardSymbol(board[i][j], simple) for i in range(9) for j in range(9)
+            },
+            **{
+                f"q{i}": getBoardSymbol(quadrant[i], simple) for i in range(9)
+            }
+        ))
 
 
 

@@ -83,7 +83,7 @@ def play_MCTS(iterations=3200, simulation=randomSimulation):
 
         print("Computer is thinking...")
         start = current_time_milli()
-        move = getMove(node, iterations=3200, simulation=simulation)
+        move = getMove(node, iterations=iterations, simulation=simulation)
         end = current_time_milli()
         node.setChild(move)
         node = node.getChild(0)
@@ -170,7 +170,7 @@ def expand(node, simulate=True, simulation=randomSimulation):
 
         else:
             board = node.buildBoard2D()
-            legalMoves = [[node.getLocal(), i] for i, aQ in enumerate(allQuadrants) if aQ == N 
+            legalMoves = [[i, j] for i, aQ in enumerate(allQuadrants) if aQ == N 
                                                for j in range(9) if board[i][j] == N]
 
         if len(legalMoves) > 0:
@@ -188,12 +188,28 @@ def expand(node, simulate=True, simulation=randomSimulation):
 
 def backpropogate(node: UTTT_Node, winner):
 
-    if node.getPlayer() == winner:
-        node.incrementWins()
-    
-    node.incrementVisits()
+    current = node
+    if winner == T:
+        while current is not None:
+            current.incrementVisits()
+            current = current.parent
 
-    if node.parent is not None:
-        backpropogate(node.parent, winner)
+    elif current.getPlayer() == winner:
+        while current is not None:
+            current.incrementWins()
+            current.incrementVisits()
+            current = current.parent
+            if current is not None:
+                current.incrementVisits()
+                current = current.parent
+
+    else:
+        while current is not None:
+            current.incrementVisits()
+            current = current.parent
+            if current is not None:
+                current.incrementWins()
+                current.incrementVisits()
+                current = current.parent
 
 
