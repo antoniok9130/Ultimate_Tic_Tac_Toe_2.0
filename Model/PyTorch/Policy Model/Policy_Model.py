@@ -26,36 +26,16 @@ Simple Artificial Neural Network with the following feature inputs:
 
 '''
 
+@jit(cache=True)
 def extract_features(quadrants, board):
 
     features = []
 
-    features.extend([
-        quadrant == P1 for quadrant in quadrants
-    ])
-    features.extend([
-        quadrant == P2 for quadrant in quadrants
-    ])
-    features.extend([
-        P1 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
-    ])
-    features.extend([
-        P2 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
-    ])
-    features.extend([
-        board[i][j] == P1 for i in range(9) for j in range(9)
-    ])
-    features.extend([
-        board[i][j] == P2 for i in range(9) for j in range(9)
-    ])
-    features.extend([
-        board[i][j] == board[i][k] == P1 for i in range(9) for j in range(9) for k in range(j)
-    ])
-    features.extend([
-        board[i][j] == board[i][k] == P2 for i in range(9) for j in range(9) for k in range(j)
-    ])
+    features.extend(quadrants)
+    for quadrant in board:
+        features.extend(board)
 
-    return np.array(features)*1.0
+    return np.array(features)
 
 
 
@@ -65,7 +45,7 @@ class Policy_Model(torch.nn.Module):
 
         super(Policy_Model, self).__init__()
 
-        self.fc1 = torch.nn.Linear(900, 256).double()
+        self.fc1 = torch.nn.Linear(90, 256).double()
         self.fc2 = torch.nn.Linear(256, 81).double()
         # self.fc3 = torch.nn.Linear(64, 2).double()
         
@@ -92,7 +72,6 @@ class Policy_Model(torch.nn.Module):
         return self.softmax(x)
 
     def predict(self, x):
-
         return self.forward(torch.tensor(torch.from_numpy(x), dtype=torch.double)).detach().numpy()
 
 

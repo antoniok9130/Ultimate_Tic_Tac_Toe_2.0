@@ -85,6 +85,7 @@ def play_MCTS(iterations=3200, simulation=randomSimulation):
         start = current_time_milli()
         move = getMove(node, iterations=iterations, simulation=simulation)
         end = current_time_milli()
+        print("Search Space Size:  {0}".format(node.getNumVisits()))
         node.setChild(move)
         node = node.getChild(0)
         print(f"g:   {move[0]}      l:   {move[1]}")
@@ -100,8 +101,8 @@ def getMove(node, iterations=3200, simulation=randomSimulation):
 
     move = isNextWin(node)
     if move is not None:
-        time.sleep(1)
-        print("Instant Win!")
+        # time.sleep(1)
+        # print("Instant Win!")
         return move
 
     i = 0
@@ -112,7 +113,6 @@ def getMove(node, iterations=3200, simulation=randomSimulation):
     if node.getNumVisits() == 0:
         raise Exception("No Move found...")
 
-    print("Search Space Size:  {0}".format(node.getNumVisits()))
     return getChildVisitedMost(node).getMove()
 
 
@@ -161,17 +161,10 @@ def getChildHighestUCT(node):
 
 def expand(node, simulate=True, simulation=randomSimulation):
     if not node.hasChildren():
-        legalMoves = []
-        allQuadrants = node.buildQuadrant()
-
-        if node.hasMove() and allQuadrants[node.getLocal()] == N:
-            nextQuadrant = node.buildQuadrant(node.getLocal())
-            legalMoves = [[node.getLocal(), i] for i, q in enumerate(nextQuadrant) if q == N]
-
-        else:
-            board = node.buildBoard2D()
-            legalMoves = [[i, j] for i, aQ in enumerate(allQuadrants) if aQ == N 
-                                               for j in range(9) if board[i][j] == N]
+        quadrants = node.buildQuadrant()
+        board     = node.buildBoard2D()
+        
+        legalMoves = getLegalMoves2D(quadrants, board, node.move)
 
         if len(legalMoves) > 0:
             node.initChildren()
@@ -181,8 +174,6 @@ def expand(node, simulate=True, simulation=randomSimulation):
 
             if simulate:
                 random = node.getChild(np.random.randint(len(node.children)))
-                quadrants = node.buildQuadrant()
-                board     = node.buildBoard2D()
                 backpropogate(random, simulation(quadrants, board, node.winner, node.move, node.getPlayer()))
 
 

@@ -1,90 +1,61 @@
 
 import sys
-sys.path.append("..\\..\\")
+sys.path.append("..\\..\\..\\")
 import subprocess as sp
 
 import numpy as np
 import torch
 
-from UTTT.Logic import *
+from UTTT import *
 from random import shuffle, randint, choice
 from Policy_Model import *
 
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print("Training on:  ", device)
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# print("Training on:  ", device)
 
-policy_name = "./ModelInstances/policy2/policy2_model"
-policy = Policy_Model(state_dict_path=policy_name, exploreProb = 0.05)
+# policy_name = "../ModelInstances/policy2/policy2_model"
+model = Policy_Model(exploreProb = 0.05) # state_dict_path=policy_name,   .to(device)
 
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(policy.parameters(), lr=0.005, momentum=0.9)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.005, momentum=0.9)
 
 
-running_loss = 0
-num_losses = 0
+@jit
+def modelPolicy(move, quadrants, board):
+    legalMoves = getLegalMoves1D(quadrants, board, move)
 
-epoch = 1
-for i in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
-    for j in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
+    probs = model.predict(extract_features(quadrants, board))
 
-        start = current_time_milli()
+    best_moves = []
+    highest_prob = -1
+    for legalMove in legalMoves:
+        if probs[legalMove] > highest_prob:
+            best_moves = [legalMove]
+        elif probs[legalMove] == highest_prob:
+            best_moves.append(legalMove)
 
-        node = UTTT_Node()
+    best_move = best_moves[np.random.randint(len(best_moves))]
+    return [int(best_move//9), best_move%9]
 
-        node.setChild((i, j))
-        node = node.getChild(0)
-        node.init()
 
-        while node.winner == N:
+@jit(cache=True)
+def modelSimulation(quadrants, board, winner, move, player):
+    
+    if winner != N:
+        return winner, 0
+    
+    if move is not None and quadrants[move[1]] == N:
+        if potential3inRow_wp(quadrants, move[1], player):
+            return player, 1 # next move
+    else:
+        for g in range(9):
+            if quadrants[g] == N and potential3inRow_wp(quadrants, g, player):
+                return player, 1 # next move
 
-            expand(node, simulate=False)
+    return simulation_p(quadrants, board, winner, move, player, modelPolicy)[0]
 
-            best_children = []
-            best_reward = -10
-            for i, child in enumerate(node.children):
-                child.init()
-                reward = compute_reward(child, policy)
 
-                if reward > best_reward:
-                    best_children = [i]
-                    best_reward = reward
 
-                elif reward == best_reward:
-                    best_children.append(i)
-
-            inputs = []
-            labels = []
-            for i in best_children:
-                inputs.append(extract_features(node.getChild(i).buildQuadrant(), node.getChild(i).buildBoard2D()))
-
-                move = node.getChild(i).move
-                labels.append(np.array([9*move[0]+move[1]]))
-
-            optimizer.zero_grad()
-
-            inputs = torch.from_numpy(np.reshape(np.array(inputs), (-1, 900)))
-            labels = torch.from_numpy(np.reshape(np.array(labels), (-1, ))).long()
-
-            outputs = policy.forward(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
-            num_losses += 1   
-
-            node.setChild(node.getChild(choice(best_children)).move)
-            node = node.getChild(0)
-            
-
-        end = current_time_milli()
-
-        print("Time:  ", ((end-start)/1000.0))
-        print("Loss:  ", (running_loss/num_losses))
-
-        running_loss = 0
-        num_losses = 0
-
-        policy.save_weights(policy_name+"_epoch_"+epoch)
-        epoch += 1
+play_MCTS(iterations=1600, simulation=modelSimulation)

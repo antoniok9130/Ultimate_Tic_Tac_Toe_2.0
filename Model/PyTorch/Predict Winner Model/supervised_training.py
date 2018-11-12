@@ -66,7 +66,7 @@ with open(file_name) as recordedGames:
 
         winner = check3InRow([quadrants[g][l] for g in range(3) for l in range(3)])
     
-        factor = len(game) * (2 if winner == T else 1)
+        # factor = len(game) * (2 if winner == T else 1)
         for board, quadrants in game_data:
             # reward = 0.5+0.5*(length+1)/factor
             # penalty = 1-reward

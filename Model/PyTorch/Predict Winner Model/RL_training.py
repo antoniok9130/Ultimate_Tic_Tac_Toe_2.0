@@ -4,11 +4,12 @@ sys.path.append("..\\..\\..\\")
 
 from numba import jit
 import numpy as np
+from random import shuffle
 
 from UTTT import *
 from Predict_Model import *
 
-model = Predict_Model("../ModelInstances/predict1/predict1_model_epoch_35")
+model = Predict_Model("../ModelInstances/predict1/predict1_model_epoch_12")
 
 @jit
 def modelSimulation(quadrants, board, winner, move, player):
@@ -54,47 +55,134 @@ def modelSimulation(quadrants, board, winner, move, player):
         return P1, 2 # at least two into the future
     if winner == 2:
         return P2, 2 # at least two into the future
-        
 
-node = MCTS_Node()
+
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print("Training on:  ", device)
+
+numP1Wins = 0
+numP2Wins = 0
+numTies = 0
+
+iteration = 1
+while True:
+    print("Iteration:", iteration)
+
+    node = MCTS_Node()
+    game_data = []
+
+    start = current_time_milli()
 
     while node.winner == N:
-        print()
-        printBoard(node.buildBoard2D(), node.buildQuadrant())
-        move = [int(m) for m in list(input("Enter Move:  ").replace(" ", ""))]
-        if len(move) == 1:
-            if node.move is not None:
-                move = [node.move[1], move[0]]
-            else:
-                print("Invalid Move:  Need to enter quadrant then move")
-                continue
-
-        elif len(move) != 2:
-            print("Invalid Move:  ", move)
-            continue
-
-        
-        if not node.isLegal(move):
-            print("Illegal Move:  ", move)
-            continue
-
+        move = getMove(node, iterations=1600, simulation=modelSimulation)
         node.setChild(move)
         node = node.getChild(0)
+        game_data.append((node.buildBoard2D(), np.reshape(node.buildQuadrant(), (3, 3))))
+        # print(f"g:   {move[0]}      l:   {move[1]}")
+        # print(f"w:   {node.numWins}      v:   {node.numVisits}")
+        # print(f"confidence:   {node.getConfidence()}")
+        # print(f"time:         {(end-start)/1000.0} seconds")
+    
+    end = current_time_milli()
 
-        printBoard(node.buildBoard2D(), node.buildQuadrant())
+    print("    Time: ", (end-start)/1000.0)
 
-        print("Computer is thinking...")
-        start = current_time_milli()
-        move = getMove(node, iterations=iterations, simulation=modelSimulation)
-        end = current_time_milli()
-        node.setChild(move)
-        node = node.getChild(0)
-        print(f"g:   {move[0]}      l:   {move[1]}")
-        print(f"w:   {node.numWins}      v:   {node.numVisits}")
-        print(f"confidence:   {node.getConfidence()}")
-        print(f"time:         {(end-start)/1000.0} seconds")
+    data = []
 
-    print(f"{node.winner} is the winner!")
+    for board, quadrants in game_data:
+        # reward = 0.5+0.5*(length+1)/factor
+        # penalty = 1-reward
+
+        if node.winner == P1:
+            expected = 1 # [reward, penalty]
+            numP1Wins += 1
+        elif node.winner == P2:
+            expected = 2 # [penalty, reward]
+            numP2Wins += 1
+        else:
+            expected = 0
+            numTies += 1
+
+        for k in range(4):
+            data.append((
+                extract_features(
+                    np.rot90(quadrants, k=k).ravel(),
+                    np.rot90(board, k=k)
+                ),
+                expected
+            ))
+            data.append((
+                extract_features(
+                    np.rot90(np.fliplr(quadrants), k=k).ravel(),
+                    np.rot90(np.fliplr(board), k=k)
+                ),
+                expected
+            ))
+
+    shuffle(data)
+    
+    batch_size = 32
+    training_inputs = [[]]
+    training_labels = [[]]
+
+    for _input_, _label_ in data:
+        if len(training_inputs[-1]) >= batch_size:
+            training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+            # training_inputs[-1] = np.array(training_inputs[-1])
+            training_labels[-1] = np.array(training_labels[-1])
+            training_inputs.append([])
+            training_labels.append([])
+
+        training_inputs[-1].append(_input_)
+        training_labels[-1].append(_label_)
+
+    
+    training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+    training_labels[-1] = np.array(training_labels[-1])
+
+    print("    Number of Data points:        ", len(data))
+    print("    Number of Training batches:   ", len(training_inputs), "\n")
+
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+
+    model = model.to(device)
+
+    running_loss = 0.0
+    for training_input, training_label in zip(training_inputs, training_labels):
+        input_tensor = torch.from_numpy(training_input).to(device)
+        label_tensor = torch.from_numpy(training_label).long().to(device)
+
+        outputs = model.forward(input_tensor)
+        optimizer.zero_grad()
+        loss = criterion(outputs, label_tensor)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+
+    correct = 0
+    with torch.no_grad():
+        for training_input, training_label in zip(training_inputs, training_labels):
+            input_tensor = torch.from_numpy(training_input).to(device)
+            label_tensor = torch.from_numpy(training_label).long().to(device)
+
+            outputs = model.forward(input_tensor)
+            _, predicted = torch.max(outputs.data, 1)
+            correct += (predicted == label_tensor).sum().item()
+            
+
+    print("    Accuracy: ", correct/len(data))
+    print("    Loss: ", running_loss/len(training_inputs))
+
+    model = model.cpu()
+
+    model.save_weights(f"../ModelInstances/predict2/predict2_model_iter_{iteration}")
+
+
+    modelSimulation.recompile()
+
+    iteration += 1
 
 
 

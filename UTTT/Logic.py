@@ -104,12 +104,22 @@ def check3InRowAt(array, position):
 
 
 
-# @jit(cache=True, nopython=True)
-# def potential3inRow(array, position, player = None):
-#     if player is None:
-#         return potential3inRow_np(array, position)
-#     else:
-#         return potential3inRow_wp(array, position, player)
+def getLegalMoves2D(quadrants, board, previousMove):
+    if previousMove is not None and quadrants[previousMove[1]] == N:
+        g = previousMove[1]
+        return [[g, l] for l, q in enumerate(board[g]) if q == N]
+    else:
+        return [[g, l] for g, aQ in enumerate(quadrants) if aQ == N 
+                       for l in range(9) if board[g][l] == N]
+
+
+def getLegalMoves1D(quadrants, board, previousMove):
+    if previousMove is not None and quadrants[previousMove[1]] == N:
+        g = 9*previousMove[1]
+        return [g+l for l, q in enumerate(board[previousMove[1]]) if q == N]
+    else:
+        return [9*g+l for g, aQ in enumerate(quadrants) if aQ == N 
+                      for l in range(9) if board[g][l] == N]
 
 
 @jit(cache=True, nopython=True)
@@ -617,7 +627,6 @@ def simulation(quadrants, board, winner, move, player, policy):
         player = P2 if player == P1 else P1
 
     return winner, length
-
 
 
 # verticalSpace = "     │   │    ║    │   │    ║    │   │    "
