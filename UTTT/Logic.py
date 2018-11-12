@@ -104,59 +104,353 @@ def check3InRowAt(array, position):
 
 
 
+# @jit(cache=True, nopython=True)
+# def potential3inRow(array, position, player = None):
+#     if player is None:
+#         return potential3inRow_np(array, position)
+#     else:
+#         return potential3inRow_wp(array, position, player)
 
-def potential3inRow(array, position, player = None):
-    if player is None:
-        return potential3inRow_np(array, position)
-    else:
-        return potential3inRow_wp(array, position, player)
 
-def potential3inRow_np(array, position):
+@jit(cache=True, nopython=True)
+def potential3inRow(array, position):
+    
+    # for i, pair in enumerate(pairs):
+    #     print(f"if position == {i}:")
+    #     for p0, p1 in pair:
+    #         print(f"    if array[{p0}] != N and array[{p0}] == array[{p1}]:")
+    #         print(f"        if potential != N and potential != array[{p0}]:")
+    #         print(f"            return B")
+    #         print(f"        potential = array[{p0}]")
+    #     print("    return potential\n")
+
     potential = N
-    for p0, p1 in pairs[position]:
-        if array[p0] != N and array[p0] == array[p1]:
-            if potential != N and potential != array[p0]:
-                potential = B
-                break
 
-            potential = array[p0]
+    if position == 0:
+        if array[1] != N and array[1] == array[2]:
+            if potential != N and potential != array[1]:
+                return B
+            potential = array[1]
+        if array[3] != N and array[3] == array[6]:
+            if potential != N and potential != array[3]:
+                return B
+            potential = array[3]
+        if array[4] != N and array[4] == array[8]:
+            if potential != N and potential != array[4]:
+                return B
+            potential = array[4]
+        return potential
+
+    if position == 1:
+        if array[0] != N and array[0] == array[2]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        if array[4] != N and array[4] == array[7]:
+            if potential != N and potential != array[4]:
+                return B
+            potential = array[4]
+        return potential
+
+    if position == 2:
+        if array[0] != N and array[0] == array[1]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        if array[5] != N and array[5] == array[8]:
+            if potential != N and potential != array[5]:
+                return B
+            potential = array[5]
+        if array[4] != N and array[4] == array[6]:
+            if potential != N and potential != array[4]:
+                return B
+            potential = array[4]
+        return potential
+
+    if position == 3:
+        if array[0] != N and array[0] == array[6]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        if array[4] != N and array[4] == array[5]:
+            if potential != N and potential != array[4]:
+                return B
+            potential = array[4]
+        return potential
+
+    if position == 4:
+        if array[0] != N and array[0] == array[8]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        if array[1] != N and array[1] == array[7]:
+            if potential != N and potential != array[1]:
+                return B
+            potential = array[1]
+        if array[2] != N and array[2] == array[6]:
+            if potential != N and potential != array[2]:
+                return B
+            potential = array[2]
+        if array[3] != N and array[3] == array[5]:
+            if potential != N and potential != array[3]:
+                return B
+            potential = array[3]
+        return potential
+
+    if position == 5:
+        if array[2] != N and array[2] == array[8]:
+            if potential != N and potential != array[2]:
+                return B
+            potential = array[2]
+        if array[3] != N and array[3] == array[4]:
+            if potential != N and potential != array[3]:
+                return B
+            potential = array[3]
+        return potential
+
+    if position == 6:
+        if array[0] != N and array[0] == array[3]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        if array[2] != N and array[2] == array[4]:
+            if potential != N and potential != array[2]:
+                return B
+            potential = array[2]
+        if array[7] != N and array[7] == array[8]:
+            if potential != N and potential != array[7]:
+                return B
+            potential = array[7]
+        return potential
+
+    if position == 7:
+        if array[1] != N and array[1] == array[4]:
+            if potential != N and potential != array[1]:
+                return B
+            potential = array[1]
+        if array[6] != N and array[6] == array[8]:
+            if potential != N and potential != array[6]:
+                return B
+            potential = array[6]
+        return potential
+
+    if position == 8:
+        if array[6] != N and array[6] == array[7]:
+            if potential != N and potential != array[6]:
+                return B
+            potential = array[6]
+        if array[2] != N and array[2] == array[5]:
+            if potential != N and potential != array[2]:
+                return B
+            potential = array[2]
+        if array[0] != N and array[0] == array[4]:
+            if potential != N and potential != array[0]:
+                return B
+            potential = array[0]
+        return potential
+
+    # for p0, p1 in pairs[position]:
+    #     if array[p0] != N and array[p0] == array[p1]:
+    #         if potential != N and potential != array[p0]:
+    #             potential = B
+    #             break
+
+    #         potential = array[p0]
 
     return potential
 
+
+@jit(cache=True, nopython=True)
 def potential3inRow_wp(array, position, player):
-    for p0, p1 in pairs[position]:
-        if array[p0] == player and array[p0] == array[p1]:
-            return True
+    # for i, pair in enumerate(pairs):
+    #     print(f"if position == {i}:")
+    #     print(f"    return {' or '.join(f'player == array[{p0}] == array[{p1}]' for p0, p1 in pair)}\n")
 
-    return False
+    if position == 0:
+        return player == array[1] == array[2] or player == array[3] == array[6] or player == array[4] == array[8]
+
+    if position == 1:
+        return player == array[0] == array[2] or player == array[4] == array[7]
+
+    if position == 2:
+        return player == array[0] == array[1] or player == array[5] == array[8] or player == array[4] == array[6]
+
+    if position == 3:
+        return player == array[0] == array[6] or player == array[4] == array[5]
+
+    if position == 4:
+        return player == array[0] == array[8] or player == array[1] == array[7] or player == array[2] == array[6] or player == array[3] == array[5]
+
+    if position == 5:
+        return player == array[2] == array[8] or player == array[3] == array[4]
+
+    if position == 6:
+        return player == array[0] == array[3] or player == array[2] == array[4] or player == array[7] == array[8]
+
+    if position == 7:
+        return player == array[1] == array[4] or player == array[6] == array[8]
+
+    if position == 8:
+        return player == array[6] == array[7] or player == array[2] == array[5] or player == array[0] == array[4]
+
+    # for p0, p1 in pairs[position]:
+    #     if array[p0] == player and array[p0] == array[p1]:
+    #         return True
+
+    # return False
 
 
+@jit(cache=True, nopython=True)
 def updatePotential3inRow(potential, array, position):
     player = array[position]
     if player != N:
-        for pair in pairs[position]:
-            if player == array[pair[0]]:
-                potential[pair[1]] |= player
-            elif player == array[pair[1]]:
-                potential[pair[0]] |= player
+
+        # for i, pair in enumerate(pairs):
+        #     print(f"if position == {i}:")
+        #     for p0, p1 in pair:
+        #         print(f"    if player == array[{p0}]:")
+        #         print(f"        potential[{p1}] |= player")
+        #         print(f"    if player == array[{p1}]:")
+        #         print(f"        potential[{p0}] |= player")
+        #     print()
+
+        if position == 0:
+            if player == array[1]:
+                potential[2] |= player
+            if player == array[2]:
+                potential[1] |= player
+            if player == array[3]:
+                potential[6] |= player
+            if player == array[6]:
+                potential[3] |= player
+            if player == array[4]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[4] |= player
+
+        if position == 1:
+            if player == array[0]:
+                potential[2] |= player
+            if player == array[2]:
+                potential[0] |= player
+            if player == array[4]:
+                potential[7] |= player
+            if player == array[7]:
+                potential[4] |= player
+
+        if position == 2:
+            if player == array[0]:
+                potential[1] |= player
+            if player == array[1]:
+                potential[0] |= player
+            if player == array[5]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[5] |= player
+            if player == array[4]:
+                potential[6] |= player
+            if player == array[6]:
+                potential[4] |= player
+
+        if position == 3:
+            if player == array[0]:
+                potential[6] |= player
+            if player == array[6]:
+                potential[0] |= player
+            if player == array[4]:
+                potential[5] |= player
+            if player == array[5]:
+                potential[4] |= player
+
+        if position == 4:
+            if player == array[0]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[0] |= player
+            if player == array[1]:
+                potential[7] |= player
+            if player == array[7]:
+                potential[1] |= player
+            if player == array[2]:
+                potential[6] |= player
+            if player == array[6]:
+                potential[2] |= player
+            if player == array[3]:
+                potential[5] |= player
+            if player == array[5]:
+                potential[3] |= player
+
+        if position == 5:
+            if player == array[2]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[2] |= player
+            if player == array[3]:
+                potential[4] |= player
+            if player == array[4]:
+                potential[3] |= player
+
+        if position == 6:
+            if player == array[0]:
+                potential[3] |= player
+            if player == array[3]:
+                potential[0] |= player
+            if player == array[2]:
+                potential[4] |= player
+            if player == array[4]:
+                potential[2] |= player
+            if player == array[7]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[7] |= player
+
+        if position == 7:
+            if player == array[1]:
+                potential[4] |= player
+            if player == array[4]:
+                potential[1] |= player
+            if player == array[6]:
+                potential[8] |= player
+            if player == array[8]:
+                potential[6] |= player
+
+        if position == 8:
+            if player == array[6]:
+                potential[7] |= player
+            if player == array[7]:
+                potential[6] |= player
+            if player == array[2]:
+                potential[5] |= player
+            if player == array[5]:
+                potential[2] |= player
+            if player == array[0]:
+                potential[4] |= player
+            if player == array[4]:
+                potential[0] |= player
+
+        # for pair in pairs[position]:
+        #     if player == array[pair[0]]:
+        #         potential[pair[1]] |= player
+        #     elif player == array[pair[1]]:
+        #         potential[pair[0]] |= player
 
 
 def isNextWin(node):
     AIPlayer = P2 if node.getPlayer() == P1 else P1
     quadrants = node.buildQuadrant()
     if node.nextQuadrant != -1:
-        if potential3inRow(quadrants, node.nextQuadrant, AIPlayer):
+        if potential3inRow_wp(quadrants, node.nextQuadrant, AIPlayer):
             quadrant = node.buildQuadrant(quadrant=node.nextQuadrant)
             for i, q in enumerate(quadrant):
-                if q == N and potential3inRow(quadrant, i, AIPlayer):
+                if q == N and potential3inRow_wp(quadrant, i, AIPlayer):
                     return [node.nextQuadrant, i]
 
     else:
         for i, q in enumerate(quadrants):
-            if q == N and potential3inRow(quadrants, i, AIPlayer):
+            if q == N and potential3inRow_wp(quadrants, i, AIPlayer):
                 quadrant = node.buildQuadrant(quadrant=i)
                 for j, q1 in enumerate(quadrant):
-                    if q1 == N and potential3inRow(quadrant, j, AIPlayer):
+                    if q1 == N and potential3inRow_wp(quadrant, j, AIPlayer):
                         return [i, j]
 
     return None
@@ -197,17 +491,51 @@ def getRandomRemaining(quadrant):
     # return np_choice(flatnonzero(quadrant == N))
 
 
-# runs faster without numba
+@jit(cache=True, nopython=True)
 def checkInstantWin(potentialQuadrants, quadrants, board, g, player):
     if quadrants[g] == N and potentialQuadrants[g] == player or potentialQuadrants[g] == B:
-        for l in range(9):
-            if board[g][l] == N and check3InRowAt(board[g], l):
-                return True
+        
+        # for l in range(9):
+        #     print(f"if board[g][{l}] == N and check3InRowAt(board[g], {l}):")
+        #     print(f"    return True")
+
+        if board[g][0] == N and check3InRowAt(board[g], 0):
+            return True
+        if board[g][1] == N and check3InRowAt(board[g], 1):
+            return True
+        if board[g][2] == N and check3InRowAt(board[g], 2):
+            return True
+        if board[g][3] == N and check3InRowAt(board[g], 3):
+            return True
+        if board[g][4] == N and check3InRowAt(board[g], 4):
+            return True
+        if board[g][5] == N and check3InRowAt(board[g], 5):
+            return True
+        if board[g][6] == N and check3InRowAt(board[g], 6):
+            return True
+        if board[g][7] == N and check3InRowAt(board[g], 7):
+            return True
+        if board[g][8] == N and check3InRowAt(board[g], 8):
+            return True
+
+        # for l in range(9):
+        #     if board[g][l] == N and check3InRowAt(board[g], l):
+        #         return True
 
     return False
 
 
-def simulation(state, policy):
+# @jit(cache=True)
+# def simulation(state, policy):
+
+#     quadrants = state.buildQuadrant()
+#     board     = state.buildBoard2D()
+
+#     return jit_simulation(quadrants, board, state.winner, state.move, state.getPlayer(), policy)
+
+
+@jit(cache=True, nopython=True)
+def simulation(quadrants, board, winner, move, player, policy):
     """
     Parameters
     ----------
@@ -215,10 +543,6 @@ def simulation(state, policy):
         The game state
     policy
     """
-    winner = state.winner
-
-    quadrants = state.buildQuadrant()
-    board     = state.buildBoard2D()
 
     numRemainingQuadrants = 0
     numRemainingBoard = np_zeros(9, dtype=intc)
@@ -228,10 +552,9 @@ def simulation(state, policy):
         if quadrant == N:
             numRemainingQuadrants += 1
             potentialQuadrants[i] = potential3inRow(quadrants, i)
-            numRemainingBoard[i] += sum([1 for j in board[i] if j == N])
-
-    move = state.move
-    player = state.getPlayer()
+            for j in board[i]:
+                if j == N:
+                    numRemainingBoard[i] += 1
 
     length = -1
 
@@ -252,22 +575,19 @@ def simulation(state, policy):
             if winner != N:
                 break
 
-        try:
-            if numRemainingBoard[move[1]] > 0:
-                g, l = policy(move, quadrants, board)
-            else:
-                g, l = policy(None, quadrants, board)
-        except:
-            print(move)
-            print(quadrants)
-            print(numRemainingBoard)
-            printBoard(board, quadrants)
-            raise Exception("Exception was thrown")
+        # try:
+        move = policy(move, quadrants, board)
+        g = move[0]
+        l = move[1]
+        # except:
+        #     print(move)
+        #     print(quadrants)
+        #     print(numRemainingBoard)
+        #     printBoard(board, quadrants)
+        #     raise Exception("Exception was thrown")
 
         board[g][l] = player
         numRemainingBoard[g] -= 1
-
-        move = [g, l]
 
         if check3InRowAt(board[g], l):
             quadrants[g] = player

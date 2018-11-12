@@ -7,8 +7,8 @@ import numpy as np
 from ..Logic import *
 from .Node import *
 
+@jit(cache=True, nopython=True)
 def randomPolicy(previousMove, quadrants, board):
-
     if previousMove is not None and quadrants[previousMove[1]] == N:
         g = previousMove[1]
     else:
@@ -19,9 +19,9 @@ def randomPolicy(previousMove, quadrants, board):
     return g, l
 
 
-def randomSimulation(node):
-    winner, length = simulation(node, randomPolicy)
-    return winner
+@jit(cache=True, nopython=True)
+def randomSimulation(quadrants, board, winner, move, player):
+    return simulation(quadrants, board, winner, move, player, randomPolicy)[0] # winner
 
 
 def getMove(node, iterations=3200, simulation=randomSimulation):
@@ -51,7 +51,9 @@ def select(node, simulation=randomSimulation):
             backpropogate(node, node.winner)
 
         elif node.hasMove() and node.getNumVisits() == 0:
-            backpropogate(node, simulation(node))
+            quadrants = node.buildQuadrant()
+            board     = node.buildBoard2D()
+            backpropogate(node, simulation(quadrants, board, node.winner, node.move, node.getPlayer()))
 
         else:
             expand(node, simulation=simulation)
@@ -105,8 +107,10 @@ def expand(node, simulate=True, simulation=randomSimulation):
                 node.addChild(node.__class__(legalMove, node, False))
 
             if simulate:
-                random = node.getChild(np.random.choice(len(node.children), size=1)[0])
-                backpropogate(random, simulation(random))
+                random = node.getChild(np.random.randint(len(node.children)))
+                quadrants = node.buildQuadrant()
+                board     = node.buildBoard2D()
+                backpropogate(random, simulation(quadrants, board, node.winner, node.move, node.getPlayer()))
 
 
 def backpropogate(node: UTTT_Node, winner):
