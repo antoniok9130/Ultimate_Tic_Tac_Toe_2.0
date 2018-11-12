@@ -27,88 +27,88 @@ Simple Artificial Neural Network with the following feature inputs:
 
 '''
 
-@jit(cache=True)
-def extract_features(quadrants, board):
-
-    features = []
-
-    features.extend([
-        quadrant == P1 for quadrant in quadrants
-    ])
-    features.extend([
-        quadrant == P2 for quadrant in quadrants
-    ])
-    features.extend([
-        P1 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
-    ])
-    features.extend([
-        P2 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
-    ])
-    features.extend([
-        board[i][j] == P1 for i in range(9) for j in range(9)
-    ])
-    features.extend([
-        board[i][j] == P2 for i in range(9) for j in range(9)
-    ])
-    features.extend([
-        board[i][j] == board[i][k] == P1 for i in range(9) for j in range(9) for k in range(j)
-    ])
-    features.extend([
-        board[i][j] == board[i][k] == P2 for i in range(9) for j in range(9) for k in range(j)
-    ])
-
-    return np.array(features)*1.0
-
-# @jit
+# @jit(cache=True)
 # def extract_features(quadrants, board):
-#     features = np.zeros(900)
-#     jit_extract_features(features, quadrants, board)
-#     return features
 
-# @jit(nopython=True)
-# def jit_extract_features(features, quadrants, board):
+#     features = []
 
-#     n = 0
-#     for quadrant in quadrants:
-#         if quadrant == P1:
-#             features[n] = 1.0
-#         n += 1
-#     for quadrant in quadrants:
-#         if quadrant == P2:
-#             features[n] = 1.0
-#         n += 1
-#     for i, q1 in enumerate(quadrants):
-#         for j, q2 in enumerate(quadrants):
-#             if i < j and P1 == q1 == q2:
-#                 features[n] = 1.0
-#             n += 1
-#     for i, q1 in enumerate(quadrants):
-#         for j, q2 in enumerate(quadrants):
-#             if i < j and P2 == q1 == q2:
-#                 features[n] = 1.0
-#             n += 1
-#     for i in range(9):
-#         for j in range(9):
-#             if board[i][j] == P1:
-#                 features[n] = 1.0
-#             n += 1
-#     for i in range(9):
-#         for j in range(9):
-#             if board[i][j] == P2:
-#                 features[n] = 1.0
-#             n += 1
-#     for i in range(9):
-#         for j in range(9):
-#              for k in range(j):
-#                 if P1 == board[i][j] == board[i][k]:
-#                     features[n] = 1.0
-#                 n += 1
-#     for i in range(9):
-#         for j in range(9):
-#              for k in range(j):
-#                 if P2 == board[i][j] == board[i][k]:
-#                     features[n] = 1.0
-#                 n += 1
+#     features.extend([
+#         quadrant == P1 for quadrant in quadrants
+#     ])
+#     features.extend([
+#         quadrant == P2 for quadrant in quadrants
+#     ])
+#     features.extend([
+#         P1 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
+#     ])
+#     features.extend([
+#         P2 == q1 == q2 for i, q1 in enumerate(quadrants) for j, q2 in enumerate(quadrants) if i < j
+#     ])
+#     features.extend([
+#         board[i][j] == P1 for i in range(9) for j in range(9)
+#     ])
+#     features.extend([
+#         board[i][j] == P2 for i in range(9) for j in range(9)
+#     ])
+#     features.extend([
+#         board[i][j] == board[i][k] == P1 for i in range(9) for j in range(9) for k in range(j)
+#     ])
+#     features.extend([
+#         board[i][j] == board[i][k] == P2 for i in range(9) for j in range(9) for k in range(j)
+#     ])
+
+#     return np.array(features)*1.0
+
+@jit
+def extract_features(quadrants, board):
+    features = np.zeros(900)
+    jit_extract_features(features, quadrants, board)
+    return features
+
+@jit(nopython=True)
+def jit_extract_features(features, quadrants, board):
+
+    n = 0
+    for quadrant in quadrants:
+        if quadrant == P1:
+            features[n] = 1.0
+        n += 1
+    for quadrant in quadrants:
+        if quadrant == P2:
+            features[n] = 1.0
+        n += 1
+    for i, q1 in enumerate(quadrants):
+        for j, q2 in enumerate(quadrants):
+            if i < j and P1 == q1 == q2:
+                features[n] = 1.0
+            n += 1
+    for i, q1 in enumerate(quadrants):
+        for j, q2 in enumerate(quadrants):
+            if i < j and P2 == q1 == q2:
+                features[n] = 1.0
+            n += 1
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] == P1:
+                features[n] = 1.0
+            n += 1
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] == P2:
+                features[n] = 1.0
+            n += 1
+    for i in range(9):
+        for j in range(9):
+             for k in range(j):
+                if P1 == board[i][j] == board[i][k]:
+                    features[n] = 1.0
+                n += 1
+    for i in range(9):
+        for j in range(9):
+             for k in range(j):
+                if P2 == board[i][j] == board[i][k]:
+                    features[n] = 1.0
+                n += 1
 
 
 

@@ -32,7 +32,7 @@ class UTTT_Node:
             self.length = parent.length+1
 
             if move is not None and not self.capturedQuadrantEquals(move[1], True):
-                nextQuadrant = move[1]
+                self.nextQuadrant = move[1]
 
             if initialize:
                 if self.winner == N:

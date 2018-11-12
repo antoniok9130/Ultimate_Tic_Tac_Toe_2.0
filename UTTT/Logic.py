@@ -576,7 +576,7 @@ def simulation(quadrants, board, winner, move, player, policy):
                 break
 
         # try:
-        move = policy(move, quadrants, board)
+        policy(move, quadrants, board)
         g = move[0]
         l = move[1]
         # except:
