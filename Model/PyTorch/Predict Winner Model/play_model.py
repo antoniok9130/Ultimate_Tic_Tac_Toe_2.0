@@ -8,7 +8,7 @@ import numpy as np
 from UTTT import *
 from Predict_Model import *
 
-model = Predict_Model("../ModelInstances/predict1/predict1_model_epoch_35")
+model = Predict_Model("../ModelInstances/predict2/predict2_model_iter_278")
 
 @jit
 def modelSimulation(quadrants, board, winner, move, player):
@@ -53,10 +53,11 @@ def modelSimulation(quadrants, board, winner, move, player):
     if winner == 1:
         return P1, 2 # at least two into the future
     if winner == 2:
+        
         return P2, 2 # at least two into the future
         
 
-play_MCTS(iterations=3200, simulation=modelSimulation)
+play_MCTS(iterations=4800, simulation=modelSimulation)
 
 
 
