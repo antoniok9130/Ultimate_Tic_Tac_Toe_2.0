@@ -1,4 +1,5 @@
 
+import os
 import sys
 sys.path.append("../../../")
 
@@ -61,14 +62,27 @@ def modelSimulation(quadrants, board, winner, move, player):
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Training on:  ", device)
 
+test_inputs = []
+test_labels = []
+with open("../Data/recordedGames.txt") as file:
+    for row in file:
+        sequence = list(row)
+
+        i = 0
+        # while(i < len(sequence)):
+            
+
 numP1Wins = 0
 numP2Wins = 0
 numTies = 0
 
-iteration = 279
+iteration = 0
 while True:
+    with open("../ModelInstances/predict2/log.csv", "w") as file:
+        file.write("iteration,time,loss,accuracy,start,game")
+        file.write(os.linesep)
+
     print("Iteration:", iteration)
-    sys.stdout.flush()
     try:
         node = MCTS_Node()
         game_data = []
@@ -86,9 +100,8 @@ while True:
             # print(f"time:         {(end-start)/1000.0} seconds")
         
         end = current_time_milli()
-
-        print("    Time: ", (end-start)/1000.0)
-        sys.stdout.flush()
+        duration = (end-start)/1000.0
+        print("    Time: ", duration)
 
         data = []
 
