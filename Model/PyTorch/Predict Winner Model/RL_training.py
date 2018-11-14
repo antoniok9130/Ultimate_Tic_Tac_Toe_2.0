@@ -1,6 +1,6 @@
 
 import sys
-sys.path.append("..\\..\\..\\")
+sys.path.append("../../../")
 
 from numba import jit
 import numpy as np
@@ -9,7 +9,7 @@ from random import shuffle
 from UTTT import *
 from Predict_Model import *
 
-model = Predict_Model("../ModelInstances/predict1/predict1_model_epoch_12")
+model = Predict_Model("../ModelInstances/predict2_model_iter_278")
 
 @jit
 def modelSimulation(quadrants, board, winner, move, player):
@@ -65,119 +65,129 @@ numP1Wins = 0
 numP2Wins = 0
 numTies = 0
 
-iteration = 1
+iteration = 279
 while True:
     print("Iteration:", iteration)
+    sys.stdout.flush()
+    try:
+        node = MCTS_Node()
+        game_data = []
 
-    node = MCTS_Node()
-    game_data = []
+        start = current_time_milli()
 
-    start = current_time_milli()
+        while node.winner == N:
+            move = getMove(node, iterations=1600, simulation=modelSimulation)
+            node.setChild(move)
+            node = node.getChild(0)
+            game_data.append((node.buildBoard2D(), np.reshape(node.buildQuadrant(), (3, 3))))
+            # print(f"g:   {move[0]}      l:   {move[1]}")
+            # print(f"w:   {node.numWins}      v:   {node.numVisits}")
+            # print(f"confidence:   {node.getConfidence()}")
+            # print(f"time:         {(end-start)/1000.0} seconds")
+        
+        end = current_time_milli()
 
-    while node.winner == N:
-        move = getMove(node, iterations=1600, simulation=modelSimulation)
-        node.setChild(move)
-        node = node.getChild(0)
-        game_data.append((node.buildBoard2D(), np.reshape(node.buildQuadrant(), (3, 3))))
-        # print(f"g:   {move[0]}      l:   {move[1]}")
-        # print(f"w:   {node.numWins}      v:   {node.numVisits}")
-        # print(f"confidence:   {node.getConfidence()}")
-        # print(f"time:         {(end-start)/1000.0} seconds")
-    
-    end = current_time_milli()
+        print("    Time: ", (end-start)/1000.0)
+        sys.stdout.flush()
 
-    print("    Time: ", (end-start)/1000.0)
+        data = []
 
-    data = []
+        for board, quadrants in game_data:
+            # reward = 0.5+0.5*(length+1)/factor
+            # penalty = 1-reward
 
-    for board, quadrants in game_data:
-        # reward = 0.5+0.5*(length+1)/factor
-        # penalty = 1-reward
+            if node.winner == P1:
+                expected = 1 # [reward, penalty]
+                numP1Wins += 1
+            elif node.winner == P2:
+                expected = 2 # [penalty, reward]
+                numP2Wins += 1
+            else:
+                expected = 0
+                numTies += 1
 
-        if node.winner == P1:
-            expected = 1 # [reward, penalty]
-            numP1Wins += 1
-        elif node.winner == P2:
-            expected = 2 # [penalty, reward]
-            numP2Wins += 1
-        else:
-            expected = 0
-            numTies += 1
+            for k in range(4):
+                data.append((
+                    extract_features(
+                        np.rot90(quadrants, k=k).ravel(),
+                        np.rot90(board, k=k)
+                    ),
+                    expected
+                ))
+                data.append((
+                    extract_features(
+                        np.rot90(np.fliplr(quadrants), k=k).ravel(),
+                        np.rot90(np.fliplr(board), k=k)
+                    ),
+                    expected
+                ))
 
-        for k in range(4):
-            data.append((
-                extract_features(
-                    np.rot90(quadrants, k=k).ravel(),
-                    np.rot90(board, k=k)
-                ),
-                expected
-            ))
-            data.append((
-                extract_features(
-                    np.rot90(np.fliplr(quadrants), k=k).ravel(),
-                    np.rot90(np.fliplr(board), k=k)
-                ),
-                expected
-            ))
+        shuffle(data)
+        
+        batch_size = 32
+        training_inputs = [[]]
+        training_labels = [[]]
 
-    shuffle(data)
-    
-    batch_size = 32
-    training_inputs = [[]]
-    training_labels = [[]]
+        for _input_, _label_ in data:
+            if len(training_inputs[-1]) >= batch_size:
+                training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+                # training_inputs[-1] = np.array(training_inputs[-1])
+                training_labels[-1] = np.array(training_labels[-1])
+                training_inputs.append([])
+                training_labels.append([])
 
-    for _input_, _label_ in data:
-        if len(training_inputs[-1]) >= batch_size:
-            training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
-            # training_inputs[-1] = np.array(training_inputs[-1])
-            training_labels[-1] = np.array(training_labels[-1])
-            training_inputs.append([])
-            training_labels.append([])
+            training_inputs[-1].append(_input_)
+            training_labels[-1].append(_label_)
 
-        training_inputs[-1].append(_input_)
-        training_labels[-1].append(_label_)
+        
+        training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+        training_labels[-1] = np.array(training_labels[-1])
 
-    
-    training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
-    training_labels[-1] = np.array(training_labels[-1])
+        print("    Number of Data points:        ", len(data))
+        print("    Number of Training batches:   ", len(training_inputs), "\n")
+        sys.stdout.flush()
 
-    print("    Number of Data points:        ", len(data))
-    print("    Number of Training batches:   ", len(training_inputs), "\n")
+        criterion = torch.nn.CrossEntropyLoss()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-    criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+        model = model.to(device)
 
-    model = model.to(device)
-
-    running_loss = 0.0
-    for training_input, training_label in zip(training_inputs, training_labels):
-        input_tensor = torch.from_numpy(training_input).to(device)
-        label_tensor = torch.from_numpy(training_label).long().to(device)
-
-        outputs = model.forward(input_tensor)
-        optimizer.zero_grad()
-        loss = criterion(outputs, label_tensor)
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item()
-
-    correct = 0
-    with torch.no_grad():
+        running_loss = 0.0
         for training_input, training_label in zip(training_inputs, training_labels):
             input_tensor = torch.from_numpy(training_input).to(device)
             label_tensor = torch.from_numpy(training_label).long().to(device)
 
             outputs = model.forward(input_tensor)
-            _, predicted = torch.max(outputs.data, 1)
-            correct += (predicted == label_tensor).sum().item()
-            
+            optimizer.zero_grad()
+            loss = criterion(outputs, label_tensor)
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
 
-    print("    Accuracy: ", correct/len(data))
-    print("    Loss: ", running_loss/len(training_inputs))
+        correct = 0
+        with torch.no_grad():
+            for training_input, training_label in zip(training_inputs, training_labels):
+                input_tensor = torch.from_numpy(training_input).to(device)
+                label_tensor = torch.from_numpy(training_label).long().to(device)
 
-    model = model.cpu()
+                outputs = model.forward(input_tensor)
+                _, predicted = torch.max(outputs.data, 1)
+                correct += (predicted == label_tensor).sum().item()
+                
 
-    model.save_weights(f"../ModelInstances/predict2/predict2_model_iter_{iteration}")
+        print("    Accuracy: ", correct/len(data))
+        print("    Loss: ", running_loss/len(training_inputs))
+        sys.stdout.flush()
+
+        model = model.cpu()
+
+        model.save_weights(f"../ModelInstances/predict2/predict2_model_iter_{iteration}")
+
+        with open("../ModelInstances/predict2/losses.csv", "a") as file:
+            file.write(f"{iteration},{running_loss/len(training_inputs)}")
+
+    except:
+        pass
 
 
     modelSimulation.recompile()
