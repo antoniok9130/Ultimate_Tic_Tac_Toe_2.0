@@ -138,7 +138,7 @@ while True:
                 start = current_time_milli()
 
                 while node.winner == N:
-                    move = getMove(node, iterations=10, simulation=modelSimulation)
+                    move = getMove(node, iterations=3200, simulation=modelSimulation)
                     moves.append(move)
                     node.setChild(move)
                     node = node.getChild(0)
@@ -254,15 +254,15 @@ while True:
                     file.write(f"{iteration},{duration},{loss},{accuracy},[{g}, {l}],{''.join(f'{move[0]}{move[1]}' for move in moves)},{node.winner}\n")
 
 
-            except Exception as e:
-                print(e)
+            except:
+                print("An Exception was thrown")
 
 
             modelSimulation.recompile()
 
             iteration += 1
             
-            exit(0)
+
 
 
 
