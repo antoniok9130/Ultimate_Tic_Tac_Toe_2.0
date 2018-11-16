@@ -111,7 +111,7 @@ test_labels = np.array(test_labels)
 print("Finished Loading Test Data.\n")
 
             
-with open("../ModelInstances/predict2/log.csv", "w") as file:
+with open("../ModelInstances/predict3/log.csv", "w") as file:
     file.write("iteration,duration,loss,accuracy,start,game,winner\n")
 
 numP1Wins = 0
@@ -138,7 +138,7 @@ while True:
                 start = current_time_milli()
 
                 while node.winner == N:
-                    move = getMove(node, iterations=3200, simulation=modelSimulation)
+                    move = getMove(node, iterations=1600, simulation=modelSimulation)
                     moves.append(move)
                     node.setChild(move)
                     node = node.getChild(0)
@@ -215,18 +215,20 @@ while True:
                 model = model.to(device)
 
                 running_loss = 0.0
-                for training_input, training_label in zip(training_inputs, training_labels):
-                    input_tensor = torch.from_numpy(training_input).to(device)
-                    label_tensor = torch.from_numpy(training_label).long().to(device)
+                num_epochs = 5
+                for epoch in range(num_epochs):
+                    for training_input, training_label in zip(training_inputs, training_labels):
+                        input_tensor = torch.from_numpy(training_input).to(device)
+                        label_tensor = torch.from_numpy(training_label).long().to(device)
+    
+                        outputs = model.forward(input_tensor)
+                        optimizer.zero_grad()
+                        loss = criterion(outputs, label_tensor)
+                        loss.backward()
+                        optimizer.step()
+                        running_loss += loss.item()
 
-                    outputs = model.forward(input_tensor)
-                    optimizer.zero_grad()
-                    loss = criterion(outputs, label_tensor)
-                    loss.backward()
-                    optimizer.step()
-                    running_loss += loss.item()
-
-                loss = running_loss/len(training_inputs)
+                loss = running_loss/(len(training_inputs)*num_epochs)
                 print("    Loss: ", loss)
 
                 model = model.cpu()
@@ -241,17 +243,19 @@ while True:
                     correct += (predicted == label_tensor).sum().item()
                         
                 accuracy = correct/len(test_inputs)
-                print("    Accuracy: ", accuracy)
+                print("    Accuracy: ", accuracy, "\n")
 
                 if loss < min_loss:
-                    model.save_weights(f"../ModelInstances/predict2/predict2_model_min_loss")
+                    model.save_weights(f"../ModelInstances/predict3/predict3_model_min_loss")
+                    min_loss = loss
                 if accuracy > max_accuracy:
-                    model.save_weights(f"../ModelInstances/predict2/predict2_model_max_accuracy")
-                
-                model.save_weights(f"../ModelInstances/predict2/predict2_model_most_recent")
+                    model.save_weights(f"../ModelInstances/predict3/predict3_model_max_accuracy")
+                    max_accuracy = accuracy
+             
+                model.save_weights(f"../ModelInstances/predict3/predict3_model_most_recent")
 
-                with open("../ModelInstances/predict2/log.csv", "a") as file:
-                    file.write(f"{iteration},{duration},{loss},{accuracy},[{g}, {l}],{''.join(f'{move[0]}{move[1]}' for move in moves)},{node.winner}\n")
+                with open("../ModelInstances/predict3/log.csv", "a") as file:
+                    file.write(f"{iteration},{duration},{loss},{accuracy},[{g} {l}],{''.join(f'{move[0]}{move[1]}' for move in moves)},{node.winner}\n")
 
 
             except:

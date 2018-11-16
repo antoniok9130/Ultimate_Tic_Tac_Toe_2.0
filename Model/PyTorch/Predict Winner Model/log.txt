@@ -13165,3 +13165,17 @@ Iteration: 1908
     Loss:  0.7622026333454994
     Accuracy:  0.5431763857798687
 Iteration: 1909
+    Time:  94.223
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6440089826878221
+    Accuracy:  0.5512008195166369
+Iteration: 1910
+    Time:  76.798
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.5874061542453064
+    Accuracy:  0.5531168190613499
+Iteration: 1911
