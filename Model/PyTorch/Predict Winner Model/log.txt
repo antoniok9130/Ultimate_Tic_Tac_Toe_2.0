@@ -9427,3 +9427,3741 @@ Iteration: 1369
     Loss:  0.7425663495002023
     Accuracy:  0.5125773039420268
 Iteration: 1370
+    Time:  97.115
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.9024431630843207
+    Accuracy:  0.4270023143756877
+Iteration: 1371
+    Time:  77.828
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.9711126708250158
+    Accuracy:  0.5112683537580149
+Iteration: 1372
+    Time:  76.938
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.7593587253254598
+    Accuracy:  0.5313389232461965
+Iteration: 1373
+    Time:  95.953
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.29323308624802
+    Accuracy:  0.5502523048905414
+Iteration: 1374
+    Time:  70.248
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.9210895475499492
+    Accuracy:  0.5216830443525439
+Iteration: 1375
+    Time:  82.893
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.9437065518366602
+    Accuracy:  0.5582387980422658
+Iteration: 1376
+    Time:  80.097
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6798466066982544
+    Accuracy:  0.5634366581932694
+Iteration: 1377
+    Time:  85.928
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.593952453201651
+    Accuracy:  0.5634176879007474
+Iteration: 1378
+    Time:  76.206
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4541964985566704
+    Accuracy:  0.5633607770231817
+Iteration: 1379
+    Time:  99.329
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.4968890529449967
+    Accuracy:  0.5628106385400463
+Iteration: 1380
+    Time:  87.472
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.5816711172847492
+    Accuracy:  0.5633607770231817
+Iteration: 1381
+    Time:  75.833
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4539921359537673
+    Accuracy:  0.5612740448457715
+Iteration: 1382
+    Time:  99.226
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.515460109774392
+    Accuracy:  0.5593201047160147
+Iteration: 1383
+    Time:  70.491
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.634998373398741
+    Accuracy:  0.5620897674242137
+Iteration: 1384
+    Time:  103.559
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.4916476505840888
+    Accuracy:  0.5592821641309709
+Iteration: 1385
+    Time:  91.707
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.6041814329316767
+    Accuracy:  0.5617293318662974
+Iteration: 1386
+    Time:  77.976
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6154499796313166
+    Accuracy:  0.5633228364381379
+Iteration: 1387
+    Time:  89.054
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.4859305117017982
+    Accuracy:  0.5616534506962098
+Iteration: 1388
+    Time:  77.993
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.3176177235652438
+    Accuracy:  0.552661532040824
+Iteration: 1389
+    Time:  106.025
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  0.6524804814763491
+    Accuracy:  0.561805213036385
+Iteration: 1390
+    Time:  73.372
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.3449155137283484
+    Accuracy:  0.5535721060818758
+Iteration: 1391
+    Time:  97.801
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.4643642620788482
+    Accuracy:  0.5508593542512426
+Iteration: 1392
+    Time:  97.482
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.6522900911161241
+    Accuracy:  0.5571005804909511
+Iteration: 1393
+    Time:  88.627
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.609024264502746
+    Accuracy:  0.5600409758318473
+Iteration: 1394
+    Time:  90.338
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6001656400427627
+    Accuracy:  0.5610274310429867
+Iteration: 1395
+    Time:  112.373
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.2078420452253347
+    Accuracy:  0.5367833971999848
+Iteration: 1396
+    Time:  87.005
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.7150495648499742
+    Accuracy:  0.556512501422772
+Iteration: 1397
+    Time:  77.858
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6144705594822337
+    Accuracy:  0.5590545206207079
+Iteration: 1398
+    Time:  74.246
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.0467569317958985
+    Accuracy:  0.5387373373297416
+Iteration: 1399
+    Time:  90.014
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.8772146346417055
+    Accuracy:  0.5581818871647001
+Iteration: 1400
+    Time:  71.271
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.5938321118559781
+    Accuracy:  0.5588079068179231
+Iteration: 1401
+    Time:  87.062
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.610997238636282
+    Accuracy:  0.5601358272944569
+Iteration: 1402
+    Time:  98.747
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.6656646728554519
+    Accuracy:  0.5634745987783132
+Iteration: 1403
+    Time:  84.242
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.5052790393322115
+    Accuracy:  0.5634366581932694
+Iteration: 1404
+    Time:  99.601
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.6112256153493367
+    Accuracy:  0.5636643017035323
+Iteration: 1405
+    Time:  97.346
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.5901620948612316
+    Accuracy:  0.5637591531661418
+Iteration: 1406
+    Time:  74.146
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.4492552925390898
+    Accuracy:  0.5637781234586637
+Iteration: 1407
+    Time:  99.244
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.2937865212711634
+    Accuracy:  0.5571954319535607
+Iteration: 1408
+    Time:  83.52
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.1422208552237318
+    Accuracy:  0.5298971810145312
+Iteration: 1409
+    Time:  100.913
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.7981734597425183
+    Accuracy:  0.5591493720833175
+Iteration: 1410
+    Time:  93.725
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.8538585446619353
+    Accuracy:  0.5389460105474826
+Iteration: 1411
+    Time:  94.115
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.7984542677869733
+    Accuracy:  0.506374018287362
+Iteration: 1412
+    Time:  78.93
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.9856714075214978
+    Accuracy:  0.5391167431801799
+Iteration: 1413
+    Time:  93.601
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7312556294159295
+    Accuracy:  0.5561900064498995
+Iteration: 1414
+    Time:  88.343
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.0031903474430361
+    Accuracy:  0.5217968661076754
+Iteration: 1415
+    Time:  92.642
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7936815750123704
+    Accuracy:  0.5444094547937929
+Iteration: 1416
+    Time:  89.521
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.50423745125603
+    Accuracy:  0.5419433167659445
+Iteration: 1417
+    Time:  101.171
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.6569432351535518
+    Accuracy:  0.5576507189740866
+Iteration: 1418
+    Time:  77.053
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.0977746163944897
+    Accuracy:  0.5315665667564594
+Iteration: 1419
+    Time:  78.389
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.9603760287679186
+    Accuracy:  0.4822058656144478
+Iteration: 1420
+    Time:  85.944
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.8838648878929966
+    Accuracy:  0.5290435178510453
+Iteration: 1421
+    Time:  98.83
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  1.0233774346507263
+    Accuracy:  0.45957430663580834
+Iteration: 1422
+    Time:  91.606
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6903529661698067
+    Accuracy:  0.4121485753310316
+Iteration: 1423
+    Time:  86.914
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.2260471026211612
+    Accuracy:  0.48254733087984214
+Iteration: 1424
+    Time:  74.24
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6602895919510545
+    Accuracy:  0.5052358007360473
+Iteration: 1425
+    Time:  94.204
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.9416505423463121
+    Accuracy:  0.4339264711461851
+Iteration: 1426
+    Time:  87.571
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.492761588586508
+    Accuracy:  0.444777478468718
+Iteration: 1427
+    Time:  85.47
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.8360637129314749
+    Accuracy:  0.503831999089426
+Iteration: 1428
+    Time:  71.061
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.6828122365922472
+    Accuracy:  0.46991311606024966
+Iteration: 1429
+    Time:  87.689
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6889196250239704
+    Accuracy:  0.43320560003035247
+Iteration: 1430
+    Time:  89.218
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6155678996362649
+    Accuracy:  0.4185036233258717
+Iteration: 1431
+    Time:  99.239
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.7361768059925676
+    Accuracy:  0.391888302917631
+Iteration: 1432
+    Time:  79.935
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5821873296187066
+    Accuracy:  0.39012406571309327
+Iteration: 1433
+    Time:  86.515
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.2094020826862395
+    Accuracy:  0.407823348636036
+Iteration: 1434
+    Time:  94.15
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6144198627103834
+    Accuracy:  0.3982812914975149
+Iteration: 1435
+    Time:  77.636
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.5019711366673172
+    Accuracy:  0.40209432029441894
+Iteration: 1436
+    Time:  109.885
+    Number of Data points:         552
+    Number of Training batches:    18 
+
+    Loss:  0.6264490976664485
+    Accuracy:  0.39393709450999737
+Iteration: 1437
+    Time:  111.456
+    Number of Data points:         560
+    Number of Training batches:    18 
+
+    Loss:  1.487399587625665
+    Accuracy:  0.4023219638046819
+Iteration: 1438
+    Time:  95.991
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.349517788575647
+    Accuracy:  0.4316500360435558
+Iteration: 1439
+    Time:  84.654
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7265146782141725
+    Accuracy:  0.4058124976287134
+Iteration: 1440
+    Time:  90.828
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.4284480422310601
+    Accuracy:  0.4251621960010623
+Iteration: 1441
+    Time:  82.758
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7970612577837582
+    Accuracy:  0.4895094282353834
+Iteration: 1442
+    Time:  96.067
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.499908763587753
+    Accuracy:  0.4810676480631331
+Iteration: 1443
+    Time:  85.37
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7160236486414286
+    Accuracy:  0.44618128011533936
+Iteration: 1444
+    Time:  80.215
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5829441383795932
+    Accuracy:  0.4391053610046667
+Iteration: 1445
+    Time:  69.968
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.8423733953491069
+    Accuracy:  0.40152521151876164
+Iteration: 1446
+    Time:  93.937
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5877031423292642
+    Accuracy:  0.39803467769473005
+Iteration: 1447
+    Time:  67.057
+    Number of Data points:         344
+    Number of Training batches:    11 
+
+    Loss:  0.6788350311049942
+    Accuracy:  0.3898584816177865
+Iteration: 1448
+    Time:  91.468
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5385389463516719
+    Accuracy:  0.3912053723868422
+Iteration: 1449
+    Time:  81.22
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.248054253955177
+    Accuracy:  0.42377736464696286
+Iteration: 1450
+    Time:  84.069
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5868452944896203
+    Accuracy:  0.41829495010813067
+Iteration: 1451
+    Time:  85.584
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.6625602351259837
+    Accuracy:  0.39551162878931595
+Iteration: 1452
+    Time:  94.97
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.542067323817262
+    Accuracy:  0.3972189551162879
+Iteration: 1453
+    Time:  74.142
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.5006404095216785
+    Accuracy:  0.4016959441514588
+Iteration: 1454
+    Time:  92.704
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.5163795734116299
+    Accuracy:  0.4046742800773988
+Iteration: 1455
+    Time:  89.193
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5938673568893761
+    Accuracy:  0.3994005387563076
+Iteration: 1456
+    Time:  87.809
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5580247000430898
+    Accuracy:  0.398888340858216
+Iteration: 1457
+    Time:  100.67
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.600621751961952
+    Accuracy:  0.3918313920400653
+Iteration: 1458
+    Time:  81.768
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.296737253657659
+    Accuracy:  0.42624350267481126
+Iteration: 1459
+    Time:  89.445
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.1702472003222666
+    Accuracy:  0.48374245930872256
+Iteration: 1460
+    Time:  80.237
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.9917262952596124
+    Accuracy:  0.44067989528398527
+Iteration: 1461
+    Time:  91.574
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.7284256328411587
+    Accuracy:  0.394866638843571
+Iteration: 1462
+    Time:  87.643
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5630799041467712
+    Accuracy:  0.3942595894828698
+Iteration: 1463
+    Time:  80.423
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5164268854936367
+    Accuracy:  0.39560648025192546
+Iteration: 1464
+    Time:  89.06
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.6980205311741006
+    Accuracy:  0.38572295784801003
+Iteration: 1465
+    Time:  97.761
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5487245573318682
+    Accuracy:  0.38574192814053193
+Iteration: 1466
+    Time:  88.433
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6042657980245598
+    Accuracy:  0.38416739386121335
+Iteration: 1467
+    Time:  91.02
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.508136880088885
+    Accuracy:  0.38574192814053193
+Iteration: 1468
+    Time:  80.52
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5790116664328933
+    Accuracy:  0.3854004628751375
+Iteration: 1469
+    Time:  91.175
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.474155316147294
+    Accuracy:  0.38720264066471904
+Iteration: 1470
+    Time:  68.846
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.542502702046974
+    Accuracy:  0.3873733732974162
+Iteration: 1471
+Could not find child with move:  5 4
+An Exception was thrown
+Iteration: 1472
+    Time:  88.894
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5393635976227744
+    Accuracy:  0.3878286603179421
+Iteration: 1473
+    Time:  76.919
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.1973960963138408
+    Accuracy:  0.4091133285275259
+Iteration: 1474
+    Time:  70.237
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.8263470138645305
+    Accuracy:  0.3898774519103085
+Iteration: 1475
+    Time:  96.722
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.5597589478571285
+    Accuracy:  0.38949804605987026
+Iteration: 1476
+    Time:  90.426
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.4254691074067938
+    Accuracy:  0.39515119323139963
+Iteration: 1477
+    Time:  100.019
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  0.5689704574961246
+    Accuracy:  0.3939181242174754
+Iteration: 1478
+    Time:  95.297
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.9527956115296656
+    Accuracy:  0.43923815305232006
+Iteration: 1479
+    Time:  73.303
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  0.7971357233394262
+    Accuracy:  0.4736123231020222
+Iteration: 1480
+    Time:  77.901
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6157994427929362
+    Accuracy:  0.4566908221724779
+Iteration: 1481
+    Time:  91.267
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.454475210415523
+    Accuracy:  0.4574116932883105
+Iteration: 1482
+    Time:  78.522
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.9500710755019205
+    Accuracy:  0.4077474674659483
+Iteration: 1483
+    Time:  85.948
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6129708520035927
+    Accuracy:  0.39556853966688166
+Iteration: 1484
+    Time:  81.298
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.575523738504556
+    Accuracy:  0.39462002504078614
+Iteration: 1485
+    Time:  92.371
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5650096019585756
+    Accuracy:  0.3936904807072125
+Iteration: 1486
+    Time:  81.568
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.493433150543681
+    Accuracy:  0.39746556891907275
+Iteration: 1487
+    Time:  109.699
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.1022522750401105
+    Accuracy:  0.4747884812383807
+Iteration: 1488
+    Time:  78.569
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.244338748746875
+    Accuracy:  0.511894373411238
+Iteration: 1489
+    Time:  92.581
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.8003327298540637
+    Accuracy:  0.46441173122889556
+Iteration: 1490
+    Time:  76.584
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.876175971106253
+    Accuracy:  0.508062374321812
+Iteration: 1491
+    Time:  83.786
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.8062815386627785
+    Accuracy:  0.5364798725196342
+Iteration: 1492
+    Time:  88.43
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.3066819068046565
+    Accuracy:  0.5180028076032932
+Iteration: 1493
+    Time:  80.899
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.8229417194450479
+    Accuracy:  0.4702356110331221
+Iteration: 1494
+    Time:  74.735
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6199893923485708
+    Accuracy:  0.4545661494100239
+Iteration: 1495
+    Time:  80.421
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5829438416569501
+    Accuracy:  0.45160678377660585
+Iteration: 1496
+    Time:  91.969
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5903308555309034
+    Accuracy:  0.4437341123800129
+Iteration: 1497
+    Time:  73.593
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.6814513991719529
+    Accuracy:  0.4224494441704291
+Iteration: 1498
+    Time:  85.671
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5775340512565111
+    Accuracy:  0.41899685093144134
+Iteration: 1499
+    Time:  101.246
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.468295300026864
+    Accuracy:  0.41651174261107105
+Iteration: 1500
+    Time:  101.924
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.0313000467206521
+    Accuracy:  0.48831429980650304
+Iteration: 1501
+    Time:  87.674
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.975745689620154
+    Accuracy:  0.4272299578859506
+Iteration: 1502
+    Time:  84.187
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5718527490202148
+    Accuracy:  0.42383427552452857
+Iteration: 1503
+    Time:  91.703
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5688947101783471
+    Accuracy:  0.4211784345714611
+Iteration: 1504
+    Time:  83.774
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5875569698557791
+    Accuracy:  0.41592366354289184
+Iteration: 1505
+    Time:  102.157
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  0.9067951369949657
+    Accuracy:  0.48689152786735973
+Iteration: 1506
+    Time:  103.585
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.5414262997286887
+    Accuracy:  0.4880676860037182
+Iteration: 1507
+    Time:  93.698
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6776033304676694
+    Accuracy:  0.5176803126304208
+Iteration: 1508
+    Time:  66.816
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.765573784703783
+    Accuracy:  0.5384907235269568
+Iteration: 1509
+An Exception was thrown
+Iteration: 1510
+    Time:  77.336
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.1504992000664458
+    Accuracy:  0.5176803126304208
+Iteration: 1511
+    Time:  91.294
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.5907655512158844
+    Accuracy:  0.5238835982850856
+Iteration: 1512
+    Time:  67.67
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.9027743799090118
+    Accuracy:  0.5002466138027848
+Iteration: 1513
+    Time:  83.176
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.711986711425019
+    Accuracy:  0.5294418939940054
+Iteration: 1514
+    Time:  87.065
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6290997970377514
+    Accuracy:  0.5390029214250484
+Iteration: 1515
+    Time:  84.592
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.5008761745618304
+    Accuracy:  0.5354365064309292
+Iteration: 1516
+    Time:  88.791
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.4863332092288573
+    Accuracy:  0.5305611412527981
+Iteration: 1517
+    Time:  96.246
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  1.2897448134153855
+    Accuracy:  0.4999620594149562
+Iteration: 1518
+    Time:  78.915
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.719154567118468
+    Accuracy:  0.4811245589406989
+Iteration: 1519
+    Time:  83.873
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6559891191763179
+    Accuracy:  0.46352012748036575
+Iteration: 1520
+    Time:  83.478
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.8909205618714454
+    Accuracy:  0.48178851917896576
+Iteration: 1521
+    Time:  93.478
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6437788629935296
+    Accuracy:  0.45219486284478505
+Iteration: 1522
+    Time:  86.825
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.2026452480909815
+    Accuracy:  0.47981560875668705
+Iteration: 1523
+    Time:  77.392
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.2191091248324468
+    Accuracy:  0.5020108510073226
+Iteration: 1524
+    Time:  83.249
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.7604315520101951
+    Accuracy:  0.5305232006677543
+Iteration: 1525
+    Time:  71.092
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  0.9592688461911123
+    Accuracy:  0.5490382061691391
+Iteration: 1526
+    Time:  96.04
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.9478624187576176
+    Accuracy:  0.5235421330196912
+Iteration: 1527
+    Time:  84.649
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.8770482259661908
+    Accuracy:  0.5491709982167925
+Iteration: 1528
+    Time:  86.785
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4339304250987885
+    Accuracy:  0.539932465758622
+Iteration: 1529
+    Time:  85.489
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.6246037395025047
+    Accuracy:  0.5463444246310278
+Iteration: 1530
+    Time:  92.964
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.8412553162560819
+    Accuracy:  0.5606100846075046
+Iteration: 1531
+    Time:  76.308
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7502861976926793
+    Accuracy:  0.5630382820503093
+Iteration: 1532
+    Time:  70.576
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  0.6123004480654658
+    Accuracy:  0.5633797473157036
+Iteration: 1533
+    Time:  87.237
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.5647061421097339
+    Accuracy:  0.5634176879007474
+Iteration: 1534
+    Time:  86.744
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.5736350048157982
+    Accuracy:  0.5636263611184884
+Iteration: 1535
+    Time:  84.648
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.6311288470520466
+    Accuracy:  0.5639488560913609
+Iteration: 1536
+    Time:  75.064
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.4606157340052874
+    Accuracy:  0.5635884205334446
+Iteration: 1537
+    Time:  93.789
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.496718970198532
+    Accuracy:  0.5633607770231817
+Iteration: 1538
+    Time:  77.986
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.360217287182733
+    Accuracy:  0.5625640247372614
+Iteration: 1539
+    Time:  88.196
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.606694695041293
+    Accuracy:  0.5625260841522176
+Iteration: 1540
+    Time:  84.682
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.5804739273398243
+    Accuracy:  0.5629244602951777
+Iteration: 1541
+    Time:  80.023
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.5716782385682663
+    Accuracy:  0.5630572523428311
+Iteration: 1542
+    Time:  105.015
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.535238205902677
+    Accuracy:  0.5627347573699586
+Iteration: 1543
+    Time:  66.892
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  0.5811238843616615
+    Accuracy:  0.5629624008802215
+Iteration: 1544
+    Time:  78.822
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4550558076788391
+    Accuracy:  0.5626778464923929
+Iteration: 1545
+    Time:  88.311
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6121662320799617
+    Accuracy:  0.5630762226353531
+Iteration: 1546
+    Time:  97.998
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.4761616629498437
+    Accuracy:  0.5626209356148272
+Iteration: 1547
+    Time:  95.81
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.4877904195880522
+    Accuracy:  0.5621277080092575
+Iteration: 1548
+    Time:  91.265
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.2795439982886512
+    Accuracy:  0.555222521531282
+Iteration: 1549
+    Time:  93.232
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6898537245275008
+    Accuracy:  0.5614447774784688
+Iteration: 1550
+    Time:  71.115
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.6370212142578007
+    Accuracy:  0.5630572523428311
+Iteration: 1551
+    Time:  94.083
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.187157641154405
+    Accuracy:  0.5482983647607846
+Iteration: 1552
+    Time:  95.559
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.7750659139129837
+    Accuracy:  0.5258565087073642
+Iteration: 1553
+    Time:  110.873
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.465071497013891
+    Accuracy:  0.5216451037675001
+Iteration: 1554
+    Time:  82.405
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.865826915432245
+    Accuracy:  0.5449595932769283
+Iteration: 1555
+    Time:  71.382
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.7743279937385794
+    Accuracy:  0.5546344424631028
+Iteration: 1556
+    Time:  86.85
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7158024872817982
+    Accuracy:  0.561805213036385
+Iteration: 1557
+    Time:  98.302
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  1.527209432601163
+    Accuracy:  0.5613119854308154
+Iteration: 1558
+    Time:  100.136
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  0.6413970468281196
+    Accuracy:  0.562658876199871
+Iteration: 1559
+    Time:  77.879
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.3473304715309287
+    Accuracy:  0.5609894904579429
+Iteration: 1560
+    Time:  91.917
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.3615907323045227
+    Accuracy:  0.5542740069051865
+Iteration: 1561
+    Time:  75.546
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.2310014257979593
+    Accuracy:  0.5389460105474826
+Iteration: 1562
+    Time:  92.197
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.729648668168906
+    Accuracy:  0.551618165952119
+Iteration: 1563
+    Time:  101.735
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6522315611491362
+    Accuracy:  0.5577266001441742
+Iteration: 1564
+    Time:  108.274
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.340239842086873
+    Accuracy:  0.5423796334939485
+Iteration: 1565
+    Time:  87.192
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.2463512905162142
+    Accuracy:  0.5153090260651819
+Iteration: 1566
+    Time:  96.825
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.4500325454150647
+    Accuracy:  0.5105664529347043
+Iteration: 1567
+    Time:  80.328
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.9040203638265185
+    Accuracy:  0.4639185036233259
+Iteration: 1568
+    Time:  79.457
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.8759488740735569
+    Accuracy:  0.5253822513943165
+Iteration: 1569
+    Time:  88.308
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.1175640846048986
+    Accuracy:  0.46295101870470845
+Iteration: 1570
+    Time:  73.737
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.9845447682653043
+    Accuracy:  0.5273551618165953
+Iteration: 1571
+    Time:  102.201
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.4341587755461906
+    Accuracy:  0.5295367454566149
+Iteration: 1572
+    Time:  84.648
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.437095391341027
+    Accuracy:  0.5290814584360891
+Iteration: 1573
+    Time:  87.453
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7840801279292222
+    Accuracy:  0.5476154342299958
+Iteration: 1574
+    Time:  86.469
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.8842286854984113
+    Accuracy:  0.5241871229654361
+Iteration: 1575
+    Time:  83.671
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.836255665767385
+    Accuracy:  0.4715825018021778
+Iteration: 1576
+    Time:  90.814
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.9811306398613624
+    Accuracy:  0.5264635580680654
+Iteration: 1577
+    Time:  77.726
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.779094290284205
+    Accuracy:  0.5389080699624388
+Iteration: 1578
+    Time:  107.232
+    Number of Data points:         536
+    Number of Training batches:    17 
+
+    Loss:  0.8721903617800316
+    Accuracy:  0.48634138938422433
+Iteration: 1579
+    Time:  86.22
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7060207521368337
+    Accuracy:  0.4652084835148158
+Iteration: 1580
+    Time:  68.989
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.9807660876706867
+    Accuracy:  0.5161247486436241
+Iteration: 1581
+    Time:  106.295
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.4624081586392985
+    Accuracy:  0.5248131426186592
+Iteration: 1582
+    Time:  71.028
+    Number of Data points:         344
+    Number of Training batches:    11 
+
+    Loss:  1.0968488767819642
+    Accuracy:  0.4931137838145464
+Iteration: 1583
+    Time:  80.178
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.636242310804847
+    Accuracy:  0.4817316083014
+Iteration: 1584
+    Time:  88.169
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.1816885763440192
+    Accuracy:  0.5236180141897788
+Iteration: 1585
+    Time:  76.212
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.5069819373411613
+    Accuracy:  0.5209811435292332
+Iteration: 1586
+    Time:  93.027
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.8079301635857445
+    Accuracy:  0.5446370983040558
+Iteration: 1587
+    Time:  76.974
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.8944258059885025
+    Accuracy:  0.5180786887733809
+Iteration: 1588
+    Time:  81.087
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.8106005390153128
+    Accuracy:  0.5385855749895664
+Iteration: 1589
+    Time:  80.765
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6700119495320579
+    Accuracy:  0.5327806654778616
+Iteration: 1590
+    Time:  83.754
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.0295169013904737
+    Accuracy:  0.49823576279546233
+Iteration: 1591
+    Time:  91.541
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.9734294879740483
+    Accuracy:  0.535702090526236
+Iteration: 1592
+    Time:  87.858
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.8919855080361627
+    Accuracy:  0.5476913154000834
+Iteration: 1593
+    Time:  81.601
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.7593782529593185
+    Accuracy:  0.5562089767424213
+Iteration: 1594
+    Time:  92.59
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.5175294672640622
+    Accuracy:  0.5552604621163258
+Iteration: 1595
+    Time:  89.11
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.6824923927884523
+    Accuracy:  0.5590545206207079
+Iteration: 1596
+    Time:  81.033
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.6485265890848988
+    Accuracy:  0.5620707971316917
+Iteration: 1597
+    Time:  92.703
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.1606944554772716
+    Accuracy:  0.5463254543385059
+Iteration: 1598
+    Time:  81.251
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.4654526042479699
+    Accuracy:  0.5454717911750199
+Iteration: 1599
+Could not find child with move:  8 1
+An Exception was thrown
+Iteration: 1600
+    Time:  71.394
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.9917464407248063
+    Accuracy:  0.5303334977425352
+Iteration: 1601
+    Time:  74.801
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7118373469196007
+    Accuracy:  0.5394582084455742
+Iteration: 1602
+    Time:  81.557
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.1455669447756327
+    Accuracy:  0.5169215009295444
+Iteration: 1603
+    Time:  85.914
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.837045653133276
+    Accuracy:  0.4638426224532382
+Iteration: 1604
+    Time:  91.572
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.441513362460765
+    Accuracy:  0.4875744583981485
+Iteration: 1605
+    Time:  88.504
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.3789444159627566
+    Accuracy:  0.5104146905945289
+Iteration: 1606
+    Time:  95.379
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.4638803510178886
+    Accuracy:  0.5179269264332056
+Iteration: 1607
+    Time:  94.379
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6594298825609606
+    Accuracy:  0.47291042227871155
+Iteration: 1608
+    Time:  108.136
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.5245191180613302
+    Accuracy:  0.4797207572940775
+Iteration: 1609
+    Time:  79.321
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.293768933166158
+    Accuracy:  0.5143036005615207
+Iteration: 1610
+    Time:  87.846
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.7633333388763169
+    Accuracy:  0.5405205448268012
+Iteration: 1611
+    Time:  82.934
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.1103842119765086
+    Accuracy:  0.5030731873885496
+Iteration: 1612
+    Time:  66.224
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.7723928825100663
+    Accuracy:  0.4634632166028
+Iteration: 1613
+    Time:  106.667
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  0.6048465695350339
+    Accuracy:  0.4488750616534507
+Iteration: 1614
+    Time:  92.215
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.567222080300559
+    Accuracy:  0.446048488067686
+Iteration: 1615
+    Time:  94.261
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.28643531664774
+    Accuracy:  0.5058238798042266
+Iteration: 1616
+    Time:  92.774
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.5157035547748487
+    Accuracy:  0.5103008688393975
+Iteration: 1617
+    Time:  90.726
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.1091112305640887
+    Accuracy:  0.5457563455628486
+Iteration: 1618
+    Time:  72.94
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.7781169475030291
+    Accuracy:  0.5282657358576469
+Iteration: 1619
+An Exception was thrown
+Iteration: 1620
+    Time:  74.867
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.8418781254130071
+    Accuracy:  0.4861706567515271
+Iteration: 1621
+    Time:  77.625
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.4547831364716688
+    Accuracy:  0.49726827787684486
+Iteration: 1622
+    Time:  79.327
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.8098861796084885
+    Accuracy:  0.536517813104678
+Iteration: 1623
+    Time:  96.204
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.455778892351362
+    Accuracy:  0.5414311188678529
+Iteration: 1624
+    Time:  93.172
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.7460143875349191
+    Accuracy:  0.4940812687331639
+Iteration: 1625
+    Time:  89.546
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.3362117467562942
+    Accuracy:  0.522745380733771
+Iteration: 1626
+    Time:  98.553
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.8029135707429078
+    Accuracy:  0.453693515954016
+Iteration: 1627
+    Time:  91.063
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.510207565410578
+    Accuracy:  0.45997268277876846
+Iteration: 1628
+    Time:  95.315
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.1587119724118682
+    Accuracy:  0.5280570626399059
+Iteration: 1629
+    Time:  90.862
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.8603083215712366
+    Accuracy:  0.5455476723451076
+Iteration: 1630
+    Time:  89.125
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.2639412168332218
+    Accuracy:  0.5373714762681641
+Iteration: 1631
+    Time:  78.79
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.8591768774534398
+    Accuracy:  0.5111924725879273
+Iteration: 1632
+    Time:  85.839
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.7804986924914649
+    Accuracy:  0.47592669878969535
+Iteration: 1633
+    Time:  100.598
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.7237152946021878
+    Accuracy:  0.4158288120802823
+Iteration: 1634
+    Time:  77.794
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.2549708812675253
+    Accuracy:  0.46515157263725004
+Iteration: 1635
+    Time:  69.126
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  1.1760883670397762
+    Accuracy:  0.49880487157111963
+Iteration: 1636
+    Time:  102.338
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6737006383335422
+    Accuracy:  0.4724930758432295
+Iteration: 1637
+    Time:  73.872
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.659784374023896
+    Accuracy:  0.4577531585537049
+Iteration: 1638
+    Time:  91.764
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.4751231759160817
+    Accuracy:  0.4668209583791782
+Iteration: 1639
+    Time:  69.781
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  0.9106754779402233
+    Accuracy:  0.5152331448950943
+Iteration: 1640
+    Time:  84.854
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7323243028385041
+    Accuracy:  0.5292711613613081
+Iteration: 1641
+    Time:  100.774
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.7973850909254452
+    Accuracy:  0.4607694350646887
+Iteration: 1642
+    Time:  83.828
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.2998157109924655
+    Accuracy:  0.5023712865652389
+Iteration: 1643
+    Time:  61.326
+    Number of Data points:         320
+    Number of Training batches:    10 
+
+    Loss:  0.7820026441307764
+    Accuracy:  0.5221762719581136
+Iteration: 1644
+    Time:  100.914
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6543435691989105
+    Accuracy:  0.508290017832075
+Iteration: 1645
+    Time:  86.073
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7259927364058462
+    Accuracy:  0.47382099631976327
+Iteration: 1646
+    Time:  106.671
+    Number of Data points:         544
+    Number of Training batches:    17 
+
+    Loss:  0.7432360478632358
+    Accuracy:  0.5203361535834883
+Iteration: 1647
+    Time:  87.563
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7099352687276956
+    Accuracy:  0.49317069469211217
+Iteration: 1648
+    Time:  80.053
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.468206585077753
+    Accuracy:  0.502959365633418
+Iteration: 1649
+    Time:  86.928
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7253639592460345
+    Accuracy:  0.5291383693136548
+Iteration: 1650
+    Time:  86.728
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.3294970371465118
+    Accuracy:  0.5112114428804492
+Iteration: 1651
+    Time:  71.986
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.8584101199140902
+    Accuracy:  0.5349622491178814
+Iteration: 1652
+    Time:  72.865
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.7174423654583583
+    Accuracy:  0.5398565845885344
+Iteration: 1653
+    Time:  96.947
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.5032987655151187
+    Accuracy:  0.5392305649353113
+Iteration: 1654
+    Time:  88.57
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7667023065235259
+    Accuracy:  0.5436127025078726
+Iteration: 1655
+    Time:  83.285
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.4707408157221808
+    Accuracy:  0.5415828812080282
+Iteration: 1656
+    Time:  117.182
+    Number of Data points:         552
+    Number of Training batches:    18 
+
+    Loss:  1.4984098043469904
+    Accuracy:  0.540577455704367
+Iteration: 1657
+    Time:  76.149
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.7409919634538984
+    Accuracy:  0.5362711993018933
+Iteration: 1658
+    Time:  65.296
+    Number of Data points:         344
+    Number of Training batches:    11 
+
+    Loss:  0.9537441105589607
+    Accuracy:  0.5154987289904011
+Iteration: 1659
+    Time:  104.127
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  0.720380293048143
+    Accuracy:  0.5318131805592442
+Iteration: 1660
+    Time:  83.583
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.7038809501523974
+    Accuracy:  0.5383010206017377
+Iteration: 1661
+    Time:  69.357
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6306121380998022
+    Accuracy:  0.5404067230716698
+Iteration: 1662
+    Time:  73.473
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.6162069111523436
+    Accuracy:  0.5421140493986417
+Iteration: 1663
+    Time:  88.208
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6666741904282757
+    Accuracy:  0.5472360283795576
+Iteration: 1664
+    Time:  98.467
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.7458919685900924
+    Accuracy:  0.5396858519558372
+Iteration: 1665
+    Time:  87.752
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7144060757754914
+    Accuracy:  0.5235421330196912
+Iteration: 1666
+    Time:  92.835
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.492651263057841
+    Accuracy:  0.5231627271692529
+Iteration: 1667
+    Time:  77.348
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4546185782464698
+    Accuracy:  0.5158971051333612
+Iteration: 1668
+    Time:  64.564
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  0.8967683792604564
+    Accuracy:  0.5353606252608415
+Iteration: 1669
+    Time:  91.166
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.2498317342204988
+    Accuracy:  0.5117615813635846
+Iteration: 1670
+    Time:  79.668
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6098650285548778
+    Accuracy:  0.49971544561217135
+Iteration: 1671
+    Time:  95.067
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.7334329825753967
+    Accuracy:  0.4690973934818075
+Iteration: 1672
+    Time:  60.31
+    Number of Data points:         320
+    Number of Training batches:    10 
+
+    Loss:  1.503164296439223
+    Accuracy:  0.47289145198618965
+Iteration: 1673
+    Time:  92.418
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.6913366693236329
+    Accuracy:  0.4493493189664985
+Iteration: 1674
+    Time:  78.869
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5727360706148323
+    Accuracy:  0.44714876503395684
+Iteration: 1675
+    Time:  97.448
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.0759181354357408
+    Accuracy:  0.4904010319839132
+Iteration: 1676
+    Time:  74.056
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.8809520446520754
+    Accuracy:  0.5156504913305763
+Iteration: 1677
+    Time:  70.288
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.6134476918740416
+    Accuracy:  0.5083089881245969
+Iteration: 1678
+    Time:  94.603
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6263431511225074
+    Accuracy:  0.4771218272185757
+Iteration: 1679
+    Time:  93.358
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.8064339440961398
+    Accuracy:  0.5290814584360891
+Iteration: 1680
+    Time:  82.514
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7054723438969362
+    Accuracy:  0.5380733770914747
+Iteration: 1681
+    Time:  78.312
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.2231478492436987
+    Accuracy:  0.5290055772660014
+Iteration: 1682
+    Time:  67.837
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.6411125808225394
+    Accuracy:  0.5325150813825549
+Iteration: 1683
+    Time:  80.73
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.6136618874706291
+    Accuracy:  0.5349812194104033
+Iteration: 1684
+    Time:  69.506
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.7339506985017115
+    Accuracy:  0.5186667678415601
+Iteration: 1685
+    Time:  87.349
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.0108977920683702
+    Accuracy:  0.45266912015783284
+Iteration: 1686
+    Time:  87.667
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6005674259444861
+    Accuracy:  0.44722464620404445
+Iteration: 1687
+    Time:  76.775
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5944525396430463
+    Accuracy:  0.4414007663998179
+Iteration: 1688
+    Time:  86.16
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5349689161431606
+    Accuracy:  0.4430511818492241
+Iteration: 1689
+    Time:  88.412
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5672838476866529
+    Accuracy:  0.4415714990325151
+Iteration: 1690
+    Time:  101.507
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.260510456093865
+    Accuracy:  0.48002428197442804
+Iteration: 1691
+    Time:  94.317
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6617267932687381
+    Accuracy:  0.521038054406799
+Iteration: 1692
+    Time:  93.849
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.9247562361831988
+    Accuracy:  0.4771787380961414
+Iteration: 1693
+    Time:  73.074
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.4318514352207892
+    Accuracy:  0.4890162006298137
+Iteration: 1694
+    Time:  89.811
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.6269673073211027
+    Accuracy:  0.4946503775088212
+Iteration: 1695
+    Time:  86.58
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.134726645780571
+    Accuracy:  0.5319649428994195
+Iteration: 1696
+    Time:  80.511
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6054686156866779
+    Accuracy:  0.5351329817505786
+Iteration: 1697
+    Time:  88.903
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5000890976608208
+    Accuracy:  0.533786090981523
+Iteration: 1698
+    Time:  89.377
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.305819163447397
+    Accuracy:  0.5390218917175703
+Iteration: 1699
+    Time:  92.544
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.5616727934183924
+    Accuracy:  0.5389270402549607
+Iteration: 1700
+    Time:  84.341
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.2594140246941552
+    Accuracy:  0.5315855370489813
+Iteration: 1701
+    Time:  87.605
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.1257155408729818
+    Accuracy:  0.5100542550366126
+Iteration: 1702
+    Time:  85.824
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6825289067801747
+    Accuracy:  0.5302955571574913
+Iteration: 1703
+    Time:  90.145
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.5832589930741249
+    Accuracy:  0.5321356755321167
+Iteration: 1704
+    Time:  90.474
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6963961323014182
+    Accuracy:  0.5241491823803923
+Iteration: 1705
+    Time:  95.005
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.6443040546298632
+    Accuracy:  0.5311492203209773
+Iteration: 1706
+    Time:  85.544
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.9176470768592299
+    Accuracy:  0.543119474902303
+Iteration: 1707
+    Time:  87.646
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.87412426668466
+    Accuracy:  0.5356451796486702
+Iteration: 1708
+    Time:  79.038
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6789613360247707
+    Accuracy:  0.5332169822058657
+Iteration: 1709
+    Time:  86.385
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6093584120276033
+    Accuracy:  0.5358538528664112
+Iteration: 1710
+    Time:  85.23
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.5056549487718642
+    Accuracy:  0.5343362294646583
+Iteration: 1711
+    Time:  76.606
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.0917265397026794
+    Accuracy:  0.5179269264332056
+Iteration: 1712
+    Time:  87.616
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.5828252361535162
+    Accuracy:  0.5200326289031377
+Iteration: 1713
+    Time:  82.066
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.6223341025281712
+    Accuracy:  0.5255719543195356
+Iteration: 1714
+    Time:  81.645
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.6147039462246926
+    Accuracy:  0.5303524680350571
+Iteration: 1715
+    Time:  92.815
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6007466046210944
+    Accuracy:  0.5262928254353683
+Iteration: 1716
+    Time:  69.571
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.5706987082942652
+    Accuracy:  0.5274879538642486
+Iteration: 1717
+    Time:  75.743
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.7070384572165982
+    Accuracy:  0.5144363926091741
+Iteration: 1718
+    Time:  103.2
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.5074157958006429
+    Accuracy:  0.5154038775277915
+Iteration: 1719
+    Time:  81.123
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5999609318347034
+    Accuracy:  0.5126531851121144
+Iteration: 1720
+    Time:  81.449
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.7917344754779437
+    Accuracy:  0.474295253632811
+Iteration: 1721
+    Time:  88.77
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7250167399697426
+    Accuracy:  0.4594035740031111
+Iteration: 1722
+    Time:  79.45
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.5258924088513264
+    Accuracy:  0.4677694730052737
+Iteration: 1723
+    Time:  95.359
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  1.0956284843616961
+    Accuracy:  0.42134916720415827
+Iteration: 1724
+    Time:  89.986
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.4952342423602132
+    Accuracy:  0.4162271882232424
+Iteration: 1725
+    Time:  72.293
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.557384580732395
+    Accuracy:  0.41541146564480025
+Iteration: 1726
+    Time:  79.011
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5439136576066597
+    Accuracy:  0.41634100997837387
+Iteration: 1727
+    Time:  90.357
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5740793507017946
+    Accuracy:  0.40958758584057364
+Iteration: 1728
+    Time:  100.096
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.548862515593144
+    Accuracy:  0.40994802139848996
+Iteration: 1729
+    Time:  65.314
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.5764698884798266
+    Accuracy:  0.4084114277042152
+Iteration: 1730
+    Time:  82.899
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5866413858917037
+    Accuracy:  0.40196152824676556
+Iteration: 1731
+    Time:  94.489
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.5100605962096856
+    Accuracy:  0.4038206169139128
+Iteration: 1732
+    Time:  91.79
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5640787207437608
+    Accuracy:  0.40298592404294875
+Iteration: 1733
+    Time:  78.847
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.6323335808275148
+    Accuracy:  0.3903896498084
+Iteration: 1734
+    Time:  88.719
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5598948927652879
+    Accuracy:  0.3899533330803961
+Iteration: 1735
+    Time:  106.312
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  0.5726506405491306
+    Accuracy:  0.38860644231134045
+Iteration: 1736
+    Time:  80.543
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5600426164362716
+    Accuracy:  0.3883598285085556
+Iteration: 1737
+    Time:  91.225
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.5269081273598104
+    Accuracy:  0.38900481845430057
+Iteration: 1738
+    Time:  79.182
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.5479642937216413
+    Accuracy:  0.38919452137951965
+Iteration: 1739
+    Time:  82.782
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5471706385453508
+    Accuracy:  0.3892704025496073
+Iteration: 1740
+    Time:  92.244
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.539839313248631
+    Accuracy:  0.38963083810752364
+Iteration: 1741
+    Time:  73.048
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.5763468590249826
+    Accuracy:  0.3884546799711652
+Iteration: 1742
+    Time:  92.202
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.5562154416301464
+    Accuracy:  0.3883787988010775
+Iteration: 1743
+    Time:  81.506
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5532359243878363
+    Accuracy:  0.3883029176309899
+Iteration: 1744
+    Time:  86.507
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5404944968600145
+    Accuracy:  0.3884167393861213
+Iteration: 1745
+    Time:  81.592
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.546736448013379
+    Accuracy:  0.38862541260386235
+Iteration: 1746
+    Time:  91.674
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5571682865663729
+    Accuracy:  0.38843570967864327
+Iteration: 1747
+    Time:  84.938
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.549813870372188
+    Accuracy:  0.3885495314337747
+Iteration: 1748
+    Time:  85.364
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5548703976174656
+    Accuracy:  0.38843570967864327
+Iteration: 1749
+    Time:  95.831
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.552702487563541
+    Accuracy:  0.3884736502636871
+Iteration: 1750
+    Time:  75.304
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.5570170304196375
+    Accuracy:  0.3883218879235118
+Iteration: 1751
+    Time:  93.09
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.5535638888687308
+    Accuracy:  0.38828394733846794
+Iteration: 1752
+    Time:  81.201
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5529989543713761
+    Accuracy:  0.38828394733846794
+Iteration: 1753
+    Time:  83.461
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.541081744007386
+    Accuracy:  0.3885305611412528
+Iteration: 1754
+    Time:  96.239
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  0.5560880923689893
+    Accuracy:  0.3884167393861213
+Iteration: 1755
+    Time:  98.263
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.4217091900675878
+    Accuracy:  0.3924384414007664
+Iteration: 1756
+    Time:  84.274
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5589553485197751
+    Accuracy:  0.3919072732101529
+Iteration: 1757
+    Time:  100.714
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.5483345828249997
+    Accuracy:  0.3922677087680692
+Iteration: 1758
+    Time:  77.873
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.4747588613055134
+    Accuracy:  0.39549265849679405
+Iteration: 1759
+    Time:  93.291
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  1.5443622132839432
+    Accuracy:  0.3959479455173199
+Iteration: 1760
+    Time:  81.855
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.6031147717367296
+    Accuracy:  0.3934628371969496
+Iteration: 1761
+    Time:  93.328
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.544966304647711
+    Accuracy:  0.3940509162651288
+Iteration: 1762
+    Time:  89.772
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5543678017190067
+    Accuracy:  0.39374739158477823
+Iteration: 1763
+    Time:  82.974
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5562632195993489
+    Accuracy:  0.3933869560268619
+Iteration: 1764
+    Time:  111.095
+    Number of Data points:         536
+    Number of Training batches:    17 
+
+    Loss:  1.541019360522601
+    Accuracy:  0.3943544409454794
+Iteration: 1765
+    Time:  70.487
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.5421049138066831
+    Accuracy:  0.3947528170884395
+Iteration: 1766
+Could not find child with move:  0 5
+An Exception was thrown
+Iteration: 1767
+    Time:  82.118
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.564940792069127
+    Accuracy:  0.393804302462344
+Iteration: 1768
+    Time:  83.558
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5304666307852601
+    Accuracy:  0.39515119323139963
+Iteration: 1769
+    Time:  72.116
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.5523203693457405
+    Accuracy:  0.39511325264635583
+Iteration: 1770
+    Time:  93.366
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5388973502110945
+    Accuracy:  0.3963842622453238
+Iteration: 1771
+    Time:  87.293
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5304735214180254
+    Accuracy:  0.39801570740220815
+Iteration: 1772
+    Time:  92.504
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.4977834681795037
+    Accuracy:  0.4016959441514588
+Iteration: 1773
+    Time:  79.733
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5630539101984265
+    Accuracy:  0.40108889479075766
+Iteration: 1774
+    Time:  77.559
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.475353057393743
+    Accuracy:  0.4053951511932314
+Iteration: 1775
+    Time:  112.705
+    Number of Data points:         536
+    Number of Training batches:    17 
+
+    Loss:  0.6044120456386225
+    Accuracy:  0.39943847934135146
+Iteration: 1776
+    Time:  98.662
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5533745493786439
+    Accuracy:  0.3993625981712638
+Iteration: 1777
+    Time:  78.816
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5628943399937204
+    Accuracy:  0.39850893500777784
+Iteration: 1778
+    Time:  97.97
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.5392297947217382
+    Accuracy:  0.39945744963387336
+Iteration: 1779
+    Time:  80.887
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.449105497144186
+    Accuracy:  0.4042759039344387
+Iteration: 1780
+    Time:  88.823
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.4377141664255724
+    Accuracy:  0.4128315058618204
+Iteration: 1781
+    Time:  80.832
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.5686330139519575
+    Accuracy:  0.4111431498273703
+Iteration: 1782
+Could not find child with move:  4 0
+An Exception was thrown
+Iteration: 1783
+    Time:  90.592
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6236308028776688
+    Accuracy:  0.4007663998178852
+Iteration: 1784
+An Exception was thrown
+Iteration: 1785
+    Time:  86.403
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6788831215548493
+    Accuracy:  0.39164168911484615
+Iteration: 1786
+    Time:  92.39
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.543494023826523
+    Accuracy:  0.39202109496528437
+Iteration: 1787
+    Time:  79.599
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.5413079847483864
+    Accuracy:  0.3924574116932883
+Iteration: 1788
+    Time:  99.689
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5561543516009981
+    Accuracy:  0.3922297681830254
+Iteration: 1789
+    Time:  92.874
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.5533176767575071
+    Accuracy:  0.39211594642789394
+Iteration: 1790
+    Time:  76.109
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.5422970067458999
+    Accuracy:  0.3924384414007664
+Iteration: 1791
+    Time:  105.455
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.546741401555658
+    Accuracy:  0.39270402549607314
+Iteration: 1792
+    Time:  83.642
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.5669629626879967
+    Accuracy:  0.39213491672041584
+Iteration: 1793
+Could not find child with move:  6 1
+An Exception was thrown
+Iteration: 1794
+    Time:  88.665
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.5686153139025899
+    Accuracy:  0.39145198618962707
+Iteration: 1795
+    Time:  63.977
+    Number of Data points:         336
+    Number of Training batches:    11 
+
+    Loss:  1.5123435217470556
+    Accuracy:  0.39257123344841977
+Iteration: 1796
+    Time:  88.393
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.5607210529997666
+    Accuracy:  0.3917175702849338
+Iteration: 1797
+    Time:  97.934
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.5373818642046966
+    Accuracy:  0.39251432257085406
+Iteration: 1798
+    Time:  83.709
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.5102918861059895
+    Accuracy:  0.3947338467959176
+Iteration: 1799
+    Time:  73.786
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.5362020278917
+    Accuracy:  0.39558750995940356
+Iteration: 1800
+    Time:  106.584
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.5344040375036656
+    Accuracy:  0.3973707174564632
+Iteration: 1801
+    Time:  110.532
+    Number of Data points:         544
+    Number of Training batches:    17 
+
+    Loss:  1.5376299972988905
+    Accuracy:  0.39822438061994914
+Iteration: 1802
+    Time:  98.934
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  0.5829792099989942
+    Accuracy:  0.39591000493227607
+Iteration: 1803
+    Time:  73.925
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  0.5591861385083838
+    Accuracy:  0.39553059908183785
+Iteration: 1804
+    Time:  82.56
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.476200395084902
+    Accuracy:  0.40101301362067004
+Iteration: 1805
+    Time:  87.737
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.5237565904702897
+    Accuracy:  0.4029100428728611
+Iteration: 1806
+    Time:  72.487
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  1.509648727099682
+    Accuracy:  0.40456045832226734
+Iteration: 1807
+    Time:  80.983
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.4905224304380422
+    Accuracy:  0.4087908335546534
+Iteration: 1808
+    Time:  89.173
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.539307285188007
+    Accuracy:  0.4097772887657928
+Iteration: 1809
+    Time:  80.298
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.4857017897779057
+    Accuracy:  0.41544940622984405
+Iteration: 1810
+    Time:  98.055
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.3332955911225335
+    Accuracy:  0.4390294798345791
+Iteration: 1811
+    Time:  83.968
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.5183968014400118
+    Accuracy:  0.44274765716887354
+Iteration: 1812
+    Time:  90.427
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.5338017811020173
+    Accuracy:  0.4453845278294191
+Iteration: 1813
+    Time:  98.025
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.3969083473662813
+    Accuracy:  0.45908107903023865
+Iteration: 1814
+    Time:  90.052
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.4667799733086044
+    Accuracy:  0.46943885874720187
+Iteration: 1815
+    Time:  88.85
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.5706158142619949
+    Accuracy:  0.4671434533520507
+Iteration: 1816
+    Time:  104.105
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.4322835929116076
+    Accuracy:  0.4780134309671055
+Iteration: 1817
+    Time:  91.266
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7342501031896582
+    Accuracy:  0.5121599575065447
+Iteration: 1818
+    Time:  70.272
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.6083146427856047
+    Accuracy:  0.5201085100732253
+Iteration: 1819
+    Time:  83.551
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.7205220725224696
+    Accuracy:  0.49428994195090487
+Iteration: 1820
+    Time:  92.083
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.4469246014660382
+    Accuracy:  0.510813066737489
+Iteration: 1821
+    Time:  92.89
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.6045384156569168
+    Accuracy:  0.5228592024889024
+Iteration: 1822
+    Time:  106.709
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.818888287065186
+    Accuracy:  0.5548620859733657
+Iteration: 1823
+    Time:  122.797
+    Number of Data points:         576
+    Number of Training batches:    18 
+
+    Loss:  1.549082907095953
+    Accuracy:  0.5548431156808438
+Iteration: 1824
+    Time:  88.96
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.5001369657493595
+    Accuracy:  0.5536479872519634
+Iteration: 1825
+    Time:  82.32
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.9201032749419651
+    Accuracy:  0.558409530674963
+Iteration: 1826
+    Time:  69.481
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.017523840305471
+    Accuracy:  0.5510300868839397
+Iteration: 1827
+    Time:  89.415
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.9118882134432776
+    Accuracy:  0.5360245854991084
+Iteration: 1828
+    Time:  79.924
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.6689359165520137
+    Accuracy:  0.5431763857798687
+Iteration: 1829
+    Time:  86.323
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  1.167753471748028
+    Accuracy:  0.5557536897218955
+Iteration: 1830
+    Time:  95.35
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.6552236669979413
+    Accuracy:  0.5589027582805327
+Iteration: 1831
+    Time:  76.106
+    Number of Data points:         376
+    Number of Training batches:    12 
+
+    Loss:  1.0197158913709206
+    Accuracy:  0.5520924232651667
+Iteration: 1832
+    Time:  77.357
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.9305215032826293
+    Accuracy:  0.5602496490495883
+Iteration: 1833
+    Time:  82.584
+    Number of Data points:         400
+    Number of Training batches:    13 
+
+    Loss:  0.6476849010683556
+    Accuracy:  0.5632279849755283
+Iteration: 1834
+    Time:  82.335
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.5728399543036635
+    Accuracy:  0.5631900443904845
+Iteration: 1835
+    Time:  99.529
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.5713251390342898
+    Accuracy:  0.5634176879007474
+Iteration: 1836
+    Time:  84.969
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.503778785914388
+    Accuracy:  0.562867549417612
+Iteration: 1837
+    Time:  92.089
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.4129412614105468
+    Accuracy:  0.5603824410972417
+Iteration: 1838
+    Time:  113.606
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  0.6335237673956805
+    Accuracy:  0.5630951929278749
+Iteration: 1839
+    Time:  92.656
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  1.49608105349934
+    Accuracy:  0.562658876199871
+Iteration: 1840
+    Time:  98.799
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  0.5735747494862816
+    Accuracy:  0.562867549417612
+Iteration: 1841
+    Time:  81.263
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.5373617010456941
+    Accuracy:  0.5628296088325682
+Iteration: 1842
+    Time:  79.799
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.7392528406092483
+    Accuracy:  0.5645938460371059
+Iteration: 1843
+    Time:  92.715
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  0.5805221668956071
+    Accuracy:  0.5647076677922374
+Iteration: 1844
+    Time:  66.527
+    Number of Data points:         344
+    Number of Training batches:    11 
+
+    Loss:  1.545271824304264
+    Accuracy:  0.5647645786698031
+Iteration: 1845
+    Time:  97.215
+    Number of Data points:         488
+    Number of Training batches:    16 
+
+    Loss:  1.3887242007565204
+    Accuracy:  0.562658876199871
+Iteration: 1846
+    Time:  77.795
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  1.4430689932218204
+    Accuracy:  0.5600409758318473
+Iteration: 1847
+    Time:  84.475
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  1.028989972091709
+    Accuracy:  0.5529460864286527
+Iteration: 1848
+    Time:  73.453
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  1.3642983959625954
+    Accuracy:  0.5480896915430435
+Iteration: 1849
+    Time:  95.067
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.7170994165963337
+    Accuracy:  0.5582957089198315
+Iteration: 1850
+    Time:  96.385
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  1.0211672475564124
+    Accuracy:  0.5444473953788368
+Iteration: 1851
+    Time:  108.582
+    Number of Data points:         536
+    Number of Training batches:    17 
+
+    Loss:  0.8321726055001716
+    Accuracy:  0.49028721022878174
+Iteration: 1852
+    Time:  100.492
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.8829973870791554
+    Accuracy:  0.5497780475774936
+Iteration: 1853
+    Time:  104.816
+    Number of Data points:         528
+    Number of Training batches:    17 
+
+    Loss:  1.51475294529781
+    Accuracy:  0.5508214136661987
+Iteration: 1854
+    Time:  72.102
+    Number of Data points:         344
+    Number of Training batches:    11 
+
+    Loss:  1.3609039545342925
+    Accuracy:  0.5433660887050878
+Iteration: 1855
+    Time:  76.103
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.9465974363731159
+    Accuracy:  0.5231816974617749
+Iteration: 1856
+    Time:  103.08
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.4838755964377164
+    Accuracy:  0.5321167052395948
+Iteration: 1857
+    Time:  100.653
+    Number of Data points:         512
+    Number of Training batches:    16 
+
+    Loss:  1.4738639399311075
+    Accuracy:  0.5377698524111242
+Iteration: 1858
+    Time:  93.142
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.3065214195167183
+    Accuracy:  0.5485070379785256
+Iteration: 1859
+    Time:  100.343
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  0.6822876134729204
+    Accuracy:  0.5544257692453618
+Iteration: 1860
+    Time:  78.549
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.8812300010679774
+    Accuracy:  0.5324012596274235
+Iteration: 1861
+    Time:  95.373
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6591919097621594
+    Accuracy:  0.5108699776150548
+Iteration: 1862
+    Time:  75.022
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.6867185718465755
+    Accuracy:  0.4837045187236787
+Iteration: 1863
+    Time:  85.611
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  0.7609571558562064
+    Accuracy:  0.5214933414273248
+Iteration: 1864
+    Time:  90.821
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.4223176462893554
+    Accuracy:  0.5307698144705392
+Iteration: 1865
+    Time:  99.468
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.2772177941766358
+    Accuracy:  0.5568160261031225
+Iteration: 1866
+    Time:  97.23
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.4773369208550702
+    Accuracy:  0.5537997495921387
+Iteration: 1867
+    Time:  81.58
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.9574569055177348
+    Accuracy:  0.5353606252608415
+Iteration: 1868
+    Time:  84.553
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.8295257572957792
+    Accuracy:  0.5117046704860189
+Iteration: 1869
+    Time:  91.926
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.4652249316059704
+    Accuracy:  0.5169215009295444
+Iteration: 1870
+    Time:  78.794
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.6529627283430547
+    Accuracy:  0.5017262966194939
+Iteration: 1871
+    Time:  111.739
+    Number of Data points:         552
+    Number of Training batches:    18 
+
+    Loss:  0.7139482747511658
+    Accuracy:  0.4289562545054445
+Iteration: 1872
+    Time:  101.815
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.4805353229053289
+    Accuracy:  0.43637363888151154
+Iteration: 1873
+    Time:  107.588
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  0.6173223303736095
+    Accuracy:  0.4246689683954927
+Iteration: 1874
+    Time:  92.925
+    Number of Data points:         480
+    Number of Training batches:    15 
+
+    Loss:  1.5409829663717143
+    Accuracy:  0.4255605721440225
+Iteration: 1875
+    Time:  65.81
+    Number of Data points:         352
+    Number of Training batches:    11 
+
+    Loss:  1.4510594837886264
+    Accuracy:  0.43140342224077094
+Iteration: 1876
+    Time:  91.65
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.6660821628896045
+    Accuracy:  0.4082027544864742
+Iteration: 1877
+    Time:  93.251
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.519794305841904
+    Accuracy:  0.4126797435216451
+Iteration: 1878
+    Time:  83.619
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.0059351165279804
+    Accuracy:  0.4711272147816519
+Iteration: 1879
+    Time:  94.749
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.6463866555388207
+    Accuracy:  0.4561975945669082
+Iteration: 1880
+    Time:  89.966
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6033690074813969
+    Accuracy:  0.44866638843570966
+Iteration: 1881
+    Time:  79.979
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.4905404445502224
+    Accuracy:  0.45323822893349014
+Iteration: 1882
+    Time:  93.355
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.7301589269846122
+    Accuracy:  0.4277231854915203
+Iteration: 1883
+    Time:  79.904
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  0.998724954954093
+    Accuracy:  0.4673331562772698
+Iteration: 1884
+    Time:  76.413
+    Number of Data points:         360
+    Number of Training batches:    12 
+
+    Loss:  0.6584618775634281
+    Accuracy:  0.44775581439465795
+Iteration: 1885
+    Time:  90.181
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5883636843899228
+    Accuracy:  0.44434116174071403
+Iteration: 1886
+    Time:  58.224
+    Number of Data points:         288
+    Number of Training batches:    9 
+
+    Loss:  1.1059699378602186
+    Accuracy:  0.46638464165117427
+Iteration: 1887
+    Time:  93.534
+    Number of Data points:         496
+    Number of Training batches:    16 
+
+    Loss:  1.5233161371696808
+    Accuracy:  0.4692870964070266
+Iteration: 1888
+    Time:  96.896
+    Number of Data points:         472
+    Number of Training batches:    15 
+
+    Loss:  0.7516002038563402
+    Accuracy:  0.4242326516674887
+Iteration: 1889
+    Time:  91.525
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.3141406352289937
+    Accuracy:  0.4639754145008916
+Iteration: 1890
+    Time:  98.269
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.6896799672116395
+    Accuracy:  0.49127366543992107
+Iteration: 1891
+    Time:  90.345
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.6599994457162516
+    Accuracy:  0.4692301855294609
+Iteration: 1892
+    Time:  82.188
+    Number of Data points:         440
+    Number of Training batches:    14 
+
+    Loss:  0.5928998161895324
+    Accuracy:  0.46388056303828207
+Iteration: 1893
+    Time:  74.362
+    Number of Data points:         368
+    Number of Training batches:    12 
+
+    Loss:  0.724893554928673
+    Accuracy:  0.4835337860909815
+Iteration: 1894
+    Time:  97.315
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  0.706925438530052
+    Accuracy:  0.5300679136472285
+Iteration: 1895
+    Time:  86.401
+    Number of Data points:         456
+    Number of Training batches:    15 
+
+    Loss:  0.650753310526106
+    Accuracy:  0.5068482756004098
+Iteration: 1896
+    Time:  111.295
+    Number of Data points:         520
+    Number of Training batches:    17 
+
+    Loss:  1.5346876488714036
+    Accuracy:  0.5096938194786964
+Iteration: 1897
+    Time:  81.042
+    Number of Data points:         408
+    Number of Training batches:    13 
+
+    Loss:  0.8375915136655402
+    Accuracy:  0.46251470197670447
+Iteration: 1898
+    Time:  69.912
+    Number of Data points:         392
+    Number of Training batches:    13 
+
+    Loss:  0.6967581867910291
+    Accuracy:  0.44754714117691696
+Iteration: 1899
+    Time:  97.422
+    Number of Data points:         504
+    Number of Training batches:    16 
+
+    Loss:  1.5248745855279258
+    Accuracy:  0.4490078537011041
+Iteration: 1900
+    Time:  77.511
+    Number of Data points:         432
+    Number of Training batches:    14 
+
+    Loss:  1.5056512515180285
+    Accuracy:  0.4528208824980081
+Iteration: 1901
+    Time:  87.906
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.4120557290354476
+    Accuracy:  0.4766665401980498
+Iteration: 1902
+    Time:  80.623
+    Number of Data points:         416
+    Number of Training batches:    13 
+
+    Loss:  1.46431605844581
+    Accuracy:  0.4865880031870091
+Iteration: 1903
+    Time:  88.772
+    Number of Data points:         424
+    Number of Training batches:    14 
+
+    Loss:  0.667659361226961
+    Accuracy:  0.447110824448913
+Iteration: 1904
+    Time:  84.251
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.0699973343106972
+    Accuracy:  0.5043062564024737
+Iteration: 1905
+    Time:  76.955
+    Number of Data points:         384
+    Number of Training batches:    12 
+
+    Loss:  1.4130417466892018
+    Accuracy:  0.5177941343855522
+Iteration: 1906
+    Time:  89.958
+    Number of Data points:         448
+    Number of Training batches:    14 
+
+    Loss:  1.2690244049517785
+    Accuracy:  0.5352657737982319
+Iteration: 1907
+    Time:  95.23
+    Number of Data points:         464
+    Number of Training batches:    15 
+
+    Loss:  1.2248377084170339
+    Accuracy:  0.5593770155935804
+Iteration: 1908
+    Time:  109.148
+    Number of Data points:         536
+    Number of Training batches:    17 
+
+    Loss:  0.7622026333454994
+    Accuracy:  0.5431763857798687
+Iteration: 1909
