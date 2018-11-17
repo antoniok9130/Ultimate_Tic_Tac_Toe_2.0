@@ -11,35 +11,77 @@ from UTTT import *
 from random import shuffle
 from Predict_Model import *
 
-data = []
+model_instance_directory = "../ModelInstances/predict4"
 
-file_name = "../Data/RecordedGames.txt"
-p = sp.Popen("wc -l < "+file_name, stdout=sp.PIPE, shell=True)
-out, err = p.communicate()
+test_data = []
 
-num_records = int(out)
-percentile = 1
-space = ceil(100/percentile)
-division = ceil(num_records/space)
+print("Loading Test Data...")
+with open("../Data/RecordedGames.txt") as recordedGames:
 
-numP1Wins = 0
-numP2Wins = 0
-numTies = 0
+    for recordedGame in recordedGames:
+        
+        game_data = []
+        game = list(recordedGame.strip())
+
+        board = np.zeros((9, 9))
+        quadrants = np.zeros(9)
+
+        i = 0
+        player = N
+        while i+1 < len(game):
+
+            player = P2 if player == P1 else P1
+
+            g = int(game[i])
+            l = int(game[i+1])
+
+            board[g][l] = player
+            if check3InRowAt(board[g], l):
+                quadrants[g] = player
+
+            game_data.append(extract_features(quadrants, board))
+
+            i += 2
+
+        winner = check3InRow([quadrants[g] for g in range(9)])
+
+        if winner == P1:
+            expected = 1
+        elif winner == P2:
+            expected = 2
+        else:
+            expected = 0
+
+        for features in game_data:
+            test_data.append((features, expected))
+
+shuffle(test_data)
+
+test_inputs, test_labels = zip(*test_data)
+test_inputs = np.array(test_inputs)
+test_labels = np.array(test_labels)
+print("Finished Loading Test Data.\n")
+
+
+with open(f"{model_instance_directory}/log.csv", "w") as file:
+    file.write("iteration,loss,accuracy\n")
+
+file_name = f"../ModelInstances/predict3/games.txt"
+
+min_loss = 1000
+max_accuracy = -1000
+iteration = 1
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print("Training on:  ", device)
+
+model = Predict_Model()
 
 with open(file_name) as recordedGames:
-
-    percent = 0
-    progress = 0
-    milestone = division
-    print("Loading Data")
     for recordedGame in recordedGames:
-        progress += 1
-        if (progress >= milestone):
-            percent += 1
-            milestone += division
-            print("[{}] {}%".format(("#"*percent).ljust(space), percent*percentile), end="\r")
-            sys.stdout.flush()
+        print("Iteration: ", iteration)
 
+        data = []
         
         game_data = []
         game = list(recordedGame.strip())
@@ -60,26 +102,23 @@ with open(file_name) as recordedGames:
             if check3InRowAt(board[g], l):
                 quadrants[int(g//3)][g%3] = player
 
-            game_data.append((np.copy(board), np.copy(quadrants)))
+            game_data.append((np.copy(board), np.copy(quadrants), i))
 
             i += 2
 
         winner = check3InRow([quadrants[g][l] for g in range(3) for l in range(3)])
     
         # factor = len(game) * (2 if winner == T else 1)
-        for board, quadrants in game_data:
+        for board, quadrants, length in game_data:
             # reward = 0.5+0.5*(length+1)/factor
             # penalty = 1-reward
 
             if winner == P1:
                 expected = 1 # [reward, penalty]
-                numP1Wins += 1
             elif winner == P2:
                 expected = 2 # [penalty, reward]
-                numP2Wins += 1
             else:
                 expected = 0
-                numTies += 1
 
             for k in range(4):
                 data.append((
@@ -97,83 +136,55 @@ with open(file_name) as recordedGames:
                     expected
                 ))
 
-    percent += 1
-    print("[{}] {}%     ".format(("#"*percent), 100))
+
             
 
-print("Shuffling Data")
-shuffle(data)
+        shuffle(data)
 
-batch_size = 32
-training_inputs = [[]]
-training_labels = [[]]
-test_inputs = []
-test_labels = []
+        batch_size = 32
+        training_inputs = [[]]
+        training_labels = [[]]
 
-for _input_, _label_ in data:
-    if len(test_inputs) < len(data)*0.15:
-        test_inputs.append(_input_)
-        test_labels.append(_label_)
-    
-    else:
-        if len(training_inputs[-1]) >= batch_size:
-            training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
-            # training_inputs[-1] = np.array(training_inputs[-1])
-            training_labels[-1] = np.array(training_labels[-1])
-            training_inputs.append([])
-            training_labels.append([])
+        for _input_, _label_ in data:
+            if len(training_inputs[-1]) >= batch_size:
+                training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+                # training_inputs[-1] = np.array(training_inputs[-1])
+                training_labels[-1] = np.array(training_labels[-1])
+                training_inputs.append([])
+                training_labels.append([])
 
-        training_inputs[-1].append(_input_)
-        training_labels[-1].append(_label_)
-
-training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
-# training_inputs[-1] = np.array(training_inputs[-1])
-training_labels[-1] = np.array(training_labels[-1])
-
-test_inputs = np.reshape(test_inputs, (-1, 900))
-# test_inputs = np.array(test_inputs)
-test_labels = np.array(test_labels)
-
-print("Number of Player 1 Wins:      ", numP1Wins)
-print("Number of Player 2 Wins:      ", numP2Wins)
-print("Number of Ties:               ", numTies)
-print()
-print("Number of Data points:        ", len(data))
-print("Number of Training batches:   ", len(training_inputs))
-print("Number of Test Points:        ", len(test_inputs), "\n")
+            training_inputs[-1].append(_input_)
+            training_labels[-1].append(_label_)
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print("Training on:  ", device)
+        training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+        training_labels[-1] = np.array(training_labels[-1])
 
-model = Predict_Model("../ModelInstances/predict1/predict1_model")
+        print("    Number of Data points:        ", len(data))
+        print("    Number of Training batches:   ", len(training_inputs), "\n")
 
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        criterion = torch.nn.CrossEntropyLoss()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-iteration_length = 400
-iteration = 0
-running_loss = 0.0
-with open("../ModelInstances/predict1/training_data.csv", "a") as file:
-    file.write("epoch,loss,accuracy\n")
-    for epoch in range(250):
         model = model.to(device)
-        print("Epoch: ", epoch)
-        for _input_, _label_ in zip(training_inputs, training_labels):
-            input_tensor = torch.from_numpy(_input_).to(device)
-            label_tensor = torch.from_numpy(_label_).long().to(device)
 
-            optimizer.zero_grad()
+        running_loss = 0.0
+        num_epochs = 5
+        for epoch in range(num_epochs):
+            for training_input, training_label in zip(training_inputs, training_labels):
+                input_tensor = torch.from_numpy(training_input).to(device)
+                label_tensor = torch.from_numpy(training_label).long().to(device)
 
-            outputs = model.forward(input_tensor)
-            loss = criterion(outputs, label_tensor)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
+                outputs = model.forward(input_tensor)
+                optimizer.zero_grad()
+                loss = criterion(outputs, label_tensor)
+                loss.backward()
+                optimizer.step()
+                running_loss += loss.item()
 
-            iteration += 1
+        loss = running_loss/(len(training_inputs)*num_epochs)
+        print("    Loss: ", loss)
 
-        
         model = model.cpu()
 
         correct = 0
@@ -182,17 +193,22 @@ with open("../ModelInstances/predict1/training_data.csv", "a") as file:
             label_tensor = torch.from_numpy(test_labels).long()
 
             outputs = model.forward(input_tensor)
-            # print(input_tensor.shape)
-            # print(outputs.shape)
-            # print(label_tensor.shape)
             _, predicted = torch.max(outputs.data, 1)
             correct += (predicted == label_tensor).sum().item()
+                
+        accuracy = correct/len(test_inputs)
+        print("    Accuracy: ", accuracy, "\n")
 
-        print("    Loss:     ", running_loss/iteration)
-        print("    Accuracy: ", correct/len(test_inputs))
-        file.write(f"{epoch},{running_loss/iteration},{correct/len(test_inputs)}\n")
+        if loss < min_loss:
+            model.save_weights(f"{model_instance_directory}/predict4_model_min_loss")
+            min_loss = loss
+        if accuracy > max_accuracy:
+            model.save_weights(f"{model_instance_directory}/predict4_model_max_accuracy")
+            max_accuracy = accuracy
+        
+        model.save_weights(f"{model_instance_directory}/predict4_model_most_recent")
 
-        running_loss = 0.0
-        iteration = 0
+        with open(f"{model_instance_directory}/log.csv", "a") as file:
+            file.write(f"{iteration},{loss},{accuracy}\n")\
 
-        model.save_weights(f"../ModelInstances/predict1/predict1_model_epoch_{epoch}")
+        iteration += 1

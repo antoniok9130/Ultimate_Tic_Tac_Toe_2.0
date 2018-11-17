@@ -69,8 +69,8 @@ class Predict_Model(torch.nn.Module):
         super(Predict_Model, self).__init__()
 
         self.fc1 = torch.nn.Linear(900, 256).double()
-        self.fc2 = torch.nn.Linear(256, 3).double()
-        # self.fc3 = torch.nn.Linear(64, 2).double()
+        self.fc2 = torch.nn.Linear(256, 64).double()
+        self.fc3 = torch.nn.Linear(64, 3).double()
         
         self.softmax = torch.nn.Softmax(dim=-1)
 
@@ -88,6 +88,7 @@ class Predict_Model(torch.nn.Module):
 
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
 
         return self.softmax(x)
 

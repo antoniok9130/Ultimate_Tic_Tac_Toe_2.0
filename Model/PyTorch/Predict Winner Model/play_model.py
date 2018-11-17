@@ -8,7 +8,7 @@ import numpy as np
 from UTTT import *
 from Predict_Model import *
 
-model = Predict_Model("../ModelInstances/predict2/predict2_model_iter_278")
+model = Predict_Model("../ModelInstances/predict2/predict2_model_most_recent")
 
 @jit
 def modelSimulation(quadrants, board, winner, move, player):
@@ -56,8 +56,10 @@ def modelSimulation(quadrants, board, winner, move, player):
         
         return P2, 2 # at least two into the future
         
+def getModelMove(node):
+    return getAIMove(node, verbose=True, iterations=4800, simulation=modelSimulation)
 
-play_MCTS(iterations=4800, simulation=modelSimulation)
+play_UTTT(P2_move=getModelMove)
 
 
 

@@ -24,7 +24,7 @@ def randomSimulation(quadrants, board, winner, move, player):
 
 
 
-def play_MCTS(iterations=3200, simulation=randomSimulation):
+def getMove(node, iterations=3200, simulation=randomSimulation):
     """
     Parameters
     ----------
@@ -53,52 +53,6 @@ def play_MCTS(iterations=3200, simulation=randomSimulation):
             length : int
                 how far into the future the win occured
     """
-    
-    node = MCTS_Node()
-
-    while node.winner == N:
-        print()
-        printBoard(node.buildBoard2D(), node.buildQuadrant())
-        move = [int(m) for m in list(input("Enter Move:  ").replace(" ", ""))]
-        if len(move) == 1:
-            if node.move is not None:
-                move = [node.move[1], move[0]]
-            else:
-                print("Invalid Move:  Need to enter quadrant then move")
-                continue
-
-        elif len(move) != 2:
-            print("Invalid Move:  ", move)
-            continue
-
-        
-        if not node.isLegal(move):
-            print("Illegal Move:  ", move)
-            continue
-
-        node.setChild(move)
-        node = node.getChild(0)
-
-        printBoard(node.buildBoard2D(), node.buildQuadrant())
-
-        print("Computer is thinking...")
-        start = current_time_milli()
-        move = getMove(node, iterations=iterations, simulation=simulation)
-        end = current_time_milli()
-        print("Search Space Size:  {0}".format(node.getNumVisits()))
-        node.setChild(move)
-        node = node.getChild(0)
-        print(f"g:   {move[0]}      l:   {move[1]}")
-        print(f"w:   {node.numWins}      v:   {node.numVisits}")
-        print(f"confidence:   {node.getConfidence()}")
-        print(f"time:         {(end-start)/1000.0} seconds")
-
-    print(f"{node.winner} is the winner!")
-
-
-
-def getMove(node, iterations=3200, simulation=randomSimulation):
-
     move = isNextWin(node)
     if move is not None:
         # time.sleep(1)
