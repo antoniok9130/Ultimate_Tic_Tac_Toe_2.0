@@ -1,6 +1,6 @@
 
 import sys
-sys.path.append("..\\..\\..\\")
+sys.path.append("../../../")
 import subprocess as sp
 
 import numpy as np
@@ -11,7 +11,6 @@ from UTTT import *
 from random import shuffle
 from Predict_Model import *
 
-model_instance_directory = "../ModelInstances/predict4"
 
 test_data = []
 
@@ -63,10 +62,12 @@ test_labels = np.array(test_labels)
 print("Finished Loading Test Data.\n")
 
 
+model_instance_directory = "../ModelInstances/predict5"
+
 with open(f"{model_instance_directory}/log.csv", "w") as file:
     file.write("iteration,loss,accuracy\n")
 
-file_name = f"../ModelInstances/predict3/games.txt"
+file_name = f"../ModelInstances/predict2/games.txt"
 
 min_loss = 1000
 max_accuracy = -1000
@@ -200,13 +201,13 @@ with open(file_name) as recordedGames:
         print("    Accuracy: ", accuracy, "\n")
 
         if loss < min_loss:
-            model.save_weights(f"{model_instance_directory}/predict4_model_min_loss")
+            model.save_weights(f"{model_instance_directory}/predict5_model_min_loss")
             min_loss = loss
         if accuracy > max_accuracy:
-            model.save_weights(f"{model_instance_directory}/predict4_model_max_accuracy")
+            model.save_weights(f"{model_instance_directory}/predict5_model_max_accuracy")
             max_accuracy = accuracy
         
-        model.save_weights(f"{model_instance_directory}/predict4_model_most_recent")
+        model.save_weights(f"{model_instance_directory}/predict5_model_most_recent")
 
         with open(f"{model_instance_directory}/log.csv", "a") as file:
             file.write(f"{iteration},{loss},{accuracy}\n")\
