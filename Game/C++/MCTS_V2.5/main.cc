@@ -98,6 +98,17 @@ void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
     }
 }
 
+
+const int movePriorities[81][2] = {
+    {4, 4}, {4, 0}, {4, 2}, {4, 6}, {4, 8}, 
+    {0, 0}, {0, 2}, {0, 6}, {0, 8}, {2, 0}, {2, 2}, {2, 6}, {2, 8}, {6, 0}, {6, 2}, {6, 6}, {6, 8}, {8, 0}, {8, 2}, {8, 6}, {8, 8}, 
+    {4, 1}, {4, 3}, {4, 5}, {4, 7}, {1, 1}, {3, 3}, {5, 5}, {7, 7}, 
+    {0, 1}, {0, 3}, {0, 5}, {0, 7}, {1, 0}, {1, 2}, {1, 3}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {2, 1}, {2, 3}, {2, 5}, {2, 7}, 
+    {3, 0}, {3, 1}, {3, 2}, {3, 5}, {3, 6}, {3, 7}, {3, 8}, {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 6}, {5, 7}, {5, 8}, 
+    {6, 1}, {6, 3}, {6, 5}, {6, 7}, {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 5}, {7, 6}, {7, 8}, 
+    {8, 1}, {8, 3}, {8, 5}, {8, 7}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4}
+};
+
 void iterateSelfPlay(const string& logPath, const string& recordPath) {
     
     std::ofstream logout;
@@ -107,22 +118,20 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
     recordout.open(recordPath, std::ios_base::app);
 
     int iteration = 1;
-    // while(true){
-	for (int i = 0; i < 9; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                logout << "Iteration " << iteration << ":" << endl;
+    while(true){
+	for (auto& move : movePriorities) {
+            logout << "Iteration " << iteration << ":   " << move[0] << ", " << move[1] << endl;
 
-                Node* node = new Node();
-                Node* game = node;
-                game->setChild(Move{i, j});
-                game = game->getChild(0).get();
-                selfPlay(game, logout, recordout);
-                delete node;
+            Node* node = new Node();
+            Node* game = node;
+            game->setChild(Move{move[0], move[1]});
+            game = game->getChild(0).get();
+            selfPlay(game, logout, recordout);
+            delete node;
 
-                ++iteration;
-            }
+            ++iteration;
        }
-   // }
+   }
 }
 
 void play() {
