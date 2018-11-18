@@ -34,9 +34,9 @@ Simple Artificial Neural Network with the following feature inputs:
 '''
 
 @jit(cache=True)
-def extract_features(quadrants, board, length):
+def extract_features(quadrants, board):
 
-    features = [length]
+    features = []
 
     features.extend([
         quadrant == P1 for quadrant in quadrants
@@ -66,7 +66,7 @@ def extract_features(quadrants, board, length):
     return np.array(features)*1.0
 
 
-
+input_size = 900
 
 class Predict_Model(torch.nn.Module):
 
@@ -74,11 +74,11 @@ class Predict_Model(torch.nn.Module):
 
         super(Predict_Model, self).__init__()
 
-        self.fc1__0_15 = torch.nn.Linear(901, 256).double()
-        self.fc1__15_30 = torch.nn.Linear(901, 256).double()
-        self.fc1__30_45 = torch.nn.Linear(901, 256).double()
-        self.fc1__45_60 = torch.nn.Linear(901, 256).double()
-        self.fc1__60_ = torch.nn.Linear(901, 256).double()
+        self.fc1__0_15 = torch.nn.Linear(input_size, 256).double()
+        self.fc1__15_30 = torch.nn.Linear(input_size, 256).double()
+        self.fc1__30_45 = torch.nn.Linear(input_size, 256).double()
+        self.fc1__45_60 = torch.nn.Linear(input_size, 256).double()
+        self.fc1__60_ = torch.nn.Linear(input_size, 256).double()
         self.fc2 = torch.nn.Linear(256, 3).double()
         
         self.softmax = torch.nn.Softmax(dim=-1)
@@ -93,17 +93,17 @@ class Predict_Model(torch.nn.Module):
         torch.save(self.state_dict(), state_dict_path)
 
 
-    def forward(self, x):
-        length = x.detach().numpy()[0]
-        print(length)
-        if 0 <= length < 15:
+    def forward(self, x, length):
+        if length < 15:
             x = F.relu(self.fc1__0_15(x))
         elif 15 <= length < 30:
             x = F.relu(self.fc1__15_30(x))
         elif 30 <= length < 45:
             x = F.relu(self.fc1__30_45(x))
+        elif 45 <= length < 60:
+            x = F.relu(self.fc1__45_60(x))
         else:
-            x = F.relu(self.fc1__45_(x))
+            x = F.relu(self.fc1__60_(x))
         x = F.relu(self.fc2(x))
 
         return self.softmax(x)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     model1 = Predict_Model()
 
-    features = extract_features(np.zeros(9), np.zeros((9, 9)), 15)
+    features = extract_features(np.zeros(9), np.zeros((9, 9)))
     
     prediction = model1.predict(features)
 
