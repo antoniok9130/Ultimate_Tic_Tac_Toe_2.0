@@ -1,6 +1,10 @@
 
+import platform
 import sys
-sys.path.append("..\\..\\..\\")
+if platform.platform() == "Windows":
+    sys.path.append("..\\..\\..\\")
+else:
+    sys.path.append("../../../")
 
 import torch
 import torch.nn.functional as F
@@ -17,20 +21,22 @@ Simple Artificial Neural Network with the following feature inputs:
 
      Feature:                                            | Num Features:
     =====================================================|=======================
+     Current Length                                      | 1               = 1
      Whether or not they have the quadrants              | 9 * 2           = 18
      Whether or not they have a pair of quadrants        | 9C2 * 2         = 72
+     Whether or not they can take a quadrant             | 9 * 2           = 18
+     Whether or not they win if they take the quadrant   | 9 * 2           = 18
      Whether or not they have the square in the quadrant | 81 * 2          = 162
      Whether or not they have a pair within a quadrant   | (9 * 9C2) * 2   = 648
-     Whether or not they can take a quadrant             | 9 * 2           = 18
                                                          |
                                                 Total:   | 18+72+162+648+18 = 918                 
 
 '''
 
 @jit(cache=True)
-def extract_features(quadrants, board):
+def extract_features(quadrants, board, length):
 
-    features = []
+    features = [length]
 
     features.extend([
         quadrant == P1 for quadrant in quadrants
@@ -68,9 +74,12 @@ class Predict_Model(torch.nn.Module):
 
         super(Predict_Model, self).__init__()
 
-        self.fc1 = torch.nn.Linear(900, 256).double()
-        self.fc2 = torch.nn.Linear(256, 64).double()
-        self.fc3 = torch.nn.Linear(64, 3).double()
+        self.fc1__0_15 = torch.nn.Linear(901, 256).double()
+        self.fc1__15_30 = torch.nn.Linear(901, 256).double()
+        self.fc1__30_45 = torch.nn.Linear(901, 256).double()
+        self.fc1__45_60 = torch.nn.Linear(901, 256).double()
+        self.fc1__60_ = torch.nn.Linear(901, 256).double()
+        self.fc2 = torch.nn.Linear(256, 3).double()
         
         self.softmax = torch.nn.Softmax(dim=-1)
 
@@ -85,10 +94,17 @@ class Predict_Model(torch.nn.Module):
 
 
     def forward(self, x):
-
-        x = F.relu(self.fc1(x))
+        length = x.detach().numpy()[0]
+        print(length)
+        if 0 <= length < 15:
+            x = F.relu(self.fc1__0_15(x))
+        elif 15 <= length < 30:
+            x = F.relu(self.fc1__15_30(x))
+        elif 30 <= length < 45:
+            x = F.relu(self.fc1__30_45(x))
+        else:
+            x = F.relu(self.fc1__45_(x))
         x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
 
         return self.softmax(x)
 
@@ -102,16 +118,18 @@ class Predict_Model(torch.nn.Module):
 if __name__ == "__main__":
 
     # tensor = torch.tensor(torch.from_numpy(np.random.rand(1002)), dtype=torch.double)
-    tensor = np.random.randint(2, size=900)
+    # tensor = np.random.randint(2, size=900)
 
     model1 = Predict_Model()
+
+    features = extract_features(np.zeros(9), np.zeros((9, 9)), 15)
     
-    prediction = model1.predict(tensor)
+    prediction = model1.predict(features)
 
-    print(prediction)
-    print(list(model1.parameters())[0][0])
+    # print(prediction)
+    # print(list(model1.parameters())[0][0])
 
-    model1.save_weights("../ModelInstances/predict1/predict1_model")
+    # model1.save_weights("../ModelInstances/predict1/predict1_model")
 
     # model2 = UTTT_Model()
 

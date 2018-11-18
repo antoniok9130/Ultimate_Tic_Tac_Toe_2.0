@@ -1,6 +1,12 @@
 
+import platform
 import sys
-sys.path.append("../../../")
+if platform.platform() == "Windows":
+    sys.path.append("..\\..\\..\\")
+else:
+    sys.path.append("../../../")
+
+    
 import subprocess as sp
 
 import numpy as np
@@ -38,7 +44,7 @@ with open("../Data/RecordedGames.txt") as recordedGames:
             if check3InRowAt(board[g], l):
                 quadrants[g] = player
 
-            game_data.append(extract_features(quadrants, board))
+            game_data.append(extract_features(quadrants, board, int(i//2)+1))
 
             i += 2
 
