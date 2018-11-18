@@ -107,7 +107,7 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
     recordout.open(recordPath, std::ios_base::app);
 
     int iteration = 1;
-    while(true){
+    // while(true){
 	for (int i = 0; i < 9; ++i) {
             for (int j = 0; j < 9; ++j) {
                 logout << "Iteration " << iteration << ":" << endl;
@@ -122,7 +122,7 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
                 ++iteration;
             }
        }
-   }
+   // }
 }
 
 void play() {

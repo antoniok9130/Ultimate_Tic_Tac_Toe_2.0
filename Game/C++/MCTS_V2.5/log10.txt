@@ -56536,3 +56536,35 @@ Iteration 170:
     Confidence:  0.661522
 
     Player 2 getting move
+Iteration 1:
+    Player 2 getting move
+    Search Space Size:  2000000
+    G:  0     L:  6
+    W:  156271    V:  359060
+    Confidence:  0.435223
+
+    Player 1 getting move
+    Search Space Size:  2000000
+    G:  6     L:  6
+    W:  205022    V:  397782
+    Confidence:  0.515413
+
+    Player 2 getting move
+    Search Space Size:  2000000
+    G:  6     L:  5
+    W:  221943    V:  508492
+    Confidence:  0.436473
+
+    Player 1 getting move
+    Search Space Size:  2000000
+    G:  5     L:  7
+    W:  297069    V:  573046
+    Confidence:  0.518403
+
+    Player 2 getting move
+    Search Space Size:  2000000
+    G:  7     L:  7
+    W:  225646    V:  520504
+    Confidence:  0.433514
+
+    Player 1 getting move
