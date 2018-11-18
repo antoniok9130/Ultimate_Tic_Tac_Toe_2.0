@@ -107,20 +107,22 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
     recordout.open(recordPath, std::ios_base::app);
 
     int iteration = 1;
-    for (int i = 0; i < 9; ++i) {
-        for (int j = 0; j < 9; ++j) {
-            logout << "Iteration " << iteration << ":" << endl;
+    while(true){
+	for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                logout << "Iteration " << iteration << ":" << endl;
 
-            Node* node = new Node();
-            Node* game = node;
-            game->setChild(Move{i, j});
-            game = game->getChild(0).get();
-            selfPlay(game, logout, recordout);
-            delete node;
+                Node* node = new Node();
+                Node* game = node;
+                game->setChild(Move{i, j});
+                game = game->getChild(0).get();
+                selfPlay(game, logout, recordout);
+                delete node;
 
-            ++iteration;
-        }
-    }
+                ++iteration;
+            }
+       }
+   }
 }
 
 void play() {
