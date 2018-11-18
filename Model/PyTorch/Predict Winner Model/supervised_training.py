@@ -68,7 +68,8 @@ test_labels = np.array(test_labels)
 print("Finished Loading Test Data.\n")
 
 
-model_instance_directory = "../ModelInstances/predict5"
+model_instance_directory = "../ModelInstances/predict6"
+sp.call(f"mkdir -p {model_instance_directory}", shell=True)
 
 with open(f"{model_instance_directory}/log.csv", "w") as file:
     file.write("iteration,loss,accuracy\n")
@@ -109,7 +110,7 @@ with open(file_name) as recordedGames:
             if check3InRowAt(board[g], l):
                 quadrants[int(g//3)][g%3] = player
 
-            game_data.append((np.copy(board), np.copy(quadrants), i))
+            game_data.append((np.copy(board), np.copy(quadrants), int(i//2)+1))
 
             i += 2
 
@@ -131,14 +132,16 @@ with open(file_name) as recordedGames:
                 data.append((
                     extract_features(
                         np.rot90(quadrants, k=k).ravel(),
-                        np.rot90(board, k=k)
+                        np.rot90(board, k=k),
+                        length
                     ),
                     expected
                 ))
                 data.append((
                     extract_features(
                         np.rot90(np.fliplr(quadrants), k=k).ravel(),
-                        np.rot90(np.fliplr(board), k=k)
+                        np.rot90(np.fliplr(board), k=k),
+                        length
                     ),
                     expected
                 ))
@@ -154,7 +157,7 @@ with open(file_name) as recordedGames:
 
         for _input_, _label_ in data:
             if len(training_inputs[-1]) >= batch_size:
-                training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+                training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 901))
                 # training_inputs[-1] = np.array(training_inputs[-1])
                 training_labels[-1] = np.array(training_labels[-1])
                 training_inputs.append([])
@@ -164,7 +167,7 @@ with open(file_name) as recordedGames:
             training_labels[-1].append(_label_)
 
 
-        training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 900))
+        training_inputs[-1] = np.reshape(training_inputs[-1], (-1, 901))
         training_labels[-1] = np.array(training_labels[-1])
 
         print("    Number of Data points:        ", len(data))
