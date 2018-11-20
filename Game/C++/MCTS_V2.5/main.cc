@@ -83,7 +83,7 @@ void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
             // game->buildQuadrant(quadrants);
             // print(cout, board, quadrants);
 
-            game = AI_move(game, 2000000, logout);
+            game = AI_move(game, 250000, logout);
         }
         logout << "    Winner:  " << game->getWinner() << endl;
         // Board2D board = make_Board2D();
