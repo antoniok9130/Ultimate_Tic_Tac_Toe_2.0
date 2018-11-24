@@ -129,7 +129,7 @@ def train():
 
 
 
-    model_instance_directory = "../ModelInstances/predict7"
+    model_instance_directory = "../ModelInstances/predict8"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
     sp.call(f"touch {model_instance_directory}/log.csv", shell=True)
 
@@ -157,87 +157,94 @@ def train():
     while True:
         shuffle(games)
         for i in range(0, len(games), 289):
-            print(f"Iteration {iteration}:")
-            game_set = games[i:i+289]
-            train_data = [[] for l in lengths]
+            try:
+                print(f"Iteration {iteration}:")
+                game_set = games[i:i+289]
+                if len(game_set) > 0:
+                    train_data = [[] for l in lengths]
 
-            for game in game_set:
-                features, expected = get_features(game, permute=True)
-                shuffle(features)
-                for feature, length in features:            
-                    train_data[min(int(length//length_interval), len(lengths)-1)].append((feature, expected))
-            
-            for i in range(len(train_data)):
-                train_data[i] = get_batches(train_data[i])
+                    for game in game_set:
+                        features, expected = get_features(game, permute=True)
+                        shuffle(features)
+                        for feature, length in features:            
+                            train_data[min(int(length//length_interval), len(lengths)-1)].append((feature, expected))
+                    
+                    for i in range(len(train_data)):
+                        train_data[i] = get_batches(train_data[i])
 
-            model = model.to(device)
+                    model = model.to(device)
 
-            criterion = torch.nn.CrossEntropyLoss()
-            optimizer = torch.optim.SGD(model.parameters(), lr=0.01) # , momentum=0.9
+                    criterion = torch.nn.CrossEntropyLoss()
+                    optimizer = torch.optim.SGD(model.parameters(), lr=0.01) # , momentum=0.9
 
-            running_losses = [0.0 for l in lengths]
-            num_train_iterations = [0 for l in lengths]
-            num_epochs = 5
-            with ProgressBar(num_epochs*len(train_data)*sum(len(x[0]) for x in train_data), 50) as progress:
-                for epoch in range(num_epochs):
-                    for i, data in enumerate(train_data):
-                        training_inputs, training_labels, val_inputs, val_labels = data
-                        for training_input, training_label in zip(training_inputs, training_labels):
-                            next(progress)
-                            if len(training_input) > 0:
-                                input_tensor = torch.from_numpy(training_input).to(device)
-                                label_tensor = torch.from_numpy(training_label).long().to(device)
+                    running_losses = [0.0 for l in lengths]
+                    num_train_iterations = [0 for l in lengths]
+                    num_epochs = 5
+                    with ProgressBar(num_epochs*sum(len(x[0]) for x in train_data), 50) as progress:
+                        for epoch in range(num_epochs):
+                            for i, data in enumerate(train_data):
+                                training_inputs, training_labels, val_inputs, val_labels = data
+                                for training_input, training_label in zip(training_inputs, training_labels):
+                                    next(progress)
+                                    if len(training_input) > 0:
+                                        input_tensor = torch.from_numpy(training_input).to(device)
+                                        label_tensor = torch.from_numpy(training_label).long().to(device)
 
-                                outputs = model.forward(input_tensor, i*15)
-                                optimizer.zero_grad()
-                                loss = criterion(outputs, label_tensor)
-                                loss.backward()
-                                optimizer.step()
-                                running_losses[i] += loss.item()
+                                        outputs = model.forward(input_tensor, i*15)
+                                        optimizer.zero_grad()
+                                        loss = criterion(outputs, label_tensor)
+                                        loss.backward()
+                                        optimizer.step()
+                                        running_losses[i] += loss.item()
 
-                                num_train_iterations[i] += 1
-
-
-            model = model.cpu()
-
-            correct = [0.0 for l in lengths]
-            num_accuracy_iterations = [0 for l in lengths]
-            with torch.no_grad():
-                for i, test_data_point in enumerate(test_data):
-                    if len(test_data_point) > 0:
-                        test_input, test_label = test_data_point
-
-                        if len(test_input) > 0:
-                            input_tensor = torch.from_numpy(test_input)
-                            label_tensor = torch.from_numpy(test_label).long()
-
-                            outputs = model.forward(input_tensor, i*15)
-                            _, predicted = torch.max(outputs.data, 1)
-                            correct[i] += (predicted == label_tensor).sum().item()
-
-                            num_accuracy_iterations[i] += len(test_input)
+                                        num_train_iterations[i] += 1
 
 
-            average_loss = sum(l/i for l, i in zip(running_losses, num_train_iterations))/len(lengths)
-            if average_loss < min_loss:
-                model.save_weights(f"{model_instance_directory}/predict_model_min_average_loss")
-                min_loss = average_loss
+                    model = model.cpu()
 
-            average_accuracy = sum(c/i for c, i in zip(correct, num_accuracy_iterations))/len(lengths)
-            if average_accuracy > max_accuracy:
-                model.save_weights(f"{model_instance_directory}/predict_model_max_average_accuracy")
-                max_accuracy = average_accuracy
-            
-            model.save_weights(f"{model_instance_directory}/predict_model_most_recent")
+                    correct = [0.0 for l in lengths]
+                    num_accuracy_iterations = [0 for l in lengths]
+                    with torch.no_grad():
+                        for i, test_data_point in enumerate(test_data):
+                            if len(test_data_point) > 0:
+                                test_input, test_label = test_data_point
 
-            with open(f"{model_instance_directory}/log.csv", "a") as file:
-                file.write("{},{},{}\n".format(
-                    iteration,
-                    ','.join([str(l/i) for l, i in zip(running_losses, num_train_iterations)]),
-                    ','.join([str(c/i) for c, i in zip(correct, num_accuracy_iterations)])
-                ))
+                                if len(test_input) > 0:
+                                    input_tensor = torch.from_numpy(test_input)
+                                    label_tensor = torch.from_numpy(test_label).long()
 
-            iteration += 1
+                                    outputs = model.forward(input_tensor, i*15)
+                                    _, predicted = torch.max(outputs.data, 1)
+                                    correct[i] += (predicted == label_tensor).sum().item()
+
+                                    num_accuracy_iterations[i] += len(test_input)
+
+
+                    average_loss = sum(l/i for l, i in zip(running_losses, num_train_iterations))/len(lengths)
+                    if average_loss < min_loss:
+                        model.save_weights(f"{model_instance_directory}/predict_model_min_average_loss")
+                        min_loss = average_loss
+
+                    average_accuracy = sum(c/i for c, i in zip(correct, num_accuracy_iterations))/len(lengths)
+                    if average_accuracy > max_accuracy:
+                        model.save_weights(f"{model_instance_directory}/predict_model_max_average_accuracy")
+                        max_accuracy = average_accuracy
+                    
+                    model.save_weights(f"{model_instance_directory}/predict_model_most_recent")
+
+                    with open(f"{model_instance_directory}/log.csv", "a") as file:
+                        file.write("{},{},{}\n".format(
+                            iteration,
+                            ','.join([str(l/i) for l, i in zip(running_losses, num_train_iterations)]),
+                            ','.join([str(c/i) for c, i in zip(correct, num_accuracy_iterations)])
+                        ))
+
+                iteration += 1
+
+            except:
+                pass
+        
+        model.save_weights(f"{model_instance_directory}/predict_model_{iteration}")
 
 
 

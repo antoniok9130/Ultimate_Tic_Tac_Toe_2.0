@@ -1,17 +1,18 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("../ModelInstances/predict6/log.csv")
+lengths = ["0_15", "15_30", "30_45", "45_60", "60_"]
+df = pd.read_csv("../ModelInstances/predict7/log.csv")
 
 # print(df.groupby("winner").count())
 
 # data.sort_values("iteration")
 
-print(df['accuracy'].idxmax())
-print(df['loss'].idxmin())
+# print(df['accuracy'].idxmax())
+# print(df['loss'].idxmin())
 # print(df['game'].nunique(), " ?= ",df['game'].count())
 
-df[["iteration", "loss", "accuracy"]].plot(x="iteration")
+df[["iteration"]+[f"accuracy__{length}" for length in lengths]].plot(x="iteration")
 # df["game_length"] = df["game"].apply(lambda x: len(x)/2)
 # df[["iteration", "game_length"]].plot(x="iteration")
 # df[["iteration", "duration"]].plot(x="iteration")

@@ -6,38 +6,37 @@ games = []
 for path in [f"../../../Game/C++/MCTS_V2.5/record{i}.txt" for i in range(20, 23)]:
     with open(path) as file:
         for row in file:
-            games.append(row.strip())
+            if len(row.strip()) > 0:
+                games.append(row.strip())
 
-# with open("ValidationGames.txt") as file:
-#     for row in file:
-#         games.append(row.strip())
-        # moves = [int(e) for e in row.strip()]
-        # g = moves[0]
-        # l = moves[1]        
-    
-        # pair = (moves[2], moves[3])
+                moves = [int(e) for e in row.strip()]
+                g = moves[0]
+                l = moves[1]        
+            
+                pair = (moves[2], moves[3])
 
-        # if pair in analyzed[g][l]:
-        #     analyzed[g][l][pair][0] += 1
+                if pair in analyzed[g][l]:
+                    analyzed[g][l][pair][0] += 1
 
-        # else:
-        #     analyzed[g][l][pair] = [1, {}]
+                else:
+                    analyzed[g][l][pair] = [1, {}]
 
 
-# def wrap(s):
-#     return "{"+s+"}"
+def wrap(s):
+    return "{"+s+"}"
 
 
-# board = [[[] for j in range(9)] for i in range(9)]
+board = [[[] for j in range(9)] for i in range(9)]
 
-# for i in range(9):
-#     for j in range(9):
-#         for key, val in analyzed[i][j].items():
-#             board[i][j].append((key[0], key[1], val[0]))
+for i in range(9):
+    for j in range(9):
+        for key, val in analyzed[i][j].items():
+            board[i][j].append((key[0], key[1], val[0]))
+            
+#         print(f"({i}, {j}):   [{', '.join([f'{key}: {val[0]}' for key, val in analyzed[i][j].items()])}]")
 
-# print(wrap(",\n ".join([wrap(", ".join([wrap(", ".join([wrap(", ".join([str(v) for v in k])) for k in move])) for move in quadrant])) for quadrant in board])))
-        # print(f"({i}, {j}):   [{', '.join([f'{key}: {val[0]}' for key, val in analyzed[i][j].items()])}]")
-
+print(wrap(",\n ".join([wrap(", ".join([wrap(", ".join([wrap(", ".join([str(v) for v in k])) for k in move])) for move in quadrant])) for quadrant in board])))
+        
 
 '''
 (0, 0):   [(0, 5): 1, (0, 6): 2, (0, 2): 5, (0, 7): 1, (0, 8): 1]
