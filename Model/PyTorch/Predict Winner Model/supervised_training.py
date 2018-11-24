@@ -134,7 +134,7 @@ def train():
     sp.call(f"touch {model_instance_directory}/log.csv", shell=True)
 
     with open(f"{model_instance_directory}/log.csv", "w") as file:
-        file.write(f"iteration,{f'loss__{length}' for length in lengths},{f'accuracy__{length}' for length in lengths}\n")
+        file.write(f"iteration,{','.join([f'loss__{length}' for length in lengths])},{','.join([f'accuracy__{length}' for length in lengths])}\n")
 
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -233,8 +233,8 @@ def train():
             with open(f"{model_instance_directory}/log.csv", "a") as file:
                 file.write("{},{},{}\n".format(
                     iteration,
-                    ','.join(l/i for l, i in zip(running_losses, num_train_iterations)),
-                    ','.join(c/i for c, i in zip(correct, num_accuracy_iterations))
+                    ','.join([str(l/i) for l, i in zip(running_losses, num_train_iterations)]),
+                    ','.join([str(c/i) for c, i in zip(correct, num_accuracy_iterations)])
                 ))
 
             iteration += 1
