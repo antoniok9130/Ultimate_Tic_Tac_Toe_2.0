@@ -3,34 +3,39 @@ import operator
 analyzed = [[{} for j in range(9)] for i in range(9)]
 games = []
 
-with open("RecordedGames.txt") as file:
-    for row in file:
-        games.append(row.strip())
-        moves = [int(e) for e in row.strip()]
-        g = moves[0]
-        l = moves[1]        
+for path in [f"../../../Game/C++/MCTS_V2.5/record{i}.txt" for i in range(20, 23)]:
+    with open(path) as file:
+        for row in file:
+            games.append(row.strip())
+
+# with open("ValidationGames.txt") as file:
+#     for row in file:
+#         games.append(row.strip())
+        # moves = [int(e) for e in row.strip()]
+        # g = moves[0]
+        # l = moves[1]        
     
-        pair = (moves[2], moves[3])
+        # pair = (moves[2], moves[3])
 
-        if pair in analyzed[g][l]:
-            analyzed[g][l][pair][0] += 1
+        # if pair in analyzed[g][l]:
+        #     analyzed[g][l][pair][0] += 1
 
-        else:
-            analyzed[g][l][pair] = [1, {}]
-
-
-def wrap(s):
-    return "{"+s+"}"
+        # else:
+        #     analyzed[g][l][pair] = [1, {}]
 
 
-board = [[[] for j in range(9)] for i in range(9)]
+# def wrap(s):
+#     return "{"+s+"}"
 
-for i in range(9):
-    for j in range(9):
-        for key, val in analyzed[i][j].items():
-            board[i][j].append((key[0], key[1], val[0]))
 
-print(wrap(",\n ".join([wrap(", ".join([wrap(", ".join([wrap(", ".join([str(v) for v in k])) for k in move])) for move in quadrant])) for quadrant in board])))
+# board = [[[] for j in range(9)] for i in range(9)]
+
+# for i in range(9):
+#     for j in range(9):
+#         for key, val in analyzed[i][j].items():
+#             board[i][j].append((key[0], key[1], val[0]))
+
+# print(wrap(",\n ".join([wrap(", ".join([wrap(", ".join([wrap(", ".join([str(v) for v in k])) for k in move])) for move in quadrant])) for quadrant in board])))
         # print(f"({i}, {j}):   [{', '.join([f'{key}: {val[0]}' for key, val in analyzed[i][j].items()])}]")
 
 
@@ -119,11 +124,7 @@ print(wrap(",\n ".join([wrap(", ".join([wrap(", ".join([wrap(", ".join([str(v) f
 '''
 
 
-games = set([x for x in games if games.count(x) > 1])
+print("There are ", len(games), " games")
 
-if len(games) > 0:
-    print("There are ", len(games), " duplicate games:")
-    for game in games:
-        print("   ", game)
-else:
-    print("There are no duplicate games")
+unique = list(set(games))
+print("There are ", len(unique), " unique games")
