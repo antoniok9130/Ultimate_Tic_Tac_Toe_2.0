@@ -105,21 +105,32 @@ def check3InRowAt(array, position):
 
 
 def getLegalMoves2D(quadrants, board, previousMove):
-    if previousMove is not None and quadrants[previousMove[1]] == N:
-        g = previousMove[1]
-        return [[g, l] for l, q in enumerate(board[g]) if q == N]
-    else:
-        return [[g, l] for g, aQ in enumerate(quadrants) if aQ == N 
-                       for l in range(9) if board[g][l] == N]
+    return [(int(m//9), int(m%9)) for m in getLegalMoves1D(quadrants, board, previousMove)]
 
 
 def getLegalMoves1D(quadrants, board, previousMove):
-    if previousMove is not None and quadrants[previousMove[1]] == N:
+    return np.nonzero(getLegalMovesField(quadrants, board, previousMove))[0].tolist()
+
+
+@jit(cache=True)
+def getLegalMovesField(quadrants, board, previousMove):
+    legalMoves = np.zeros(81)
+    getLegalMovesField_numba(legalMoves, quadrants, board, [-1, -1] if previousMove is None else previousMove)
+    return legalMoves
+
+@jit(cache=True, nopython=True)
+def getLegalMovesField_numba(legalMoves, quadrants, board, previousMove):
+    if previousMove[1] != -1 and quadrants[previousMove[1]] == N:
         g = 9*previousMove[1]
-        return [g+l for l, q in enumerate(board[previousMove[1]]) if q == N]
+        for l, q in enumerate(board[previousMove[1]]):
+            if q == N:
+                legalMoves[g+l] = 1.0
     else:
-        return [9*g+l for g, aQ in enumerate(quadrants) if aQ == N 
-                      for l in range(9) if board[g][l] == N]
+        for g, aQ in enumerate(quadrants):
+            if aQ == N:
+                for l, b_gl in enumerate(board[g]):
+                    if b_gl == N:
+                        legalMoves[9*g+l] = 1.0
 
 
 @jit(cache=True, nopython=True)
@@ -544,8 +555,8 @@ def checkInstantWin(potentialQuadrants, quadrants, board, g, player):
 #     return jit_simulation(quadrants, board, state.winner, state.move, state.getPlayer(), policy)
 
 
-@jit(cache=True, nopython=True)
-def simulation(quadrants, board, winner, move, player, policy):
+@jit(cache=True) # , nopython=True
+def simulation(quadrants, board, winner, move, player, length, policy):
     """
     Parameters
     ----------
@@ -586,7 +597,7 @@ def simulation(quadrants, board, winner, move, player, policy):
                 break
 
         # try:
-        policy(move, quadrants, board)
+        policy(move, quadrants, board, length)
         g = move[0]
         l = move[1]
         # except:

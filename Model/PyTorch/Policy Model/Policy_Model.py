@@ -1,6 +1,11 @@
 
+import platform
 import sys
-sys.path.append("..\\..\\")
+if platform.platform() == "Windows":
+    sys.path.append("..\\..\\..\\")
+else:
+    sys.path.append("../../../")
+
 
 import torch
 import torch.nn.functional as F
@@ -26,16 +31,8 @@ Simple Artificial Neural Network with the following feature inputs:
 
 '''
 
-@jit(cache=True)
-def extract_features(quadrants, board):
-
-    features = []
-
-    features.extend(quadrants)
-    for quadrant in board:
-        features.extend(board)
-
-    return np.array(features)
+def extract_features(board): # quadrants, 
+    return np.array((board == P1, board == P2))*1.0
 
 
 
@@ -45,7 +42,10 @@ class Policy_Model(torch.nn.Module):
 
         super(Policy_Model, self).__init__()
 
-        self.fc1 = torch.nn.Linear(90, 256).double()
+        self.conv1 = torch.nn.Conv2d(in_channels=2, out_channels=32, kernel_size=3).double()
+        # self.pool = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv2 = torch.nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3).double()
+        self.fc1 = torch.nn.Linear(5*5*64, 256).double()
         self.fc2 = torch.nn.Linear(256, 81).double()
         # self.fc3 = torch.nn.Linear(64, 2).double()
         
@@ -66,44 +66,28 @@ class Policy_Model(torch.nn.Module):
 
     def forward(self, x):
 
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = x.view(-1, 5*5*64)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
 
         return self.softmax(x)
 
     def predict(self, x):
-        return self.forward(torch.tensor(torch.from_numpy(x), dtype=torch.double)).detach().numpy()
+        return self.forward(torch.tensor(torch.from_numpy(np.reshape(x, (-1, 2, 9, 9))), dtype=torch.double)).detach().numpy()
 
 
     def getMove(self, previousMove, quadrants, board):
-        legal_moves = []
-        if previousMove is not None and quadrants[previousMove[1]] == N:
-            g = previousMove[1]
-            legal_moves = [9*g+l for l in range(9) if board[g][l] == N]
-        
-        else:
-            legal_moves = [9*g+l for g in range(9) if quadrants[g] == N for l in range(9) if board[g][l] == N]
-
-        if len(legal_moves) <= 0:
-            raise Exception("No Legal Moves")
+        legal_moves = getLegalMovesField(quadrants, board, previousMove)
         
         if random.random() < self.exploreProb:
             move = random.choice(legal_moves)
 
         else:
             action_probabilities = self.predict(extract_features(quadrants, board))
-
-            max_prob = -1
-            best_moves = []
-            for legal_move in legal_moves:
-                probability = action_probabilities[legal_move]
-                if probability > max_prob:
-                    max_prob = probability
-                    best_moves = [legal_move]
-                elif probability == max_prob:
-                    best_moves.append(legal_move)
-
-            move = random.choice(best_moves)
+            np.multiply(action_probabilities, legal_moves, action_probabilities)
+            move = np.random.choice(np.nonzero(action_probabilities == action_probabilities.max()))
 
         return int(move//9), move%9
 
@@ -118,9 +102,18 @@ if __name__ == "__main__":
 
     policy = Policy_Model()
 
-    print(compute_reward(UTTT_Node(), policy))
+    # quadrants = np.random.randint(3, size=9)
+    # board = np.random.randint(3, size=(9,9))
+    # start = current_time_milli()
+    # for i in range(1000):
+    #     move = policy.getMove(None, quadrants, board)
+    # end = current_time_milli()
+    # print((end-start)/1000.0)
 
-    policy.save_weights("./ModelInstances/policy2/policy2_model")
+
+    # print(compute_reward(UTTT_Node(), policy))
+
+    # policy.save_weights("./ModelInstances/policy2/policy2_model")
 
     # tensor = torch.tensor(torch.from_numpy(np.random.rand(1002)), dtype=torch.double)
     # tensor = torch.tensor(torch.from_numpy(np.zeros((1002))), dtype=torch.double)

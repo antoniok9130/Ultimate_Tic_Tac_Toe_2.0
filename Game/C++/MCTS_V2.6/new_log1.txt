@@ -1,4 +1,0 @@
-Iteration 1:
-    Player  getting move
-Iteration 1:
-    Player  getting move

@@ -45,7 +45,10 @@ class MCTS_Node(UTTT_Node):
 
 
     def getConfidence(self):
-        return self.numWins/self.numVisits
+        if self.numVisits > 0:
+            return self.numWins/self.numVisits
+        
+        return 0.5
 
 
 @jit(cache=True, nopython=True)

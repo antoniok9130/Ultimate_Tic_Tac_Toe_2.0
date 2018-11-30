@@ -6,9 +6,10 @@ import numpy as np
 
 from ..Logic import *
 from .Node import *
+from ..second_move import *
 
 @jit(cache=True, nopython=True)
-def randomPolicy(move, quadrants, board):
+def randomPolicy(move, quadrants, board, length):
     if move is not None and quadrants[move[1]] == N:
         g = move[1]
     else:
@@ -19,8 +20,8 @@ def randomPolicy(move, quadrants, board):
 
 
 @jit(cache=True, nopython=True)
-def randomSimulation(quadrants, board, winner, move, player):
-    return simulation(quadrants, board, winner, move, player, randomPolicy)[0] # winner
+def randomSimulation(quadrants, board, winner, move, player, length):
+    return simulation(quadrants, board, winner, move, player, length, randomPolicy)[0] # winner
 
 
 
@@ -59,6 +60,11 @@ def getMove(node, iterations=3200, simulation=randomSimulation):
         # print("Instant Win!")
         return move
 
+    if node.length == 1:
+        # time.sleep(1)
+        # print("Instant Win!")
+        return get_xecond_move(node.move[0], node.move[1])
+
     i = 0
     while (i < iterations):
         select(node, simulation=simulation)
@@ -80,7 +86,7 @@ def select(node, simulation=randomSimulation):
         elif node.hasMove() and node.getNumVisits() == 0:
             quadrants = node.buildQuadrant()
             board     = node.buildBoard2D()
-            backpropogate(node, simulation(quadrants, board, node.winner, node.move, node.getPlayer()))
+            backpropogate(node, simulation(quadrants, board, node.winner, node.move, node.getPlayer(), node.length))
 
         else:
             expand(node, simulation=simulation)
@@ -128,7 +134,7 @@ def expand(node, simulate=True, simulation=randomSimulation):
 
             if simulate:
                 random = node.getChild(np.random.randint(len(node.children)))
-                backpropogate(random, simulation(quadrants, board, node.winner, node.move, node.getPlayer()))
+                backpropogate(random, simulation(quadrants, board, node.winner, node.move, node.getPlayer(), node.length))
 
 
 def backpropogate(node: UTTT_Node, winner):

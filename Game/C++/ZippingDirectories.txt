@@ -1,0 +1,5 @@
+Compress:
+	tar -zcvf archive.tar.gz directory/ 
+	
+Decompress:
+	tar -zxvf archive.tar.gz

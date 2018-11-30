@@ -8,10 +8,10 @@ import numpy as np
 from UTTT import *
 from Predict_Model import *
 
-model = Predict_Model("../ModelInstances/predict2/predict2_model_most_recent")
+model = Predict_Model("../ModelInstances/predict8/predict_model_min_average_loss")
 
 @jit
-def modelSimulation(quadrants, board, winner, move, player):
+def modelSimulation(quadrants, board, winner, move, player, length):
     '''
     Parameters
     ----------
@@ -45,7 +45,7 @@ def modelSimulation(quadrants, board, winner, move, player):
             if quadrants[g] == N and potential3inRow_wp(quadrants, g, player):
                 return player, 1 # next move
 
-    prediction = model.predict(extract_features(quadrants, board))
+    prediction = model.predict(extract_features(quadrants, board), length)
     winner = prediction.argmax()
     # print(prediction)
     if winner == 0:
@@ -53,7 +53,6 @@ def modelSimulation(quadrants, board, winner, move, player):
     if winner == 1:
         return P1, 2 # at least two into the future
     if winner == 2:
-        
         return P2, 2 # at least two into the future
         
 def getModelMove(node):

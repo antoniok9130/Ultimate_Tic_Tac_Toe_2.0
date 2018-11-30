@@ -108,9 +108,9 @@ class Predict_Model(torch.nn.Module):
 
         return self.softmax(x)
 
-    def predict(self, x):
+    def predict(self, x, length):
 
-        return self.forward(torch.tensor(torch.from_numpy(x), dtype=torch.double)).detach().numpy()
+        return self.forward(torch.tensor(torch.from_numpy(x), dtype=torch.double), length).detach().numpy()
 
 
 
