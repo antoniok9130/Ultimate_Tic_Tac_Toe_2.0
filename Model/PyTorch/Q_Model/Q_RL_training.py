@@ -9,6 +9,7 @@ else:
     
 import subprocess as sp
 from math import inf
+import time
 
 import numpy as np
 from numba import jit
@@ -202,7 +203,7 @@ def train():
                             num_iterations += 1
 
                         loss = running_loss/num_iterations
-                        with open(f"{model_instance_directory}/log.csv", "w") as file:
+                        with open(f"{model_instance_directory}/log.csv", "a") as file:
                             file.write(f"{iteration},{loss}\n")
 
                         model = model.cpu()
@@ -221,7 +222,7 @@ def train():
                         iteration += 1
 
                 except:
-                    pass
+                    time.sleep(1)
 
 
 
