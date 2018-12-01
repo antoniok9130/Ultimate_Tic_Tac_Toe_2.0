@@ -34,7 +34,7 @@ from Q_Model import *
 
 # path_to_transitions = "../ModelInstances/Q1/transitions.txt"
 # sp.call(f"touch {path_to_transitions}", shell=True)
-max_number_of_transitions = 55000
+max_number_of_transitions = 25000
 
 
 # def transition_to_str(board, action, rewards):
@@ -99,7 +99,7 @@ def train():
             transitions.pop(0)
 
 
-    model_instance_directory = "../ModelInstances/Q1"
+    model_instance_directory = "../ModelInstances/Q2"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
     sp.call(f"touch {model_instance_directory}/log.csv", shell=True)
 
@@ -178,7 +178,7 @@ def train():
                         add_to_transitions(board.copy(), previousMove, rewards, winner != N)
 
                         # train
-                        sample_transitions = sample(transitions, min(len(transitions), 32))
+                        sample_transitions = sample(transitions, min(len(transitions), 128))
                         features = []
                         for transition in sample_transitions:
                             features.extend(transition_to_features(transition[0], transition[2], permute=True))
@@ -212,7 +212,7 @@ def train():
                             model.save_weights(f"{model_instance_directory}/q_model_min_loss")
                             min_loss = loss
 
-                        model.save_weights(f"{model_instance_directory}/pq_model_most_recent")
+                        model.save_weights(f"{model_instance_directory}/q_model_most_recent")
 
                         end = current_time_milli()
                         print(f"Loss:             {loss}")
