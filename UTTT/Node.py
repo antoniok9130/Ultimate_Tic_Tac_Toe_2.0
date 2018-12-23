@@ -98,11 +98,11 @@ class UTTT_Node:
 
     
     def getGlobal(self):
-        return self.move[0]
+        return self.move[0] if self.move is not None else None
 
     
     def getLocal(self):
-        return self.move[1]
+        return self.move[1] if self.move is not None else None
 
     
     # def getWinner(self):
@@ -161,24 +161,18 @@ class UTTT_Node:
 
         current = self
         if quadrant is None:
-            while True:
+            while current is not None:
                 if current.capturedQuadrant != N:
                     array[current.move[0]] = current.capturedQuadrant
 
                 current = current.parent
 
-                if current is None:
-                    break
-
         else:
-            while True:
+            while current is not None:
                 if current.move is not None and current.move[0] == quadrant:
                     array[current.move[1]] = 2-(current.length%2)
 
                 current = current.parent
-
-                if current is None:
-                    break
 
         return array
 
@@ -187,14 +181,11 @@ class UTTT_Node:
         array = np.zeros((9, 9), dtype=np.intc)
 
         current = self
-        while True:
+        while current is not None:
             if current.move is not None:
                 array[current.move[0]][current.move[1]] = 2-(current.length%2)
 
             current = current.parent
-
-            if current is None:
-                break
 
         return array
 

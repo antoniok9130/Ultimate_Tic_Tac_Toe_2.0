@@ -15,6 +15,7 @@
 #include "Board.h"
 #include "Game.h"
 #include "Node.h"
+#include "tests.h"
 
 using namespace std;
 
@@ -61,15 +62,19 @@ void analyze() {
     }
 }
 
-Node* AI_move(Node* node, int iterations, std::ostream& logout=cout) {  // double thinkingTime
+Node* AI_move(Node* node, std::ostream& logout=cout) {  // double thinkingTime
     logout << "    Player " << (node->getPlayer() == P1 ? P2 : P1) << " getting move" << endl;
-    Move move = getMove(node, iterations - node->getNumVisits());  // thinkingTime
+    clock_t begin = clock();
+    unique_ptr<Move> move = getMove(node);  // thinkingTime
+    clock_t end = clock();
     logout << "    Search Space Size:  " << node->getNumVisits() << endl;
-    logout << "    G:  " << move.first << "     L:  " << move.second << endl;
+    logout << "    G:  " << move->first << "     L:  " << move->second << endl;
     node->setChild(move);
-    node = node->getChildren().back().get();
+    node = node->getChild(0);
     logout << "    W:  " << node->getNumWins() << "    V:  " << node->getNumVisits() << endl;
-    logout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl << endl;
+    logout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl;
+    logout << "    Time:  " << (double(end - begin) / CLOCKS_PER_SEC) << endl;
+    logout << "    Stack Size:  " << NodePool::size() << endl << endl;
     return node;
 }
 
@@ -83,7 +88,7 @@ void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
             // game->buildQuadrant(quadrants);
             // print(cout, board, quadrants);
 
-            game = AI_move(game, 250000, logout);
+            game = AI_move(game, logout);
         }
         logout << "    Winner:  " << game->getWinner() << endl;
         // Board2D board = make_Board2D();
@@ -124,8 +129,8 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
 
             Node* node = new Node();
             Node* game = node;
-            game->setChild(Move{move[0], move[1]});
-            game = game->getChild(0).get();
+            game->setChild(move[0], move[1]);
+            game = game->getChild(0);
             selfPlay(game, logout, recordout);
             delete node;
 
@@ -135,30 +140,30 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
 }
 
 void play() {
-    Node* node = new Node();
-    Node* game = node;
+    cout << "Initializing Game..." << endl;
+    Node* game = NodePool::getNode();
+    cout << "Initialized Game." << endl;
     string s;
     try {
-        int player = 0;
-        cout << "Play as Player 1 or 2:  ";
-        if (getline(cin, s)) {
-            istringstream playerss{s};
-            playerss >> player;
-        }
-        if (player != 1 && player != 2) {
-            throw "Invalid Player Number:  " + player;
-        }
-        double thinkingTime = 3.0;
-        cout << "Enter thinking time for AI (in seconds):  ";
-        if (getline(cin, s)) {
-            istringstream thinkingss{s};
-            thinkingss >> thinkingTime;
-        }
+        int player = 1; // 0;
+        // cout << "Play as Player 1 or 2:  ";
+        // if (getline(cin, s)) {
+        //     istringstream playerss{s};
+        //     playerss >> player;
+        // }
+        // if (player != 1 && player != 2) {
+        //     throw "Invalid Player Number:  " + player;
+        // }
+        // cout << "Enter thinking time for AI (in seconds):  ";
+        // if (getline(cin, s)) {
+        //     istringstream thinkingss{s};
+        //     thinkingss >> thinkingTime;
+        // }
         // bool continuePlaying = true;
         // thread bplay(backgroundPlay, game, continuePlaying);
 
         if (player == 2) {
-            game = AI_move(game, thinkingTime);
+            game = AI_move(game);
         }
 
         while (game->getWinner() == N) {
@@ -173,7 +178,7 @@ void play() {
             istringstream iss{s};
             int global, local;
             if (iss >> global) {
-                Move move{-1, -1};
+                unique_ptr<Move> move;
                 if (!(iss >> local)) {
                     if (game->getNextQuadrant() == -1) {
                         cout << "Need a global input" << endl;
@@ -181,13 +186,13 @@ void play() {
                     }
                     local = global;
                     global = game->getLocal();
-                    move = Move{std::move(global), std::move(local)};
+                    move = make_unique<Move>(std::move(global), std::move(local));
                 } else {
-                    move = Move{std::move(global), std::move(local)};
+                    move = make_unique<Move>(std::move(global), std::move(local));
                 }
-                if (move.first >= 0 && move.first <= 8 && move.second >= 0 && move.second <= 8 && game->isLegal(move)) {
+                if (move->first >= 0 && move->first <= 8 && move->second >= 0 && move->second <= 8 && game->isLegal(move)) {
                     game->setChild(move);
-                    game = game->getChildren().back().get();
+                    game = game->getChild(0);
 
                     Board2D nextBoard = make_Board2D();
                     game->buildBoard2D(nextBoard);
@@ -198,13 +203,13 @@ void play() {
                         // continuePlaying = false;
                         // bplay.join();
 
-                        game = AI_move(game, thinkingTime);
+                        game = AI_move(game);
 
                         // continuePlaying = true;
                         // bplay = thread(backgroundPlay, game, continuePlaying);
                     }
                 } else {
-                    cout << "Not Valid Move:  " << move.first << " " << move.second << endl;
+                    cout << "Invalid Move:  " << move->first << " " << move->second << endl;
                 }
             } else {
                 cout << "Please Enter move in quadrant:  " << game->getNextQuadrant() << endl;
@@ -221,12 +226,14 @@ void play() {
     } catch (const char* s) {
         cerr << s << endl;
     }
-    delete node;
 }
 
 int main(int argc, char** argv) {
     try {
         srand(time(NULL));
+
+        NodePool::getInstance(4000000);
+        runTests();
 
         bool analysis = false;
         bool selfplay = false;
@@ -268,7 +275,6 @@ int main(int argc, char** argv) {
             // print(cout, board, quadrants, false);
 
             play();
-
             // cout << sizeof(Node) << endl;
         }
     } catch (...) {

@@ -4,3 +4,4 @@ from .MCTS import *
 from .play import *
 from .utils import *
 from .second_move import *
+from .Environment import *
