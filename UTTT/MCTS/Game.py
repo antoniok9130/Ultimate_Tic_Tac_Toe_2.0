@@ -19,7 +19,7 @@ def randomPolicy(move, quadrants, board, length):
     move[1] = getRandomRemaining(board[g])
 
 
-@jit(cache=True, nopython=True)
+@jit(cache=True) # , nopython=True
 def randomSimulation(quadrants, board, winner, move, player, length):
     return simulation(quadrants, board, winner, move, player, length, randomPolicy)[0] # winner
 
@@ -63,7 +63,7 @@ def getMove(node, iterations=3200, simulation=randomSimulation):
     if node.length == 1:
         # time.sleep(1)
         # print("Instant Win!")
-        return get_xecond_move(node.move[0], node.move[1])
+        return get_second_move(node.move[0], node.move[1])
 
     i = 0
     while (i < iterations):

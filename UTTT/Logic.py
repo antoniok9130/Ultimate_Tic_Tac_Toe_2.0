@@ -105,7 +105,7 @@ def check3InRowAt(array, position):
 
 
 def getLegalMoves2D(quadrants, board, previousMove):
-    return [(int(m//9), int(m%9)) for m in getLegalMoves1D(quadrants, board, previousMove)]
+    return [[int(m//9), int(m%9)] for m in getLegalMoves1D(quadrants, board, previousMove)]
 
 
 def getLegalMoves1D(quadrants, board, previousMove):

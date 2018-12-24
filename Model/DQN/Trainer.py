@@ -111,7 +111,7 @@ class Trainer:
     def experience_replay(self):
         if len(self.memory) > 0:
             batches = []
-            for _ in range(self.batch_size): # np.random.randint(1, 2)
+            for _ in range(min(self.batch_size, len(self.memory))): # np.random.randint(1, 2)
                 sample = self.memory.sample(self.mini_batch_size)
 
                 values = self.model.predict([s[0] for s in sample], self.device)

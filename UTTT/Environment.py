@@ -13,12 +13,12 @@ class UTTT_Environment:
     def step(self, action):
         reward = 0
         done = False
-        legal = tuple(action) in self.legalMoves
+        legal = action in self.legalMoves
         if legal:
             g = action[0]
             l = action[1]
 
-            self.player = P1 if self.player == P2 else P2
+            self.player = P2 if self.player == P1 else P1
             self.board[g][l] = self.player
             self.numBoardRemaining[g] -= 1
             if check3InRowAt(self.board[g], l):
@@ -49,7 +49,7 @@ class UTTT_Environment:
 
             self.previousMove = action
 
-        return self.board, reward, done, {"legal": legal}
+        return self.board, reward, done, {"legal": legal, "player": self.player}
 
 
     def random_action(self):
