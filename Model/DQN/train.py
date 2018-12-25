@@ -50,17 +50,21 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
         cumulative_reward = 0
         short_term = Memory(None, buckets=True)
 
-        action = env.random_action()
         observation = env.reset()
+        prev_states = [observation]
+        action = env.random_action()
+        observation, reward, done, info = env.step(action)
+        prev_states.append(observation)
+        observation, reward, done, info = env.step(get_second_move(*action))
+        prev_states.append(observation)
+
         done = False
         timestep = 0
         player = N
 
         while not done and timestep <= 81:
             # print(f"Game: {game}      Iteration: {iteration}")
-            # env.render()
-
-            prev_state = observation
+            # env.render() 
 
             if np.random.random() < explore_prob*(num_episodes-episode)/num_episodes:
                 action = env.random_action()
@@ -70,12 +74,15 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 #     rewards = P2_model.predict(prev_state, device)
                 # else:
                 #     rewards = P1_model.predict(prev_state, device)
-                rewards = model.predict(prev_state, device)
+                rewards = model.predict(prev_states[-1], device)
 
                 np.multiply(rewards+1, legal_moves, rewards)
                 action = unflatten_move(argmax(rewards))
 
             observation, reward, done, info = env.step(action)
+            del prev_states[0]
+            prev_states.append(observation)
+
             if not info["legal"]:
                 printBoard(observation, env.quadrants)
                 print(action)
@@ -86,7 +93,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
             player = info["player"]
             cumulative_reward += reward
             
-            short_term.remember([prev_state, flatten_move(action), reward, done, observation])
+            short_term.remember([prev_states[-3], flatten_move(action), reward, done, observation])
 
             timestep += 1
 
@@ -138,7 +145,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
 
         # print(f"  P1:  {round(P1_mean, 2)}".ljust(15), end="")
         # print(f"  P2:  {round(P2_mean, 2)}".ljust(15), end="")
-        print(f"  Mean:  {round(mean, 2)}".ljust(15), end="")
+        print(f"  Mean:  {round(mean, 4)}".ljust(20), end="")
         with open(f"{model_instance_directory}/mean_rewards.csv", "a") as file:
             file.write(f"{episode},{mean},1\n")
             # file.write(f"{episode},{P2_mean},2\n")
@@ -161,7 +168,8 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
         # P2_trainer.experience_replay()
         trainer.experience_replay()
 
-        model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
+        if episode%100 == 0:
+            model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
     
     # P1_model.save_weights(f"{model_instance_directory}/P1_trained_uttt_model")
     # P2_model.save_weights(f"{model_instance_directory}/P2_trained_uttt_model")
@@ -174,11 +182,11 @@ if __name__ == "__main__":
         "learning_rate": 0.01,
         "momentum": 0.9,
         "milestones": [15000, 50000],
-        "explore_prob": 0.15,
+        "explore_prob": 0.25,
         "discount": 0.95,
-        "max_memory_size": 300,
+        "max_memory_size": 500,
         "batch_size": 50,
         "mini_batch_size": 32,
-        "num_episodes": 100000
+        "num_episodes": 150000
     })
             
