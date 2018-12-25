@@ -17,11 +17,13 @@ inline int fastrand() {
 }
 
 NodePool::NodePool(const size_t& max_size): max_size{max_size} {
+    cout << "Initializing Game..." << endl;
     pool = new Node*[max_size];
     for (size_t i = 0; i<max_size; ++i){
         pool[i] = new Node();
         stack.emplace_back(pool[i]);
     }
+    cout << "Initialized Game." << endl;
 }
 NodePool::~NodePool(){
     stack.clear();

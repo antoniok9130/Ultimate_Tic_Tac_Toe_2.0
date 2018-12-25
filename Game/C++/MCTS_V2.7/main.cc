@@ -140,9 +140,7 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
 }
 
 void play() {
-    cout << "Initializing Game..." << endl;
     Node* game = NodePool::getNode();
-    cout << "Initialized Game." << endl;
     string s;
     try {
         int player = 1; // 0;
@@ -232,7 +230,7 @@ int main(int argc, char** argv) {
     try {
         srand(time(NULL));
 
-        NodePool::getInstance(4000000);
+        NodePool::getInstance(2000000);
         runTests();
 
         bool analysis = false;

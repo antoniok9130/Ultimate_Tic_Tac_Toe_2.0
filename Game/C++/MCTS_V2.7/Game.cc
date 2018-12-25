@@ -6,6 +6,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 #include <iostream>
 #include <list>
 #include <utility>
@@ -16,6 +17,8 @@ using namespace std;
 int numP1Wins = 0;
 int numP2Wins = 0;
 int numTies = 0;
+
+bool visitSort(Node* node1, Node* node2){ return node1->getNumVisits() > node2 -> getNumVisits(); }
 
 unique_ptr<Move> getMove(Node* node) {
     unique_ptr<Move> move = isWin(node);
@@ -34,6 +37,28 @@ unique_ptr<Move> getMove(Node* node) {
             break;
         }
     }
+    std::sort(node->getChildren().begin(), node->getChildren().end(), visitSort);
+    while (node->getChildren().size() > 1){
+        NodePool::returnNode(node->getChildren().back());
+        node->getChildren().pop_back();
+    }
+    cout << NodePool::size() << endl;
+    iteration = 0;
+    while(NodePool::size() > 81) {
+        select(node);
+        ++iteration;
+        if (iteration > NodePool::maxSize()){
+            break;
+        }
+    }
+    // iteration = 0;
+    // while(NodePool::size() > 81) {
+    //     select(node);
+    //     ++iteration;
+    //     if (iteration > NodePool::maxSize()){
+    //         break;
+    //     }
+    // }
     if (node->getNumVisits() == 0) {
         throw "No Move found...";
     }

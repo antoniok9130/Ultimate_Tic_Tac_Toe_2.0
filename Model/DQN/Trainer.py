@@ -97,9 +97,10 @@ class Trainer:
         self.init_batch(**kwargs)
 
     
-    def init_trainer(self, learning_rate, momentum=0, weight_decay=0, loss="MSELoss", **kwargs):
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+    def init_trainer(self, learning_rate, milestones, momentum=0, loss="MSELoss", **kwargs):
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum)
         self.criterion = getattr(torch.nn, loss)()
+        self.scheduler = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=milestones)
 
 
     def init_batch(self, batch_size, mini_batch_size, discount=0.95, **kwargs):
@@ -124,12 +125,13 @@ class Trainer:
                     batch_input.append(state)
 
                     label = value
-                    label[action] = reward+(self.discount*np.amax(prediction) if not terminal else 0)
+                    label[action] = reward+(self.discount*np.amin(prediction) if not terminal else 0)
                     batch_label.append(label)
 
                 batches.append((self.model.transform(batch_input), np.array(batch_label)))
                 
             if len(batches) > 0:
+                self.scheduler.step()
                 running_loss = 0
                 for batch_input, batch_label in batches:
                     input_tensor = torch.from_numpy(batch_input).double().to(self.device)

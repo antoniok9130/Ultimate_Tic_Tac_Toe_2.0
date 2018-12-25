@@ -63,13 +63,17 @@ void analyze() {
 
 Node* AI_move(Node* node, int iterations, std::ostream& logout=cout) {  // double thinkingTime
     logout << "    Player " << (node->getPlayer() == P1 ? P2 : P1) << " getting move" << endl;
+    clock_t start = clock();
     Move move = getMove(node, iterations - node->getNumVisits());  // thinkingTime
+    clock_t end = clock();
     logout << "    Search Space Size:  " << node->getNumVisits() << endl;
     logout << "    G:  " << move.first << "     L:  " << move.second << endl;
     node->setChild(move);
     node = node->getChildren().back().get();
     logout << "    W:  " << node->getNumWins() << "    V:  " << node->getNumVisits() << endl;
-    logout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl << endl;
+    logout << "    Confidence:  " << (node->getNumWins() / (double)node->getNumVisits()) << endl;
+    logout << "    Time:  " << (double(end-start)/CLOCKS_PER_SEC) << endl;
+    logout << endl;
     return node;
 }
 
@@ -139,21 +143,21 @@ void play() {
     Node* game = node;
     string s;
     try {
-        int player = 0;
-        cout << "Play as Player 1 or 2:  ";
-        if (getline(cin, s)) {
-            istringstream playerss{s};
-            playerss >> player;
-        }
-        if (player != 1 && player != 2) {
-            throw "Invalid Player Number:  " + player;
-        }
-        double thinkingTime = 3.0;
-        cout << "Enter thinking time for AI (in seconds):  ";
-        if (getline(cin, s)) {
-            istringstream thinkingss{s};
-            thinkingss >> thinkingTime;
-        }
+        int player = 1;
+        // cout << "Play as Player 1 or 2:  ";
+        // if (getline(cin, s)) {
+        //     istringstream playerss{s};
+        //     playerss >> player;
+        // }
+        // if (player != 1 && player != 2) {
+        //     throw "Invalid Player Number:  " + player;
+        // }
+        double thinkingTime = 2000000;
+        // cout << "Enter thinking time for AI (in seconds):  ";
+        // if (getline(cin, s)) {
+        //     istringstream thinkingss{s};
+        //     thinkingss >> thinkingTime;
+        // }
         // bool continuePlaying = true;
         // thread bplay(backgroundPlay, game, continuePlaying);
 

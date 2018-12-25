@@ -183,11 +183,24 @@ void expand(Node* node) {
 }
 
 int runSimulation(Node* node) {
+
     node->init();
     Board2D board = make_Board2D();
     node->buildBoard2D(board);
     Quadrant quadrants = make_Quadrant();
     node->buildQuadrant(quadrants);
+    
+    int r = fastrand()%3;
+    if (r == 0){
+        return TIE;
+    }
+    if (r == 1){
+        return P1;
+    
+    }
+    if (r == 2){
+        return P2;
+    }
 
     int numRemainingQuadrants = 0;
     auto numRemainingBoard = array<int, 9>();

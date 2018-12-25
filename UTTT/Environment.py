@@ -23,29 +23,21 @@ class UTTT_Environment:
             self.numBoardRemaining[g] -= 1
             if check3InRowAt(self.board[g], l):
                 self.quadrants[g] = self.player
-                reward += 10
-
                 self.numQuadrantsRemaining -= 1
 
                 if check3InRowAt(self.quadrants, g):
-                    reward += 90
+                    reward += 1
                     done = True
                 
                 elif self.numQuadrantsRemaining < 1:
                     done = True
-                    reward += 15
 
             elif self.numBoardRemaining[g] < 1:
-                self.quadrants[g] = T
+                self.quadrants[g] = self.player
                 self.numQuadrantsRemaining -= 1
                 
                 if self.numQuadrantsRemaining < 1:
                     done = True
-                    reward += 15
-
-
-            if not done and self.quadrants[l] != N:
-                reward -= 1
 
             self.previousMove = action
 
