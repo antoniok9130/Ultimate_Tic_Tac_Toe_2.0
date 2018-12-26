@@ -21,7 +21,7 @@ def get_second_move(g, l):
         
         num -= m[2]
 
-    return move_visit_count[0][0], move_visit_count[0][1]
+    return [move_visit_count[0][0], move_visit_count[0][1]]
 
     
 

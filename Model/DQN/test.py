@@ -29,17 +29,17 @@ def getDQNMove(node, verbose=True, iterations=50):
         print("Computer is thinking...")
         start = current_time_milli()
 
-    # board = node.buildBoard2D()
-    # quadrants = node.buildQuadrant()
+    board = node.buildBoard2D()
+    quadrants = node.buildQuadrant()
 
-    # legal_moves = getLegalMovesField(quadrants, board, node.getMove())
-    # rewards = model.predict(board, device)+1
-    # np.multiply(rewards, legal_moves, rewards)
+    legal_moves = getLegalMovesField(quadrants, board, node.getMove())
+    rewards = model.predict(board, device)+1
+    np.multiply(rewards, legal_moves, rewards)
 
-    # move = argmax(rewards)
-    # move = unflatten_move(move)
+    move = argmax(rewards)
+    move = unflatten_move(move)
 
-    move = getMove(node, iterations=iterations, simulation=DQN_simulation)
+    # move = getMove(node, iterations=iterations, simulation=DQN_simulation)
 
     if verbose:
         end = current_time_milli()

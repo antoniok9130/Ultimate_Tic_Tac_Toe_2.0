@@ -125,7 +125,7 @@ class Trainer:
                     batch_input.append(state)
 
                     label = value
-                    label[action] = reward+(self.discount*np.amin(prediction) if not terminal else 0)
+                    label[action] = reward+(self.discount*np.amax(prediction) if not terminal else 0)
                     batch_label.append(label)
 
                 batches.append((self.model.transform(batch_input), np.array(batch_label)))
