@@ -153,6 +153,14 @@ class Trainer:
                         exit(1)
 
                 return running_loss / len(batches)
+
+            else:
+                print("Batch is empty:", len(batches))
+
+        else:
+            print("Memory is empty:", len(self.memory))
+
+        return None
                 
 
 
