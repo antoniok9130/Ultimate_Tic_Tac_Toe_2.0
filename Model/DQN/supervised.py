@@ -106,12 +106,6 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
             short_term = Memory(None, buckets=True)
 
             observation = env.reset()
-            prev_states = [observation]
-            action = env.random_action()
-            observation, reward, done, info = env.step(action)
-            prev_states.append(observation)
-            observation, reward, done, info = env.step(get_second_move(*action))
-            prev_states.append(observation)
 
             done = False
             timestep = 0
@@ -134,9 +128,9 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 #     np.multiply(rewards+1, legal_moves, rewards)
                 #     action = unflatten_move(argmax(rewards))
 
-                observation, reward, done, info = env.step(env.get_action())
-                del prev_states[0]
-                prev_states.append(observation)
+                prev_state = observation
+                action = env.get_action()
+                observation, reward, done, info = env.step(action)
 
                 if not info["legal"]:
                     printBoard(observation, env.quadrants)
@@ -147,7 +141,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 player = info["player"]
                 cumulative_reward += reward
                 
-                short_term.remember([prev_states[-3], flatten_move(action), reward, done, observation])
+                short_term.remember([prev_state, flatten_move(action), reward, done, observation])
 
                 timestep += 1
 
@@ -216,7 +210,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
 
             # P1_trainer.experience_replay()
             # P2_trainer.experience_replay()
-            loss = trainer.experience_replay()
+            loss = trainer.experience_replay(add_max=False)
             if loss is not None:
                 losses.append(loss)
                 mean = np.mean(losses[-average:])

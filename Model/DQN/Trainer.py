@@ -109,7 +109,7 @@ class Trainer:
         self.discount = discount
 
     
-    def experience_replay(self):
+    def experience_replay(self, add_max=True):
         if len(self.memory) > 0:
             batches = []
             for _ in range(min(self.batch_size, len(self.memory))): # np.random.randint(1, 2)
@@ -125,7 +125,10 @@ class Trainer:
                     batch_input.append(state)
 
                     label = value
-                    label[action] = reward+(self.discount*np.amax(prediction) if not terminal else 0)
+                    if add_max:
+                        label[action] = reward+(self.discount*np.amax(prediction) if not terminal else 0)
+                    else:
+                        label[action] = reward-(self.discount*np.amax(prediction) if not terminal else 0)
                     batch_label.append(label)
 
                 batches.append((self.model.transform(batch_input), np.array(batch_label)))
