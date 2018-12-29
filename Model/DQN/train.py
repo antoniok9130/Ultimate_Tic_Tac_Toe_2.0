@@ -25,8 +25,6 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
     # P2_model = UTTT_Model().to(device)
     # P1_trainer = Trainer(P1_model, device, **kwargs)
     # P2_trainer = Trainer(P2_model, device, **kwargs)
-    model = UTTT_Model(verbose=True).to(device)
-    trainer = Trainer(model, device, **kwargs)
 
     model_instance_directory = "./Attempts/attempt3"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
@@ -35,6 +33,10 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
         file.write(f"episode,cumulative_reward,player\n")
     with open(f"{model_instance_directory}/mean_rewards.csv", "w") as file:
         file.write(f"episode,cumulative_reward,player\n")
+
+
+    model = UTTT_Model(f"{model_instance_directory}/most_recent_uttt_model", verbose=True).to(device)
+    trainer = Trainer(model, device, **kwargs)
 
     h, w = transform_image_shape
 
@@ -169,10 +171,13 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
         trainer.experience_replay()
 
         if episode%100 == 0:
-            model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
+            model.save_weights(f"{model_instance_directory}/most_recent_uttt_model_v2")
     
     # P1_model.save_weights(f"{model_instance_directory}/P1_trained_uttt_model")
     # P2_model.save_weights(f"{model_instance_directory}/P2_trained_uttt_model")
+
+
+    model.save_weights(f"{model_instance_directory}/most_recent_uttt_model_v2")
 
 
 

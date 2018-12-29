@@ -9,7 +9,7 @@ from Model import *
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Testing on:  ", device)
 
-model = UTTT_Model("./Attempts/attempt3/most_recent_uttt_model").to(device)
+model = UTTT_Model("./Attempts/supervised1/most_recent_uttt_model").to(device)
 
 def get_DQN_simulation_move(previousMove, quadrants, board, length):
     legal_moves = getLegalMovesField(quadrants, board, previousMove)

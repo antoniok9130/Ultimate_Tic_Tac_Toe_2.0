@@ -8,13 +8,14 @@ import numpy as np
 class UTTT_Environment:
 
     def __init__(self):
+        self.finished = False
         self.reset()
 
     def step(self, action):
-        reward = 0
-        done = False
-        legal = action in self.legalMoves
-        if legal:
+        self.reward = 0
+        self.done = False
+        self.legal = action in self.legalMoves
+        if self.legal:
             g = action[0]
             l = action[1]
 
@@ -26,26 +27,32 @@ class UTTT_Environment:
                 self.numQuadrantsRemaining -= 1
 
                 if check3InRowAt(self.quadrants, g):
-                    reward += 1
-                    done = True
+                    self.reward += 1
+                    self.done = True
                 
                 elif self.numQuadrantsRemaining < 1:
-                    done = True
+                    self.done = True
 
             elif self.numBoardRemaining[g] < 1:
                 self.quadrants[g] = self.player
                 self.numQuadrantsRemaining -= 1
                 
                 if self.numQuadrantsRemaining < 1:
-                    done = True
+                    self.done = True
 
             self.previousMove = action
 
-        return self.board, reward, done, {"legal": legal, "player": self.player}
+        return self.return_observation()
 
+    def return_observation(self):
+        return self.board, self.reward, self.done, {"legal": self.legal, "player": self.player}
 
     def random_action(self):
         return self.legalMoves[np.random.randint(len(self.legalMoves))]
+
+    
+    def additional_reset(self):
+        pass
                     
             
     def reset(self):
@@ -56,6 +63,7 @@ class UTTT_Environment:
         self.numBoardRemaining = [9 for _ in range(9)]
         self.player = N
         self.legalMoves = getLegalMoves2D(self.quadrants, self.board, self.previousMove)
+        self.additional_reset()
         return self.board
 
 def flatten_move(move):
