@@ -109,12 +109,14 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
             short_term = Memory(None, buckets=True)
 
             observation = env.reset()
+            observation = transform_board(observation)
 
             done = False
             timestep = 0
             # player = N
 
             while not done and timestep <= 81:
+                prev_state = observation
                 # print(f"Game: {game}      Iteration: {iteration}")
                 # env.render() 
 
@@ -131,9 +133,9 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 #     np.multiply(rewards+1, legal_moves, rewards)
                 #     action = unflatten_move(argmax(rewards))
 
-                prev_state = observation
                 action = env.get_action()
                 observation, reward, done, info = env.step(action)
+                observation = transform_board(observation)
 
                 if not info["legal"]:
                     printBoard(observation)
@@ -144,7 +146,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 player = info["player"]
                 # cumulative_reward += reward
                 
-                short_term.remember([np.copy(prev_state), flatten_move(action), reward, done, np.copy(observation)])
+                short_term.remember([prev_state, flatten_move(action), reward, done, observation])
 
                 timestep += 1
 
@@ -250,7 +252,7 @@ if __name__ == "__main__":
         "explore_prob": 0.25,
         "discount": 0.95,
         "max_memory_size": 1000,
-        "batch_size": 50,
+        "batch_size": 100,
         "mini_batch_size": 32,
         "num_episodes": 300000
     })
