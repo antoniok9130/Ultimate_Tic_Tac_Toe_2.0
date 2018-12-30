@@ -144,7 +144,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 player = info["player"]
                 # cumulative_reward += reward
                 
-                short_term.remember([prev_state, flatten_move(action), reward, done, observation])
+                short_term.remember([np.copy(prev_state), flatten_move(action), reward, done, np.copy(observation)])
 
                 timestep += 1
 
