@@ -39,7 +39,9 @@ class Supervised_Environment(UTTT_Environment):
             with open("./Data/TrainingGames.txt") as file:
                 self.games = [row.strip() for row in file]
 
-            # self.games = list(set(self.games))
+            print("Num Games:        ", len(self.games))
+            self.games = list(set(self.games))
+            print("Num Unique Games: ", len(self.games))
             shuffle(self.games)
             self.current = 0
             self.flip = False
@@ -248,6 +250,6 @@ if __name__ == "__main__":
         "max_memory_size": 1000,
         "batch_size": 50,
         "mini_batch_size": 32,
-        "num_episodes": 250000
+        "num_episodes": 300000
     })
             
