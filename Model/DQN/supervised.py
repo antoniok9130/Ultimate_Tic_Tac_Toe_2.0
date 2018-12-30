@@ -74,7 +74,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
     # P1_trainer = Trainer(P1_model, device, **kwargs)
     # P2_trainer = Trainer(P2_model, device, **kwargs)
 
-    model_instance_directory = "./Attempts/supervised1"
+    model_instance_directory = "./Attempts/supervised2"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
 
     with open(f"{model_instance_directory}/loss.csv", "w") as file:
@@ -98,20 +98,21 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
     # P2_max_mean = 0
     # cumulative_rewards = []
     losses = []
+    start = current_time_milli()
     for episode in range(num_episodes):
         if env.finished:
             break
 
         try:
 
-            cumulative_reward = 0
+            # cumulative_reward = 0
             short_term = Memory(None, buckets=True)
 
             observation = env.reset()
 
             done = False
             timestep = 0
-            player = N
+            # player = N
 
             while not done and timestep <= 81:
                 # print(f"Game: {game}      Iteration: {iteration}")
@@ -135,13 +136,13 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
                 observation, reward, done, info = env.step(action)
 
                 if not info["legal"]:
-                    printBoard(observation, env.quadrants)
+                    printBoard(observation)
                     print(action)
                     print(env.legalMoves)
                     raise Exception("Illegal Move")
 
                 player = info["player"]
-                cumulative_reward += reward
+                # cumulative_reward += reward
                 
                 short_term.remember([prev_state, flatten_move(action), reward, done, observation])
 
@@ -154,19 +155,17 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
             # P1_short_term = Memory(None, buckets=True)
             # P2_short_term = Memory(None, buckets=True)
 
-            discounted_reward_P1 = 0
-            discounted_reward_P2 = 0
+            reward_P1 = 1 if len(short_term)%2 == 1 else -1
+            reward_P2 = 1 if len(short_term)%2 == 0 else -1
             for i in range(len(short_term)-1, -1, -1):
-                short_term_reward = short_term[i][2] * (1 if i%2 == 0 else -1)
-
-                discounted_reward_P1 = 0.95 * discounted_reward_P1 + short_term_reward
-                discounted_reward_P2 = 0.95 * discounted_reward_P2 - short_term_reward
-
+                # short_term_reward = short_term[i][2] * (1 if i%2 == 0 else -1)
                 if i%2 == 0:
-                    short_term[i][2] = discounted_reward_P1
+                    # discounted_reward_P1 = 0.95 * discounted_reward_P1 # + short_term_reward
+                    short_term[i][2] = reward_P1 # discounted_reward_P1
                     # P1_short_term.remember(short_term[i])
                 else:
-                    short_term[i][2] = discounted_reward_P2
+                    # discounted_reward_P2 = 0.95 * discounted_reward_P2 # - short_term_reward
+                    short_term[i][2] = reward_P2 # discounted_reward_P2
                     # P2_short_term.remember(short_term[i])
 
             # print([x[2] for x in P1_short_term.memory])
@@ -237,6 +236,9 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
 
     model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
 
+    end = current_time_milli()
+    print("Took", (end-start)/1000.0, "seconds to train model")
+
 
 
 
@@ -244,7 +246,7 @@ if __name__ == "__main__":
     train(**{
         "learning_rate": 0.01,
         "momentum": 0.9,
-        "milestones": [50000, 100000],
+        "milestones": [75000, 170000],
         "explore_prob": 0.25,
         "discount": 0.95,
         "max_memory_size": 1000,

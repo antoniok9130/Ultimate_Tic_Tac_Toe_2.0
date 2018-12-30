@@ -11,7 +11,7 @@ class UTTT_Environment:
         self.finished = False
         self.reset()
 
-    def step(self, action):
+    def step(self, action, check=True):
         self.reward = 0
         self.done = False
         self.legal = action in self.legalMoves
@@ -21,24 +21,25 @@ class UTTT_Environment:
 
             self.player = P2 if self.player == P1 else P1
             self.board[g][l] = self.player
-            self.numBoardRemaining[g] -= 1
-            if check3InRowAt(self.board[g], l):
-                self.quadrants[g] = self.player
-                self.numQuadrantsRemaining -= 1
+            if check:
+                self.numBoardRemaining[g] -= 1
+                if check3InRowAt(self.board[g], l):
+                    self.quadrants[g] = self.player
+                    self.numQuadrantsRemaining -= 1
 
-                if check3InRowAt(self.quadrants, g):
-                    self.reward += 1
-                    self.done = True
-                
-                elif self.numQuadrantsRemaining < 1:
-                    self.done = True
+                    if check3InRowAt(self.quadrants, g):
+                        self.reward += 1
+                        self.done = True
+                    
+                    elif self.numQuadrantsRemaining < 1:
+                        self.done = True
 
-            elif self.numBoardRemaining[g] < 1:
-                self.quadrants[g] = self.player
-                self.numQuadrantsRemaining -= 1
-                
-                if self.numQuadrantsRemaining < 1:
-                    self.done = True
+                elif self.numBoardRemaining[g] < 1:
+                    self.quadrants[g] = self.player
+                    self.numQuadrantsRemaining -= 1
+                    
+                    if self.numQuadrantsRemaining < 1:
+                        self.done = True
 
             self.previousMove = action
 

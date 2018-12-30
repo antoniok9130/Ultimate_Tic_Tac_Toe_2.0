@@ -1,13 +1,23 @@
+import sys
+sys.path.append("../../")
+
 import numpy as np
+from numba import jit
 import torch
 import torch.nn.functional as F
 
 from Trainer import *
+from UTTT import *
 
 transform_image_shape = (9, 9)
 
-model_input_size = 1
+model_input_size = 2
 model_output_size = 81
+
+# @jit(cache=True, nopython=True)
+def transform_board(x):
+    x = np.array(x)
+    return np.array([x == P1, x == P2])
 
 class UTTT_Model(BaseModel):
 
@@ -44,7 +54,7 @@ class UTTT_Model(BaseModel):
             self.load_weights(state_dict_path)
 
     def transform(self, x):
-        return np.reshape(x, (-1, model_input_size, transform_image_shape[0], transform_image_shape[1])).astype(np.double)
+        return np.reshape(np.array(transform_board(x)), (-1, model_input_size, transform_image_shape[0], transform_image_shape[1])).astype(np.double)
 
     def forward(self, x):
 
