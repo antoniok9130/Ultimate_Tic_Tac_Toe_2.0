@@ -74,7 +74,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
     # P1_trainer = Trainer(P1_model, device, **kwargs)
     # P2_trainer = Trainer(P2_model, device, **kwargs)
 
-    model_instance_directory = "./Attempts/supervised2"
+    model_instance_directory = "./Attempts/supervised3"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
 
     with open(f"{model_instance_directory}/loss.csv", "w") as file:
