@@ -116,7 +116,7 @@ class Trainer:
                 sample = self.memory.sample(self.mini_batch_size)
 
                 values = self.model.predict([s[0] for s in sample], self.device)
-                predictions = [0 for v in values] # self.model.predict([s[4] for s in sample], self.device)
+                predictions = self.model.predict([s[4] for s in sample], self.device)
 
                 batch_input = []
                 batch_label = []

@@ -33,7 +33,7 @@ def getDQNMove(node, verbose=True, iterations=50):
     quadrants = node.buildQuadrant()
 
     legal_moves = getLegalMovesField(quadrants, board, node.getMove())
-    rewards = model.predict(board, device)+1
+    rewards = model.predict(transform_board(board), device)+1
     np.multiply(rewards, legal_moves, rewards)
 
     move = argmax(rewards)
