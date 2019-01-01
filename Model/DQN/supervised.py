@@ -74,7 +74,7 @@ def train(num_episodes, explore_prob, average=100, **kwargs):
     # P1_trainer = Trainer(P1_model, device, **kwargs)
     # P2_trainer = Trainer(P2_model, device, **kwargs)
 
-    model_instance_directory = "./Attempts/supervised3"
+    model_instance_directory = "./Attempts/supervised4"
     sp.call(f"mkdir -p {model_instance_directory}", shell=True)
 
     with open(f"{model_instance_directory}/loss.csv", "w") as file:
@@ -252,8 +252,8 @@ if __name__ == "__main__":
         "explore_prob": 0.25,
         "discount": 0.95,
         "max_memory_size": 1000,
-        "batch_size": 100,
-        "mini_batch_size": 32,
+        "batch_size": 50,
+        "mini_batch_size": 64,
         "num_episodes": 300000
     })
             
