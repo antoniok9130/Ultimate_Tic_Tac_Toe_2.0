@@ -86,7 +86,7 @@ def select(node, simulation=randomSimulation):
         elif node.hasMove() and node.getNumVisits() == 0:
             quadrants = node.buildQuadrant()
             board     = node.buildBoard2D()
-            backpropogate(node, simulation(quadrants, board, node.winner, node.move, node.getPlayer(), node.length))
+            backpropogate(node, simulation(quadrants, board, node.winner, node.getMove(), node.getPlayer(), node.length))
 
         else:
             expand(node, simulation=simulation)
@@ -134,7 +134,7 @@ def expand(node, simulate=True, simulation=randomSimulation):
 
             if simulate:
                 random = node.getChild(np.random.randint(len(node.children)))
-                backpropogate(random, simulation(quadrants, board, node.winner, node.move, node.getPlayer(), node.length))
+                backpropogate(random, simulation(quadrants, board, node.winner, node.getMove(), node.getPlayer(), node.length))
 
 
 def backpropogate(node: UTTT_Node, winner):

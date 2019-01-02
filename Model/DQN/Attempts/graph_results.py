@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("./supervised1/loss.csv")
+df = pd.read_csv("./supervised4/loss.csv")
 
 # df = df[df["player"] == 1]
 # P2_df = df[df["player"] == 2]

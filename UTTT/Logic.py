@@ -584,17 +584,13 @@ def simulation(quadrants, board, winner, move, player, length, policy):
 
         if move is not None and quadrants[move[1]] == N:
             if checkInstantWin(potentialQuadrants, quadrants, board, move[1], player):
-                winner = player
-                break
+                return player, length
         
         else:
             for g in range(9):
                 if checkInstantWin(potentialQuadrants, quadrants, board, g, player):
-                    winner = player
-                    break
+                    return player, length
 
-            if winner != N:
-                break
 
         # try:
         policy(move, quadrants, board, length)
@@ -618,12 +614,10 @@ def simulation(quadrants, board, winner, move, player, length, policy):
             updatePotential3inRow(potentialQuadrants, quadrants, g)
 
             if check3InRowAt(quadrants, g):
-                winner = player
-                break
+                return player, length
 
             elif numRemainingQuadrants == 0:
-                winner = T
-                break
+                return T, length
 
         elif numRemainingBoard[g] <= 0:
             quadrants[g] = T
@@ -631,8 +625,7 @@ def simulation(quadrants, board, winner, move, player, length, policy):
             numRemainingBoard[g] = 0
 
             if numRemainingQuadrants == 0:
-                winner = T
-                break
+                return T, length
 
 
         player = P2 if player == P1 else P1

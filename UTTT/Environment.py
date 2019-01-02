@@ -2,6 +2,7 @@
 from .utils import *
 from .Node import *
 from .Logic import *
+from .second_move import * 
 
 import numpy as np
 
@@ -29,6 +30,7 @@ class UTTT_Environment:
 
                     if check3InRowAt(self.quadrants, g):
                         self.reward += 1
+                        self.winner = self.player
                         self.done = True
                     
                     elif self.numQuadrantsRemaining < 1:
@@ -53,7 +55,10 @@ class UTTT_Environment:
 
     
     def additional_reset(self):
-        pass
+        action = unflatten_move(np.random.randint(81))
+        self.step(action)
+        action = get_second_move(*action)
+        self.step(action)
                     
             
     def reset(self):
@@ -63,6 +68,7 @@ class UTTT_Environment:
         self.numQuadrantsRemaining = 9
         self.numBoardRemaining = [9 for _ in range(9)]
         self.player = N
+        self.winner = N
         self.legalMoves = getLegalMoves2D(self.quadrants, self.board, self.previousMove)
         self.additional_reset()
         return self.board
