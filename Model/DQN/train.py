@@ -150,7 +150,7 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Training on:  ", device)
 
-    model = UTTT_Model(verbose=True).to(device)
+    model = UTTT_Model("./Attempts/supervised3/most_recent_uttt_model", verbose=True).to(device)
 
     train(**{
         "model_instance_directory": "./Attempts/attempt4",
@@ -159,13 +159,13 @@ if __name__ == "__main__":
 
         "learning_rate": 0.01,
         "momentum": 0.9,
-        "milestones": [15000, 50000],
+        "milestones": [125000, 250000],
         "explore_prob": 0.25,
         "discount": 0.95,
         "max_memory_size": 1000,
         "batch_size": 50,
         "mini_batch_size": 32,
-        "num_episodes": 150000,
+        "num_episodes": 500000,
         "num_envs": 128
     })
             
