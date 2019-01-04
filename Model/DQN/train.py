@@ -118,7 +118,7 @@ def train(model_instance_directory, model, device, num_episodes,
             # print(action)
             # raise(e)
             print(e)
-            exit(1)
+            # exit(1)
 
         end = current_time_milli()
         times.append((end-start)/1000.0)
