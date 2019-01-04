@@ -3,6 +3,7 @@ import sys
 sys.path.append("../../")
 
 import os
+import traceback
 import subprocess as sp
 from math import inf
 import time
@@ -15,22 +16,11 @@ from math import ceil
 from Trainer import *
 from Model import *
 from UTTT import *
-
-def get_model_actions(model, observations, envs, explore_prob):
-    if np.random.random() < explore_prob:
-        return [env.random_action() for env in envs]
-    else:
-        legal_moves = [getLegalMovesField(env.quadrants, env.board, env.previousMove) for env in envs]
-        rewards = model.predict(observations, device)
-        return [unflatten_move(argmax(np.multiply(reward+1, legal_move))) for reward, legal_move in zip(rewards, legal_moves)]
-
-def modify_envs(envs):
-    pass
+from Environment import *
 
 
 def train(model_instance_directory, model, device, num_episodes, explore_prob, 
-          environment=UTTT_Environment, num_envs=1, get_actions=get_model_actions, modify_envs=modify_envs,
-          average=100, **kwargs):
+          environment=UTTT_Environment, average=100, **kwargs):
 
     # P1_model = UTTT_Model(verbose=True).to(device)
     # P2_model = UTTT_Model().to(device)
@@ -46,9 +36,7 @@ def train(model_instance_directory, model, device, num_episodes, explore_prob,
 
     h, w = transform_image_shape
 
-    # env = environment()
-    envs = [environment() for i in range(num_envs)]
-    modify_envs(envs)
+    env = environment()
 
     losses = []
     times = []
@@ -56,87 +44,84 @@ def train(model_instance_directory, model, device, num_episodes, explore_prob,
     episode = 0
     while episode < num_episodes:
         start = current_time_milli()
-
-        envs = [env for env in envs if not env.finished]
-
-        if len(envs) < 1:
+        
+        if env.finished:
             break
 
         try:
+            env.reset()
 
-            # cumulative_reward = 0
-            short_terms = [Memory(None, buckets=True) for i in range(len(envs))]
+            done = False
+            timestep = 0
 
-            observations = [env.reset() for env in envs]
-            observations = list(map(transform_board, observations))
-
-            dones = [False for i in range(len(envs))]
-            timesteps = [0 for i in range(len(envs))]
-            active = [True for i in range(len(envs)) if dones[i] == False and timesteps[i] <= 81]
-
-            while any(a for a in active):
-                # env.render() 
-                prev_states = [observations[i] for i in range(len(envs)) if active[i]]
-                actions = get_actions(model, prev_states, [envs[i] for i in range(len(envs)) if active[i]], explore_prob*(num_episodes-episode)/num_episodes)
-
-                prev_states = iter(prev_states)
-                actions = iter(actions)
-                for i in range(len(envs)):
-                    if active[i]:
-                        prev_state = next(prev_states)
-                        action = next(actions)
-
-                        observation, reward, done, info = envs[i].step(action)
-                        observations[i] = transform_board(observation)
-                        dones[i] = done
-                        timesteps[i] += 1
-                        active[i] = dones[i] == False and timesteps[i] <= 81
-
-                        if not info["legal"]:
-                            printBoard(observation)
-                            print(action)
-                            print(envs[i].legalMoves)
-                            raise Exception("Illegal Move")
-
-                        if timesteps[i] > 81 and not dones[i]:
-                            raise Exception("Invalid Game")
-
-                        short_terms[i].remember([prev_state, flatten_move(action), reward, done, observations[i]])
-
-            for short_term in short_terms:
-                reward_P1 = 1 if len(short_term)%2 == 1 else -1
-                reward_P2 = 1 if len(short_term)%2 == 0 else -1
-                for i in range(len(short_term)-1, -1, -1):
-                    if i%2 == 0:
-                        short_term[i][2] = reward_P1
-                    else:
-                        short_term[i][2] = reward_P2
-
-                trainer.memory.remember(short_term.memory)
-
-                print(f"\rEp: {episode}".ljust(15), end="")
-                loss = trainer.experience_replay(add_max=False)
-
-                if loss is not None:
-                    losses.append(loss)
-                    mean = np.mean(losses[-average:])
-                    print(f"  Mean Loss:  {round(mean, 6)}".ljust(25), end="")
+            observations = []
+            
+            # model = trainer.model.cpu()
+            while not done and timestep <= 81:
+                # env.render()
+                action = env.get_action(trainer.model, device)
                 
-                    with open(f"{model_instance_directory}/loss.csv", "a") as file:
-                        file.write(f"{episode},{mean}\n")
+                observation, reward, done, info = env.step(action)
+                if not done:
+                    observations.append(transform_board(observation))
+                timestep += 1
+                
+                if not info["legal"]:
+                    quadrant = env.node.buildQuadrant()
+                    printBoard(observation, quadrant)
+                    print(getLegalMovesField(quadrant, observation, env.moves[-1]))
+                    print(getLegalMoves1D(quadrant, observation, env.moves[-1]))
+                    print(getLegalMoves2D(quadrant, observation, env.moves[-1]))
+                    print(env.moves[-1])
+                    print(action)
+                    raise Exception("Illegal Move")
 
-                episode += 1
+            if timestep > 81 and not done:
+                raise Exception("Invalid Game")
 
-                if episode%100 == 0:
-                    model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
-                    del losses[:-average]
 
-        except IndexError as e:
-            pass
+            short_term = Memory(None, buckets=True)
+
+            current = env.node.parent
+            reward = 1
+            for action, observation in zip(reversed(env.moves[2:]), reversed(observations)):
+                reward = abs(reward-1)
+                # short_term.remember([observation, current.get_priorities(), reward])
+                short_term.remember([observation, flatten_move(action), reward])
+                current = current.parent
+            
+            trainer.memory.remember(short_term.memory)
+
+
+            print(f"\rEp: {episode}".ljust(15), end="")
+            loss = trainer.experience_replay()
+
+            if loss is not None:
+                losses.append(loss)
+                mean = np.mean(losses[-average:])
+                print(f"  Mean Loss:  {round(mean, 6)}".ljust(25), end="")
+            
+                with open(f"{model_instance_directory}/loss.csv", "a") as file:
+                    file.write(f"{episode},{mean}\n")
+
+            episode += 1
+
+            if episode%100 == 0:
+                model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
+                del losses[:-average]
+                print(f"  Time:  {round(np.mean(times[-average:]), 6)}".ljust(25), end="")
+                del times[:-average]
+
+        except Exception as e:
+            printBoard(observation, env.node.buildQuadrant())
+            print(env.moves[-1])
+            print(action)
+            raise(e)
+            # print(e)
+            # exit(1)
 
         end = current_time_milli()
-        times.append((end-start)/(1000.0*num_envs))
-        print(f"  Time:  {round(np.mean(times[-100:]), 6)}".ljust(25), end="")
+        times.append((end-start)/1000.0)
 
     model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
 
@@ -150,10 +135,10 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Training on:  ", device)
 
-    model = UTTT_Model("./Attempts/supervised3/most_recent_uttt_model", verbose=True).to(device)
+    model = UTTT_Model(verbose=True).to(device)
 
     train(**{
-        "model_instance_directory": "./Attempts/attempt4",
+        "model_instance_directory": "./Attempts/attempt5",
         "model": model,
         "device": device,
 
@@ -162,10 +147,9 @@ if __name__ == "__main__":
         "milestones": [125000, 250000],
         "explore_prob": 0.25,
         "discount": 0.95,
-        "max_memory_size": 1000,
+        "max_memory_size": 1500,
         "batch_size": 50,
         "mini_batch_size": 32,
-        "num_episodes": 500000,
-        "num_envs": 128
+        "num_episodes": 500000
     })
             

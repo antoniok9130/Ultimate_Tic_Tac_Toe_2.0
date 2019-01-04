@@ -105,12 +105,15 @@ def check3InRowAt(array, position):
 
 
 def getLegalMoves2D(quadrants, board, previousMove):
-    return [[int(m//9), int(m%9)] for m in getLegalMoves1D(quadrants, board, previousMove)]
+    return unflatten_legalMoves(getLegalMovesField(quadrants, board, previousMove))
 
 
 def getLegalMoves1D(quadrants, board, previousMove):
     return np.nonzero(getLegalMovesField(quadrants, board, previousMove))[0].tolist()
 
+# @jit(cache=True)
+def unflatten_legalMoves(legalMoves):
+    return list(map(lambda m: [int(m//9), int(m%9)], np.nonzero(legalMoves)[0].tolist()))
 
 @jit(cache=True)
 def getLegalMovesField(quadrants, board, previousMove):
@@ -126,10 +129,10 @@ def getLegalMovesField_numba(legalMoves, quadrants, board, previousMove):
             if q == N:
                 legalMoves[g+l] = 1.0
     else:
-        for g, aQ in enumerate(quadrants):
-            if aQ == N:
-                for l, b_gl in enumerate(board[g]):
-                    if b_gl == N:
+        for g in range(9):
+            if quadrants[g] == N:
+                for l in range(9):
+                    if board[g][l] == N:
                         legalMoves[9*g+l] = 1.0
 
 
@@ -662,29 +665,29 @@ def printBoard(board, quadrant, simple = False):
 
     else :
         print('''
-            │   │    ║    │   │    ║    │   │    
-          {b00} │ {b01} │ {b02}  ║  {b10} │ {b11} │ {b12}  ║  {b20} │ {b21} │ {b22}   
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
-          {b03} │ {b04} │ {b05}  ║  {b13} │ {b14} │ {b15}  ║  {b23} │ {b24} │ {b25}                ║   ║  
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───             {q0} ║ {q1} ║ {q2}
-          {b06} │ {b07} │ {b08}  ║  {b16} │ {b17} │ {b18}  ║  {b26} │ {b27} │ {b28}            ════╬═══╬════
-            │   │    ║    │   │    ║    │   │                {q3} ║ {q4} ║ {q5}
-        ═════════════╬═════════════╬═════════════          ════╬═══╬════
-            │   │    ║    │   │    ║    │   │                {q6} ║ {q7} ║ {q8}
-          {b30} │ {b31} │ {b32}  ║  {b40} │ {b41} │ {b42}  ║  {b50} │ {b51} │ {b52}                ║   ║  
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── 
-          {b33} │ {b34} │ {b35}  ║  {b43} │ {b44} │ {b45}  ║  {b53} │ {b54} │ {b55}
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
-          {b36} │ {b37} │ {b38}  ║  {b46} │ {b47} │ {b48}  ║  {b56} │ {b57} │ {b58}
-            │   │    ║    │   │    ║    │   │   
-        ═════════════╬═════════════╬═════════════
-            │   │    ║    │   │    ║    │   │   
-          {b60} │ {b61} │ {b62}  ║  {b70} │ {b71} │ {b72}  ║  {b80} │ {b81} │ {b82}
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
-          {b63} │ {b64} │ {b65}  ║  {b73} │ {b74} │ {b75}  ║  {b83} │ {b84} │ {b85}
-         ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
-          {b66} │ {b67} │ {b68}  ║  {b76} │ {b77} │ {b78}  ║  {b86} │ {b87} │ {b88}
-            │   │    ║    │   │    ║    │   │   
+    │   │    ║    │   │    ║    │   │    
+  {b00} │ {b01} │ {b02}  ║  {b10} │ {b11} │ {b12}  ║  {b20} │ {b21} │ {b22}   
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+  {b03} │ {b04} │ {b05}  ║  {b13} │ {b14} │ {b15}  ║  {b23} │ {b24} │ {b25}                ║   ║  
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───             {q0} ║ {q1} ║ {q2}
+  {b06} │ {b07} │ {b08}  ║  {b16} │ {b17} │ {b18}  ║  {b26} │ {b27} │ {b28}            ════╬═══╬════
+    │   │    ║    │   │    ║    │   │                {q3} ║ {q4} ║ {q5}
+═════════════╬═════════════╬═════════════          ════╬═══╬════
+    │   │    ║    │   │    ║    │   │                {q6} ║ {q7} ║ {q8}
+  {b30} │ {b31} │ {b32}  ║  {b40} │ {b41} │ {b42}  ║  {b50} │ {b51} │ {b52}                ║   ║  
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── 
+  {b33} │ {b34} │ {b35}  ║  {b43} │ {b44} │ {b45}  ║  {b53} │ {b54} │ {b55}
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+  {b36} │ {b37} │ {b38}  ║  {b46} │ {b47} │ {b48}  ║  {b56} │ {b57} │ {b58}
+    │   │    ║    │   │    ║    │   │   
+═════════════╬═════════════╬═════════════
+    │   │    ║    │   │    ║    │   │   
+  {b60} │ {b61} │ {b62}  ║  {b70} │ {b71} │ {b72}  ║  {b80} │ {b81} │ {b82}
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+  {b63} │ {b64} │ {b65}  ║  {b73} │ {b74} │ {b75}  ║  {b83} │ {b84} │ {b85}
+ ───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼───
+  {b66} │ {b67} │ {b68}  ║  {b76} │ {b77} │ {b78}  ║  {b86} │ {b87} │ {b88}
+    │   │    ║    │   │    ║    │   │   
         '''.format(
             **{
                 f"b{i}{j}": getBoardSymbol(board[i][j], simple) for i in range(9) for j in range(9)

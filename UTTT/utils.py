@@ -2,6 +2,8 @@
 import time
 import sys
 import subprocess as sp
+from numba import jit
+import numpy as np
 
 current_time_milli = lambda: int(round(time.time() * 1000))
 
@@ -75,4 +77,23 @@ def file_len(file):
     p = sp.Popen(f"wc -l < {file}", stdout=sp.PIPE, shell=True)	
     out, err = p.communicate()
     return int(out)
+
+
+def argmax(x):
+    return np.random.choice(np.flatnonzero(x == x.max()))
+
+def flatten_move(move):
+    return 9*move[0]+move[1]
+
+def unflatten_move(move):
+    return [int(move//9), int(move%9)]
+
+
+@jit(cache=True, nopython=True)
+def product(args, start=1):
+    p = start
+    for arg in args:
+        p *= arg
+    return p
+
 

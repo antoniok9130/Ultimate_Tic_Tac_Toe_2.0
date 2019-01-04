@@ -11,9 +11,6 @@ from UTTT import *
 
 transform_image_shape = (9, 9)
 
-model_input_size = 2
-model_output_size = 81
-
 # @jit(cache=True, nopython=True)
 def transform_board(x):
     x = np.array(x)
@@ -25,47 +22,118 @@ class UTTT_Model(BaseModel):
 
         super(UTTT_Model, self).__init__()
 
-        input_shape = transform_image_shape
-        if verbose: print("input:      ", input_shape)
-        conv1_kernel = 3
-        conv1_stride = 1
-        conv1_out_channels = 16
+        conv1_params = {
+            "in_channels": 2,
+            "out_channels": 16,
+            "kernel_size": 3,
+            "stride": 1,
+            "padding": 1
+        }
+        self.conv1 = torch.nn.Conv2d(**conv1_params).double()
+        self.model_input_size = conv1_params["in_channels"]
+        conv1_output_shape = self.conv_out_shape(transform_image_shape, **conv1_params)
 
-        self.conv1 = torch.nn.Conv2d(in_channels=model_input_size, out_channels=conv1_out_channels, kernel_size=conv1_kernel, stride=conv1_stride).double()
 
-        conv1_output_shape = self.conv_out_shape(input_shape, conv1_kernel, conv1_stride)
-        if verbose: print("conv1 out:  ", conv1_output_shape)
-        conv2_kernel = 3
-        conv2_stride = 1
-        conv2_out_channels = 32
+        conv2_params = {
+            "in_channels": conv1_params["out_channels"],
+            "out_channels": 32,
+            "kernel_size": 3,
+            "stride": 1,
+            "padding": 1
+        }
+        self.conv2 = torch.nn.Conv2d(**conv2_params).double()
+        conv2_output_shape = self.conv_out_shape(conv1_output_shape, **conv2_params)
 
-        self.conv2 = torch.nn.Conv2d(in_channels=conv1_out_channels, out_channels=conv2_out_channels, kernel_size=conv2_kernel, stride=conv2_stride).double()
 
-        h, w = self.conv_out_shape(conv1_output_shape, conv2_kernel, conv2_stride)
-        if verbose: print("conv2 out:  ", (h, w))
+        policy_conv_params = {
+            "in_channels": conv2_params["out_channels"],
+            "out_channels": 2,
+            "kernel_size": 1,
+            "stride": 1
+        }
+        self.policy_conv = torch.nn.Conv2d(**policy_conv_params).double()
+        policy_conv_output_shape = self.conv_out_shape(conv2_output_shape, **policy_conv_params)
 
-        self.view_size = h*w*conv2_out_channels
-        if verbose: print("view size:  ", self.view_size)
-        
-        self.fc1 = torch.nn.Linear(self.view_size, 256).double()
-        self.fc2 = torch.nn.Linear(256, model_output_size).double()
+        policy_fc_params = {
+            "in_features": product(policy_conv_output_shape)*policy_conv_params["out_channels"],
+            "out_features": 81
+        }
+        self.policy_viewsize = policy_fc_params["in_features"]
+        self.policy_fc = torch.nn.Linear(**policy_fc_params).double()
+
+
+        value_conv_params = {
+            "in_channels": conv2_params["out_channels"],
+            "out_channels": 1,
+            "kernel_size": 1,
+            "stride": 1
+        }
+        self.value_conv = torch.nn.Conv2d(**value_conv_params).double()
+        value_conv_output_shape = self.conv_out_shape(conv2_output_shape, **value_conv_params)
+
+        value_fc1_params = {
+            "in_features": product(value_conv_output_shape)*value_conv_params["out_channels"],
+            "out_features": 64
+        }
+        self.value_viewsize = value_fc1_params["in_features"]
+        self.value_fc1 = torch.nn.Linear(**value_fc1_params).double()
+
+        value_fc2_params = {
+            "in_features": value_fc1_params["out_features"],
+            "out_features": 1
+        }
+        self.value_fc2 = torch.nn.Linear(**value_fc2_params).double()
+
 
         if state_dict_path is not None:
             self.load_weights(state_dict_path)
 
+
+        if verbose:
+            amt = 25
+            print("input:".ljust(amt), transform_image_shape)
+            print("conv1 out:".ljust(amt), conv1_output_shape, conv1_params["out_channels"])
+            print("conv2 out:".ljust(amt), conv2_output_shape, conv2_params["out_channels"])
+            print("policy conv out:".ljust(amt), policy_conv_output_shape)
+            print("policy view size:".ljust(amt), policy_fc_params["in_features"])
+            print("value conv out:".ljust(amt), value_conv_output_shape)
+            print("value view size:".ljust(amt), value_fc1_params["in_features"])
+
     def transform(self, x):
-        return np.reshape(np.array(x, dtype=np.double), (-1, model_input_size, transform_image_shape[0], transform_image_shape[1])).astype(np.double)
+        return np.reshape(np.array(x, dtype=np.double), (-1, self.model_input_size, transform_image_shape[0], transform_image_shape[1]))
 
     def forward(self, x):
 
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        x = x.view(-1, self.view_size)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
 
-        return x
+        policy = F.relu(self.policy_conv(x))
+        policy = self.policy_fc(policy.view(-1, self.policy_viewsize))
+
+        value = F.relu(self.value_conv(x))
+        value = self.value_fc1(value.view(-1, self.value_viewsize))
+        value = self.value_fc2(value)
+        value = torch.tanh(value)
+
+        return policy, value
+
+
+    def predict(self, x, device=None, preprocess=False):
+        if preprocess:
+            x = transform_board(x)
+        if device is None:
+            policy, value = self.forward(torch.tensor(torch.from_numpy(self.transform(x)), dtype=torch.double))
+            policy = policy.detach().numpy()[0]
+            value = value.detach().numpy()[0]
+        else:
+            policy, value = self.forward(torch.tensor(torch.from_numpy(self.transform(x)), dtype=torch.double).to(device))
+            policy = policy.cpu().detach().numpy()[0]
+            value = value.cpu().detach().numpy()[0]
+
+        return policy, value
 
 
 if __name__ == "__main__":
     model = UTTT_Model(verbose=True)
+    print(model)
+    # model.save_weights("./Attempts/test.pt")

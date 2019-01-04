@@ -16,6 +16,7 @@ from math import ceil
 from Trainer import *
 from Model import *
 from UTTT import *
+from .Environment import *
 from train import *
 
 def getMoves(record):

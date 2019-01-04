@@ -57,10 +57,10 @@ class BaseModel(torch.nn.Module):
         torch.save(self.state_dict(), state_dict_path)
 
     
-    def conv_out_shape(self, input, kernel, stride):
+    def conv_out_shape(self, input, kernel_size, stride, padding=0, **kwargs):
         c = 1 # input[0]
-        h = (input[0]-(kernel-1)-1)/stride+1
-        w = (input[1]-(kernel-1)-1)/stride+1
+        h = (input[0]+2*padding-(kernel_size-1)-1)/stride+1
+        w = (input[1]+2*padding-(kernel_size-1)-1)/stride+1
         if h%1 != 0:
             print(input, "->", (c, h, w))
             raise Exception("Height out is not an integer")
@@ -81,8 +81,11 @@ class BaseModel(torch.nn.Module):
     def predict(self, x, device=None):
         if device is None:
             return self.forward(torch.tensor(torch.from_numpy(self.transform(x)), dtype=torch.double)).detach().numpy()
+        else:
+            return self.forward(torch.tensor(torch.from_numpy(self.transform(x)), dtype=torch.double).to(device)).cpu().detach().numpy()
 
-        return self.forward(torch.tensor(torch.from_numpy(self.transform(x)), dtype=torch.double).to(device)).cpu().detach().numpy()
+        
+        
 
 
 
@@ -97,9 +100,10 @@ class Trainer:
         self.init_batch(**kwargs)
 
     
-    def init_trainer(self, learning_rate, milestones, momentum=0, loss="MSELoss", **kwargs):
+    def init_trainer(self, learning_rate, milestones, momentum=0, policy_loss="CrossEntropyLoss", value_loss="MSELoss", **kwargs):
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=momentum)
-        self.criterion = getattr(torch.nn, loss)()
+        self.policy_criterion = getattr(torch.nn, policy_loss)()
+        self.value_criterion = getattr(torch.nn, value_loss)()
         self.scheduler = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=milestones)
 
 
@@ -115,44 +119,35 @@ class Trainer:
             for _ in range(min(self.batch_size, len(self.memory))): # np.random.randint(1, 2)
                 sample = self.memory.sample(self.mini_batch_size)
 
-                values = self.model.predict([s[0] for s in sample], self.device)
-                predictions = self.model.predict([s[4] for s in sample], self.device)
-
                 batch_input = []
-                batch_label = []
-                for s, value, prediction in zip(sample, values, predictions):
-                    state, action, reward, terminal, next_state = s
+                policy_labels = []
+                value_labels = []
+                for state, action, reward in sample:
                     batch_input.append(state)
+                    policy_labels.append(action)
+                    value_labels.append([reward])
+                    
 
-                    label = value
-                    if add_max:
-                        label[action] = reward+(self.discount*np.amax(prediction) if not terminal else 0)
-                    else:
-                        label[action] = reward-(self.discount*np.amax(prediction) if not terminal else 0)
-                    batch_label.append(label)
-
-                batches.append((self.model.transform(batch_input), np.array(batch_label)))
+                batches.append((self.model.transform(batch_input), np.array(policy_labels), np.array(value_labels)))
                 
             if len(batches) > 0:
                 self.scheduler.step()
                 running_loss = 0
-                for batch_input, batch_label in batches:
+                for batch_input, policy_label, value_label in batches:
                     input_tensor = torch.from_numpy(batch_input).double().to(self.device)
-                    label_tensor = torch.from_numpy(batch_label).double().to(self.device)
+                    policy_label_tensor = torch.from_numpy(policy_label).to(self.device)
+                    value_label_tensor = torch.from_numpy(value_label).double().to(self.device)
             
                     self.optimizer.zero_grad()
-                    outputs = self.model.forward(input_tensor)
-                    loss = self.criterion(outputs, label_tensor)
+                    policy, value = self.model.forward(input_tensor)
+                    loss = self.policy_criterion(policy, policy_label_tensor)+\
+                            self.value_criterion(value, value_label_tensor)
                     loss.backward()
                     self.optimizer.step()
                     running_loss += loss.item()
 
                     if running_loss > 1000000000:
-                        # print([list(map(float, x)) for x in [list(batch_input[0].ravel())]])  
-                        # print([list(map(float, x)) for x in list(batch_input)])  
-                        print([list(map(float, x)) for x in list(outputs.cpu().detach().numpy())])   
-                        # print([list(map(float, x)) for x in [batch_label]])   
-                        print([list(map(float, x)) for x in list(batch_label)])   
+                        print("Running Loss:  ", running_loss)
                         exit(1)
 
                 return running_loss / len(batches)
@@ -165,11 +160,6 @@ class Trainer:
 
         return None
                 
-
-
-
-def argmax(x):
-    return np.random.choice(np.flatnonzero(x == x.max()))
 
 
 current_time_milli = lambda: int(round(time.time() * 1000))

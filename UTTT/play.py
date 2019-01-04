@@ -43,10 +43,12 @@ def getAIMove(node, verbose=True, iterations=4800, simulation=randomSimulation):
 
     return move
     
+def create_MCTS_node():
+    return MCTS_Node()
 
-def play_UTTT(P1_move=getHumanMove, P2_move=getAIMove):
+def play_UTTT(P1_move=getHumanMove, P2_move=getAIMove, create_node=create_MCTS_node):
 
-    node = MCTS_Node()
+    node = create_node()
 
     while node.winner == N:
         move = P1_move(node)

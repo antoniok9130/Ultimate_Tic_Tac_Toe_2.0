@@ -59,6 +59,8 @@ class UTTT_Node:
             self.capturedQuadrant = check3InRow(currentQuadrant)
 
             if self.capturedQuadrant != N:
+                if self.move[0] == self.move[1]:
+                    self.nextQuadrant = -1
                 allQuadrants = self.buildQuadrant()
                 self.winner = check3InRow(allQuadrants)
 
@@ -66,7 +68,12 @@ class UTTT_Node:
 
 
     
-    def isLegal(self, move):
+    def isLegal(self, move, raise_exception=False):
+        if raise_exception:
+            if not (self.nextQuadrant == -1 or move[0] == self.nextQuadrant):
+                raise Exception("Wrong Quadrant: ", self.nextQuadrant, move)
+            return not self.moveOrCapturedQuadrantEquals(move, move[0], raise_exception=True)
+
         return (self.nextQuadrant == -1 or move[0] == self.nextQuadrant) and \
                 not self.moveOrCapturedQuadrantEquals(move, move[0])
 
@@ -83,7 +90,14 @@ class UTTT_Node:
 
 
     
-    def moveOrCapturedQuadrantEquals(self, move, quadrant):
+    def moveOrCapturedQuadrantEquals(self, move, quadrant, raise_exception=False):
+        if raise_exception:
+            if self.moveEquals(move):
+                raise Exception("Move Already Exists: ", move)
+            if self.capturedQuadrantEquals(quadrant):
+                raise Exception("Quadrant Already Filled: ", quadrant, move)
+            return self.parent is not None and self.parent.moveOrCapturedQuadrantEquals(move, quadrant, raise_exception=True)
+
         return self.moveEquals(move) or self.capturedQuadrantEquals(quadrant) or \
                (self.parent is not None and self.parent.moveOrCapturedQuadrantEquals(move, quadrant))
 
@@ -137,7 +151,7 @@ class UTTT_Node:
     def addChild(self, child):
         self.children.append(child)
 
-    def getChild(self, index):
+    def getChild(self, index, throw=True):
         return self.children[index]
 
     def setChild(self, move):

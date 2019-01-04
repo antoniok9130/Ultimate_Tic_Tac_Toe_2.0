@@ -1,44 +1,22 @@
 import sys
 sys.path.append("../../")
 
-from UTTT import *
-from UTTT.MCTS import *
+from UTTT.play import play_UTTT
+from APVMCTS import *
 import random
 from Model import *
+from Environment import *
 
 device = torch.device("cpu") # "cuda:0" if torch.cuda.is_available() else 
 print("Testing on:  ", device)
 
-model = UTTT_Model("./Attempts/supervised3/most_recent_uttt_model").to(device)
+model = UTTT_Model().to(device) # "./Attempts/attempt5/most_recent_uttt_model"
 
 numP1Wins = 0
 numP2Wins = 0
 numTies = 0
 
-def DQN_Policy(move, quadrants, board, length):
-    legal_moves = getLegalMovesField(quadrants, board, move)
-    rewards = model.predict(transform_board(board), device)
-    np.multiply(rewards+1, legal_moves, rewards)
-    next_move = unflatten_move(argmax(rewards))
-
-    move[0] = next_move[0]
-    move[1] = next_move[1]
-
-def DQN_simulation(quadrants, board, winner, move, player, length):
-    # global numP1Wins
-    # global numP2Wins
-    # global numTies
-    
-    winner, time_step = simulation(quadrants, board, winner, move, player, length, DQN_Policy)
-    # if winner == P1:
-    #     numP1Wins += 1
-    # elif winner == P2:
-    #     numP2Wins += 1
-    # else:
-    #     numTies += 1
-    return winner # (1 if winner == player else -1)*(q.gamma**time_step)
-
-def getDQNMove(node, verbose=True, iterations=400):
+def getDQNMove(node, verbose=True, iterations=1600):
     if verbose:
         printBoard(node.buildBoard2D(), node.buildQuadrant())
         print("Computer is thinking...")
@@ -54,13 +32,16 @@ def getDQNMove(node, verbose=True, iterations=400):
     # move = argmax(rewards)
     # move = unflatten_move(move)
 
-    move = getMove(node, iterations=iterations, simulation=DQN_simulation)
+    move = getMove(node, model, device, iterations=iterations)
     
     if verbose:
         end = current_time_milli()
-        print("Search Space Size:  {0}".format(node.getNumVisits()))
+        if node.children is not None:
+            for child in node.children:
+                print(child.priorProbability, child.meanAction, child.numVisits)
+        print("Search Space Size:  {0}".format(node.numVisits))
         print(f"g:   {move[0]}      l:   {move[1]}")
-        print(f"w:   {node.numWins}      v:   {node.numVisits}")
+        print(f"q:   {node.meanAction}      v:   {node.numVisits}")
         print(f"confidence:   {node.getConfidence()}")
         print(f"time:         {(end-start)/1000.0} seconds")
         # print("numP1Wins: ", str(numP1Wins).ljust(5), 
@@ -104,6 +85,9 @@ def test_win_ratio():
     print()
     # numP1Wins:  461   numP2Wins:  361   numTies:  178
 
+def creat_APVMCTS_node():
+    return APVMCTS_Node(0)
+
 if __name__ == "__main__":
-    play_UTTT(P2_move=getDQNMove)
+    play_UTTT(P2_move=getDQNMove, create_node=creat_APVMCTS_node)
 
