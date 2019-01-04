@@ -19,7 +19,7 @@ from UTTT import *
 from Environment import *
 
 
-def train(model_instance_directory, model, device, num_episodes, explore_prob, 
+def train(model_instance_directory, model, device, num_episodes,
           environment=UTTT_Environment, average=100, **kwargs):
 
     # P1_model = UTTT_Model(verbose=True).to(device)
@@ -113,12 +113,12 @@ def train(model_instance_directory, model, device, num_episodes, explore_prob,
                 del times[:-average]
 
         except Exception as e:
-            printBoard(observation, env.node.buildQuadrant())
-            print(env.moves[-1])
-            print(action)
-            raise(e)
-            # print(e)
-            # exit(1)
+            # printBoard(observation, env.node.buildQuadrant())
+            # print(env.moves[-1])
+            # print(action)
+            # raise(e)
+            print(e)
+            exit(1)
 
         end = current_time_milli()
         times.append((end-start)/1000.0)
@@ -145,7 +145,6 @@ if __name__ == "__main__":
         "learning_rate": 0.01,
         "momentum": 0.9,
         "milestones": [125000, 250000],
-        "explore_prob": 0.25,
         "discount": 0.95,
         "max_memory_size": 1500,
         "batch_size": 50,

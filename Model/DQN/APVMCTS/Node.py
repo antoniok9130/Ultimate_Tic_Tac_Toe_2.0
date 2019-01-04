@@ -51,7 +51,7 @@ class APVMCTS_Node(UTTT_Node):
 
     def getConfidence(self):
         if self.numVisits > 0:
-            return self.value
+            return self.meanAction
         
         return 0.5
 

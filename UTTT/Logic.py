@@ -549,6 +549,12 @@ def checkInstantWin(potentialQuadrants, quadrants, board, g, player):
     return False
 
 
+
+@jit(cache=True, nopython=True)
+def unravel_board(board):
+    return [[board[int(3*(g//3)+l//3)][int(3*(g%3)+l%3)] for l in range(9)] for g in range(9)]
+
+
 # @jit(cache=True)
 # def simulation(state, policy):
 

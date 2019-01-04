@@ -16,7 +16,7 @@ from math import ceil
 from Trainer import *
 from Model import *
 from UTTT import *
-from .Environment import *
+from Environment import *
 from train import *
 
 def getMoves(record):
@@ -28,12 +28,12 @@ class Supervised_Environment(UTTT_Environment):
     def __init__(self):
         super(Supervised_Environment, self).__init__()
 
-    def get_action(self):
+    def get_action(self, model, device):
         self.i += 1
         return self.currentGame[self.i]
 
     def return_observation(self):
-        return np.rot90(self.board if not self.flip else np.fliplr(self.board), k=self.rot), self.reward, self.done, {"legal": self.legal, "player": self.player}
+        return np.rot90(self.board if not self.flip else np.fliplr(self.board), k=self.rot), self.reward, self.done, {"legal": self.legal}
 
     def additional_reset(self):
         if hasattr(self, "current"):
@@ -72,18 +72,18 @@ if __name__ == "__main__":
     model = UTTT_Model(verbose=True).to(device)
     
     train(**{
-        "model_instance_directory": "./Attempts/supervised4",
+        "model_instance_directory": "./Attempts/supervised5",
         "model": model,
         "device": device,
+        "environment": Supervised_Environment,
         
         "learning_rate": 0.01,
         "momentum": 0.9,
         "milestones": [75000, 170000],
-        "explore_prob": 0.25,
         "discount": 0.95,
-        "max_memory_size": 1000,
+        "max_memory_size": 1500,
         "batch_size": 50,
-        "mini_batch_size": 64,
+        "mini_batch_size": 32,
         "num_episodes": 300000
     })
             

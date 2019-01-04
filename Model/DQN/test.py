@@ -10,7 +10,7 @@ from Environment import *
 device = torch.device("cpu") # "cuda:0" if torch.cuda.is_available() else 
 print("Testing on:  ", device)
 
-model = UTTT_Model().to(device) # "./Attempts/attempt5/most_recent_uttt_model"
+model = UTTT_Model("./Attempts/supervised5/most_recent_uttt_model").to(device)
 
 numP1Wins = 0
 numP2Wins = 0
@@ -36,12 +36,9 @@ def getDQNMove(node, verbose=True, iterations=1600):
     
     if verbose:
         end = current_time_milli()
-        if node.children is not None:
-            for child in node.children:
-                print(child.priorProbability, child.meanAction, child.numVisits)
         print("Search Space Size:  {0}".format(node.numVisits))
         print(f"g:   {move[0]}      l:   {move[1]}")
-        print(f"q:   {node.meanAction}      v:   {node.numVisits}")
+        print(f"v:   {node.value}      n:   {node.numVisits}")
         print(f"confidence:   {node.getConfidence()}")
         print(f"time:         {(end-start)/1000.0} seconds")
         # print("numP1Wins: ", str(numP1Wins).ljust(5), 

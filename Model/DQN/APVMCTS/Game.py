@@ -77,6 +77,7 @@ def expand(node, model, device):
         legalMoves2D = unflatten_legalMoves(legalMoves)
 
         if len(legalMoves2D) > 0:
+            board = np.array(unravel_board(board))
             P, v = model.predict(board, device, preprocess=True)
             np.multiply(P+1, legalMoves, P)
             P -= 1

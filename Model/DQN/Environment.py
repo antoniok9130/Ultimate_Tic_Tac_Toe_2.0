@@ -1,3 +1,5 @@
+import sys
+sys.path.append("../../")
 
 from UTTT.utils import *
 from APVMCTS import *
@@ -22,7 +24,7 @@ class UTTT_Environment:
 
             self.node.setChild(action)
             self.node = self.node.getChild(0)
-            self.board[g][l] = self.node.getPlayer()
+            self.board[int(3*(g//3)+l//3)][int(3*(g%3)+l%3)] = self.node.getPlayer()
             
             self.node.init()
             self.winner = self.node.winner
@@ -34,7 +36,7 @@ class UTTT_Environment:
         return self.return_observation()
 
     def return_observation(self):
-        return self.board, self.reward, self.done, {"legal": self.legal, "player": self.node.getPlayer() }
+        return self.board, self.reward, self.done, {"legal": self.legal}
 
     
     def additional_reset(self):
@@ -52,5 +54,19 @@ class UTTT_Environment:
         self.additional_reset()
         return self.board
 
-    def get_action(self, model, device):
-        return getMove(self.node, model, device)
+    def get_action(self, model, device, iterations=100):
+        return getMove(self.node, model, device, iterations=iterations)
+
+
+# if __name__ == "__main__":
+#     board = np.zeros((9, 9))
+#     for g in range(9):
+#         for l in range(9):
+#             # print(g, l, 3*(g//3)+l//3, 3*(g%3)+l%3)
+#             # board[int(3*(g//3)+l//3)][int(3*(g%3)+l%3)] = 9*g+l
+#             board[g][l] = 9*g+l
+
+#     print(board)
+#     board = np.array(unravel_board(board))
+
+#     print(board)
