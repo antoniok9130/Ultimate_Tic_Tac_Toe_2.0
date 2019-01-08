@@ -54,7 +54,7 @@ class UTTT_Environment:
         self.additional_reset()
         return self.board
 
-    def get_action(self, model, device, iterations=100):
+    def get_action(self, model, device, iterations=160):
         return getMove(self.node, model, device, iterations=iterations)
 
 

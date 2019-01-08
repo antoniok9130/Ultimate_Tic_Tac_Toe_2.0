@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("./supervised4/loss.csv")
+df = pd.read_csv("./supervised5/log.csv")
 
 # df = df[df["player"] == 1]
 # P2_df = df[df["player"] == 2]
@@ -17,7 +17,7 @@ print(df[field].max())
 print(df[field].idxmax())
 print(df[field].min())
 print(df[field].idxmin())
-# print(df['game'].nunique(), " ?= ",df['game'].count())
+print(df['game'].nunique(), " ?= ",df['game'].count())
 
 # df["game_length"] = df["game"].apply(lambda x: len(x)/2)
 # df[["iteration", "game_length"]].plot(x="iteration")

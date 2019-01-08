@@ -30,10 +30,11 @@ class Supervised_Environment(UTTT_Environment):
 
     def get_action(self, model, device):
         self.i += 1
-        return self.currentGame[self.i]
+        g, l = self.currentGame[self.i][0], self.currentGame[self.i][1]
+        return rot90(g, l, k=self.rot, flip=self.flip)
 
     def return_observation(self):
-        return np.rot90(self.board if not self.flip else np.fliplr(self.board), k=self.rot), self.reward, self.done, {"legal": self.legal}
+        return self.board, self.reward, self.done, {"legal": self.legal}
 
     def additional_reset(self):
         if hasattr(self, "current"):
@@ -79,7 +80,7 @@ if __name__ == "__main__":
         
         "learning_rate": 0.01,
         "momentum": 0.9,
-        "milestones": [75000, 170000],
+        "milestones": [90000, 180000],
         "discount": 0.95,
         "max_memory_size": 1500,
         "batch_size": 50,

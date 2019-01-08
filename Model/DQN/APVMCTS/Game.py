@@ -51,7 +51,7 @@ def select(node, model, device):
         node.init()
 
         if node.winner != N:
-            backpropogate(node, 0)
+            backpropogate(node, 1)
         else:
             expand(node, model, device)
 
@@ -97,6 +97,7 @@ def backpropogate(node, actionValue):
     current = node
     while current is not None:
         current.incrementAction(actionValue)
+        actionValue *= -1
         current = current.parent
 
 

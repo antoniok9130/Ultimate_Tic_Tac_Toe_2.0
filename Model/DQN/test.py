@@ -16,7 +16,7 @@ numP1Wins = 0
 numP2Wins = 0
 numTies = 0
 
-def getDQNMove(node, verbose=True, iterations=1600):
+def getDQNMove(node, verbose=True, iterations=8000):
     if verbose:
         printBoard(node.buildBoard2D(), node.buildQuadrant())
         print("Computer is thinking...")
@@ -36,6 +36,9 @@ def getDQNMove(node, verbose=True, iterations=1600):
     
     if verbose:
         end = current_time_milli()
+        if node.children is not None:
+            for child in node.children:
+                print(child.totalAction, child.numVisits, child.priorProbability)
         print("Search Space Size:  {0}".format(node.numVisits))
         print(f"g:   {move[0]}      l:   {move[1]}")
         print(f"v:   {node.value}      n:   {node.numVisits}")

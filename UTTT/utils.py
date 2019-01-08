@@ -97,3 +97,39 @@ def product(args, start=1):
     return p
 
 
+
+@jit(cache=True, nopython=True)
+def rot90(g, l, k=1, flip=False):
+
+    # convert to cartesian coordinates with origin at center, center
+    x = int(3*(g%3)+l%3)-4
+    y = 4-int(3*(g//3)+l//3)
+
+    if flip: x = -x
+
+    # rotate coordinates
+    for i in range(k):
+        x, y = y, -x
+
+    # convert back to global, local
+    x = x+4
+    y = 4-y
+    g = 3*(y//3)+(x//3)
+    l = 3*(y%3)+(x%3)
+
+    return [g, l]
+
+
+
+
+if __name__ == "__main__":
+    assert(rot90(0, 0) == [2, 2])
+    assert(rot90(2, 3) == [8, 1])
+    assert(rot90(4, 4) == [4, 4])
+    assert(rot90(3, 2) == [1, 8])
+    assert(rot90(3, 2, 2) == [5, 6])
+    assert(rot90(3, 2, 3) == [7, 0])
+    assert(rot90(3, 2, 3, True) == [1, 6])
+
+
+
