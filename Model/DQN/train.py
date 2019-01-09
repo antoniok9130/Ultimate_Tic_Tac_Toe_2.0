@@ -63,7 +63,8 @@ def train(model_instance_directory, model, device, num_episodes,
                 
                 observation, reward, done, info = env.step(action)
                 if not done:
-                    observations.append(transform_board(unravel_board(observation)))
+                    observations.append(transform_board(observation))
+                    
                 timestep += 1
                 
                 if not info["legal"]:

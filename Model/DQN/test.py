@@ -7,7 +7,7 @@ import random
 from Model import *
 from Environment import *
 
-device = torch.device("cpu") # "cuda:0" if torch.cuda.is_available() else 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print("Testing on:  ", device)
 
 model = UTTT_Model("./Attempts/supervised5/most_recent_uttt_model").to(device)
@@ -65,7 +65,7 @@ def test_win_ratio():
             
             legal_moves = getLegalMovesField(env.quadrants, env.board, env.previousMove)
             rewards = model.predict(transform_board(observation), device)
-            np.multiply(rewards+1, legal_moves, rewards)
+            np.multiply(rewards, legal_moves, rewards)
             action = unflatten_move(argmax(rewards))
 
             observation, reward, done, info = env.step(action)
@@ -85,9 +85,9 @@ def test_win_ratio():
     print()
     # numP1Wins:  461   numP2Wins:  361   numTies:  178
 
-def creat_APVMCTS_node():
+def create_APVMCTS_node():
     return APVMCTS_Node(0)
 
 if __name__ == "__main__":
-    play_UTTT(P2_move=getDQNMove, create_node=creat_APVMCTS_node)
+    play_UTTT(P2_move=getDQNMove, create_node=create_APVMCTS_node)
 

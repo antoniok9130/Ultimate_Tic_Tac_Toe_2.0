@@ -4,6 +4,7 @@ import time
 from random import sample
 from numba import jit
 import numpy as np
+from sklearn.utils.extmath import softmax
 
 from UTTT.Logic import *
 from UTTT.utils import *
@@ -79,8 +80,7 @@ def expand(node, model, device):
         if len(legalMoves2D) > 0:
             board = np.array(unravel_board(board))
             P, v = model.predict(board, device, preprocess=True)
-            np.multiply(P+1, legalMoves, P)
-            P -= 1
+            np.multiply(P, legalMoves, P)
             v = v[0]
             node.initChildren()
 

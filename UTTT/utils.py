@@ -120,6 +120,11 @@ def rot90(g, l, k=1, flip=False):
     return [g, l]
 
 
+# @jit(cache=True, nopython=True)
+# def softmax(x):
+#     e_x = np.exp(x - np.max(x))
+#     return e_x / e_x.sum(axis=0)
+
 
 
 if __name__ == "__main__":
