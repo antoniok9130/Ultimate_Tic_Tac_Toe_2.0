@@ -4,7 +4,7 @@ import time
 from random import sample
 from numba import jit
 import numpy as np
-from sklearn.utils.extmath import softmax
+# from sklearn.utils.extmath import softmax
 
 from UTTT.Logic import *
 from UTTT.utils import *
