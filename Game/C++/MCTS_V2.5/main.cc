@@ -77,7 +77,7 @@ Node* AI_move(Node* node, int iterations, std::ostream& logout=cout) {  // doubl
     return node;
 }
 
-void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
+void selfPlay(Node* game, const int& numIterations, std::ostream& logout, std::ostream& recordout) {
     // game = new Node();
     try {
         while (game->getWinner() == N) {
@@ -87,7 +87,7 @@ void selfPlay(Node* game, std::ostream& logout, std::ostream& recordout) {
             // game->buildQuadrant(quadrants);
             // print(cout, board, quadrants);
 
-            game = AI_move(game, 250000, logout);
+            game = AI_move(game, numIterations, logout);
         }
         logout << "    Winner:  " << game->getWinner() << endl;
         // Board2D board = make_Board2D();
@@ -113,7 +113,7 @@ const int movePriorities[88][2] = {
     {8, 1}, {8, 3}, {8, 5}, {8, 7}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4}
 };
 
-void iterateSelfPlay(const string& logPath, const string& recordPath) {
+void iterateSelfPlay(const int& numIterations, const string& logPath, const string& recordPath) {
     
     std::ofstream logout;
     logout.open(logPath, std::ios_base::app);
@@ -130,7 +130,7 @@ void iterateSelfPlay(const string& logPath, const string& recordPath) {
             Node* game = node;
             game->setChild(Move{move[0], move[1]});
             game = game->getChild(0).get();
-            selfPlay(game, logout, recordout);
+            selfPlay(game, numIterations, logout, recordout);
             delete node;
 
             ++iteration;
@@ -234,6 +234,7 @@ int main(int argc, char** argv) {
 
         bool analysis = false;
         bool selfplay = false;
+	int numIterations;
         string logPath;
         string recordPath;
         for (int i = 0; i < argc; ++i) {
@@ -243,12 +244,14 @@ int main(int argc, char** argv) {
                 break;
             } else if (arg == "-s") {
                 selfplay = true;
-                if (i+2 >= argc){
+                if (i+3 >= argc){
                     cerr << "No paths supplied" << endl;
                     return 1;
                 }
-                logPath = string{argv[i+1]};
-                recordPath = string{argv[i+2]};
+		istringstream iss {argv[i+1]};
+		iss >> numIterations;
+                logPath = string{argv[i+2]};
+                recordPath = string{argv[i+3]};
 
                 break;
             }
@@ -256,7 +259,7 @@ int main(int argc, char** argv) {
         if (analysis) {
             analyze();
         } else if (selfplay) {
-            iterateSelfPlay(logPath, recordPath);
+            iterateSelfPlay(numIterations, logPath, recordPath);
             // std::thread t1(iterateSelfPlay, "Thread1_log.txt");
             // std::thread t2(iterateSelfPlay, "Thread2_log.txt");
             
