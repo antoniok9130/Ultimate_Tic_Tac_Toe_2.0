@@ -97,7 +97,10 @@ def backpropogate(node, actionValue):
     current = node
     while current is not None:
         current.incrementAction(actionValue)
-        actionValue *= -1
         current = current.parent
+
+        if current is not None:
+            current.incrementAction(0)
+            current = current.parent
 
 

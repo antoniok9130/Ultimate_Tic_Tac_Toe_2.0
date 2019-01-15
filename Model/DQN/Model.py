@@ -24,7 +24,7 @@ class UTTT_Model(BaseModel):
 
         conv1_params = {
             "in_channels": 2,
-            "out_channels": 16,
+            "out_channels": 32,
             "kernel_size": 3,
             "stride": 1,
             "padding": 1
@@ -36,7 +36,7 @@ class UTTT_Model(BaseModel):
 
         conv2_params = {
             "in_channels": conv1_params["out_channels"],
-            "out_channels": 32,
+            "out_channels": 64,
             "kernel_size": 3,
             "stride": 1,
             "padding": 1
@@ -45,14 +45,25 @@ class UTTT_Model(BaseModel):
         conv2_output_shape = self.conv_out_shape(conv1_output_shape, **conv2_params)
 
 
-        policy_conv_params = {
+        conv3_params = {
             "in_channels": conv2_params["out_channels"],
+            "out_channels": 64,
+            "kernel_size": 3,
+            "stride": 1,
+            "padding": 1
+        }
+        self.conv3 = torch.nn.Conv2d(**conv3_params).double()
+        conv3_output_shape = self.conv_out_shape(conv2_output_shape, **conv3_params)
+
+
+        policy_conv_params = {
+            "in_channels": conv3_params["out_channels"],
             "out_channels": 2,
             "kernel_size": 1,
             "stride": 1
         }
         self.policy_conv = torch.nn.Conv2d(**policy_conv_params).double()
-        policy_conv_output_shape = self.conv_out_shape(conv2_output_shape, **policy_conv_params)
+        policy_conv_output_shape = self.conv_out_shape(conv3_output_shape, **policy_conv_params)
 
         policy_fc_params = {
             "in_features": product(policy_conv_output_shape)*policy_conv_params["out_channels"],
@@ -63,13 +74,13 @@ class UTTT_Model(BaseModel):
 
 
         value_conv_params = {
-            "in_channels": conv2_params["out_channels"],
+            "in_channels": conv3_params["out_channels"],
             "out_channels": 1,
             "kernel_size": 1,
             "stride": 1
         }
         self.value_conv = torch.nn.Conv2d(**value_conv_params).double()
-        value_conv_output_shape = self.conv_out_shape(conv2_output_shape, **value_conv_params)
+        value_conv_output_shape = self.conv_out_shape(conv3_output_shape, **value_conv_params)
 
         value_fc1_params = {
             "in_features": product(value_conv_output_shape)*value_conv_params["out_channels"],
@@ -94,6 +105,7 @@ class UTTT_Model(BaseModel):
             print("input:".ljust(amt), transform_image_shape)
             print("conv1 out:".ljust(amt), conv1_output_shape, conv1_params["out_channels"])
             print("conv2 out:".ljust(amt), conv2_output_shape, conv2_params["out_channels"])
+            print("conv3 out:".ljust(amt), conv3_output_shape, conv3_params["out_channels"])
             print("policy conv out:".ljust(amt), policy_conv_output_shape)
             print("policy view size:".ljust(amt), policy_fc_params["in_features"])
             print("value conv out:".ljust(amt), value_conv_output_shape)
@@ -109,6 +121,7 @@ class UTTT_Model(BaseModel):
 
         policy = F.relu(self.policy_conv(x))
         policy = self.policy_fc(policy.view(-1, self.policy_viewsize))
+        policy = F.softmax(policy)
 
         value = F.relu(self.value_conv(x))
         value = self.value_fc1(value.view(-1, self.value_viewsize))

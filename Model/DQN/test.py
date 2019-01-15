@@ -38,15 +38,16 @@ def getDQNMove(node, verbose=True, iterations=8000):
         end = current_time_milli()
         if node.children is not None:
             for child in node.children:
-                print(child.totalAction, child.numVisits, child.priorProbability)
-        print("Search Space Size:  {0}".format(node.numVisits))
-        print(f"g:   {move[0]}      l:   {move[1]}")
-        print(f"v:   {node.value}      n:   {node.numVisits}")
-        print(f"confidence:   {node.getConfidence()}")
-        print(f"time:         {(end-start)/1000.0} seconds")
-        # print("numP1Wins: ", str(numP1Wins).ljust(5), 
-        #      "numP2Wins: ", str(numP2Wins).ljust(5), 
-        #      "numTies: ", str(numTies).ljust(5))
+                print(child.value, child.totalAction, child.numVisits, child.priorProbability)
+            best_child = getChildVisitedMost(node)
+            print("Search Space Size:  {0}".format(best_child.parent.numVisits))
+            print(f"g:   {move[0]}      l:   {move[1]}")
+            print(f"v:   {best_child.getValue()}      n:   {best_child.numVisits}")
+            print(f"confidence:   {best_child.getConfidence()}")
+            print(f"time:         {(end-start)/1000.0} seconds")
+            # print("numP1Wins: ", str(numP1Wins).ljust(5), 
+            #      "numP2Wins: ", str(numP2Wins).ljust(5), 
+            #      "numTies: ", str(numTies).ljust(5))
 
     return move
 
@@ -89,5 +90,6 @@ def create_APVMCTS_node():
     return APVMCTS_Node(0)
 
 if __name__ == "__main__":
-    play_UTTT(P2_move=getDQNMove, create_node=create_APVMCTS_node)
+    print(model.state_dict())
+    # play_UTTT(P2_move=getDQNMove, create_node=create_APVMCTS_node)
 

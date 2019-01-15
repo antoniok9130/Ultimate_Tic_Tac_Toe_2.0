@@ -88,6 +88,9 @@ def flatten_move(move):
 def unflatten_move(move):
     return [int(move//9), int(move%9)]
 
+def cartesian_move(move):
+    return [int(3*(move[0]//3)+move[1]//3), int(3*(move[0]%3)+move[1]%3)]
+
 
 @jit(cache=True, nopython=True)
 def product(args, start=1):
@@ -99,11 +102,15 @@ def product(args, start=1):
 
 
 @jit(cache=True, nopython=True)
-def rot90(g, l, k=1, flip=False):
+def rot90(g, l, k=1, flip=False, cartesian=True):
 
     # convert to cartesian coordinates with origin at center, center
-    x = int(3*(g%3)+l%3)-4
-    y = 4-int(3*(g//3)+l//3)
+    if cartesian:
+        x = int(3*(g%3)+l%3)-4
+        y = 4-int(3*(g//3)+l//3)
+    else:
+        x = 4-g
+        y = l-4
 
     if flip: x = -x
 
@@ -118,6 +125,18 @@ def rot90(g, l, k=1, flip=False):
     l = 3*(y%3)+(x%3)
 
     return [g, l]
+
+# @jit(cache=True)
+def board_rot90(board, k=1, flip=False):
+    if flip:
+        if k == 0:
+            return [np.fliplr(b) for b in board]
+        elif k == 2:
+            return [np.fliplr(b) for b in np.rot90(board, k=k, axes=(1, 2))]
+        else:
+            return np.rot90(np.fliplr(board), k=k, axes=(1, 2))
+    else:
+        return np.rot90(board, k=-k, axes=(1, 2))
 
 
 # @jit(cache=True, nopython=True)
@@ -135,6 +154,67 @@ if __name__ == "__main__":
     assert(rot90(3, 2, 2) == [5, 6])
     assert(rot90(3, 2, 3) == [7, 0])
     assert(rot90(3, 2, 3, True) == [1, 6])
+
+    for i in range(81):
+        board1 = np.zeros((2, 9, 9))
+        board2 = np.zeros((2, 9, 9))
+
+        action = unflatten_move(i)
+        xy = cartesian_move(action)
+        board1[0][xy[0]][xy[1]] = 1
+
+        for flip in [True, False]:
+            for k in range(4):
+                board2 = np.zeros((2, 9, 9))
+
+                transformed_action = rot90(action[0], action[1], k=k, flip=flip)
+                xy = cartesian_move(transformed_action)
+                board2[0][xy[0]][xy[1]] = 1
+
+                if flip:
+                    if k == 0:
+                        transformed_board = np.array([np.fliplr(b) for b in board1])
+                    elif k == 2:
+                        transformed_board = np.array([np.fliplr(b) for b in np.rot90(board1, k=k, axes=(1, 2))])
+                    else:
+                        transformed_board = np.rot90(np.fliplr(board1), k=k, axes=(1, 2))
+                else:
+                    transformed_board = np.rot90(board1, k=-k, axes=(1, 2))
+
+                if not all(list((transformed_board == board2).ravel())):
+                    print("Flip: ", flip)
+                    print("K:    ", k, "\n")
+                    print(action)
+                    print(board1[0])
+                    print(transformed_board[0])
+                    print(board2[0],"\n")
+
+    # print("Action:  ", action)
+    # print("XY:      ", xy)
+    # print(board1, "\n")
+
+
+    # flip = True if np.random.randint(2) == 1 else False
+    # k = np.random.randint(4)
+    # print("Flip: ", flip)
+    # print("K:    ", k, "\n")
+
+    # transformed_action = rot90(action[0], action[1], k=k, flip=flip)
+    # xy = cartesian_move(transformed_action)
+    # board2[0][xy[0]][xy[1]] = 1
+    
+    # print("Action:  ", transformed_action)
+    # print("XY:      ", xy)
+
+    # if flip:
+    #     board1 = np.fliplr(np.rot90(board1, k=-k, axes=(1, 2)))
+    # else:
+    #     board1 = np.rot90(board1, k=-k, axes=(1, 2))
+    
+    # print(board1, "\n")
+    # print(board2, "\n")
+    # print(all(list((board1 == board2).ravel())))
+
 
 
 

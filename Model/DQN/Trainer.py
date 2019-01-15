@@ -1,8 +1,11 @@
+import sys
+sys.path.append("../../")
 
 import torch
 import numpy as np
 
 import time
+from UTTT.utils import rot90, board_rot90, flatten_move, cartesian_move
 
 class Memory():
 
@@ -123,9 +126,15 @@ class Trainer:
                 policy_labels = []
                 value_labels = []
                 for state, action, reward in sample:
-                    batch_input.append(state)
-                    policy_labels.append(action)
+
+                    flip = True if np.random.randint(2) == 1 else False
+                    k = np.random.randint(4)
+
+                    batch_input.append(np.array(board_rot90(state, k=k, flip=flip)))
+
+                    policy_labels.append(flatten_move(cartesian_move(rot90(action[0], action[1], k=k, flip=flip))))
                     value_labels.append([reward])
+
                     
 
                 batches.append((self.model.transform(batch_input), np.array(policy_labels), np.array(value_labels)))

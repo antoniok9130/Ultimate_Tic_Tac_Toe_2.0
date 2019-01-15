@@ -19,12 +19,10 @@ class UTTT_Environment:
         self.done = False
         self.legal = self.node.isLegal(action, raise_exception=True)
         if self.legal:
-            g = action[0]
-            l = action[1]
-
             self.node.setChild(action)
             self.node = self.node.getChild(0)
-            self.board[int(3*(g//3)+l//3)][int(3*(g%3)+l%3)] = self.node.getPlayer()
+            XY = cartesian_move(action)
+            self.board[XY[0]][XY[1]] = self.node.getPlayer()
             
             self.node.init()
             self.winner = self.node.winner

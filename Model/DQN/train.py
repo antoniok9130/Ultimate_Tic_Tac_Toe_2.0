@@ -48,79 +48,79 @@ def train(model_instance_directory, model, device, num_episodes,
         if env.finished:
             break
 
-        try:
-            env.reset()
+        # try:
+        env.reset()
 
-            done = False
-            timestep = 0
+        done = False
+        timestep = 0
 
-            observations = []
+        observations = []
+        
+        # model = trainer.model.cpu()
+        while not done and timestep <= 81:
+            # env.render()
+            action = env.get_action(trainer.model, device)
             
-            # model = trainer.model.cpu()
-            while not done and timestep <= 81:
-                # env.render()
-                action = env.get_action(trainer.model, device)
+            observation, reward, done, info = env.step(action)
+            if not done:
+                observations.append(transform_board(observation))
                 
-                observation, reward, done, info = env.step(action)
-                if not done:
-                    observations.append(transform_board(observation))
-                    
-                timestep += 1
-                
-                if not info["legal"]:
-                    quadrant = env.node.buildQuadrant()
-                    printBoard(observation, quadrant)
-                    print(getLegalMovesField(quadrant, observation, env.moves[-1]))
-                    print(getLegalMoves1D(quadrant, observation, env.moves[-1]))
-                    print(getLegalMoves2D(quadrant, observation, env.moves[-1]))
-                    print(env.moves[-1])
-                    print(action)
-                    raise Exception("Illegal Move")
-
-            if timestep > 81 and not done:
-                raise Exception("Invalid Game")
-
-
-            short_term = Memory(None, buckets=True)
-
-            current = env.node.parent
-            reward = 1
-            for action, observation in zip(reversed(env.moves[2:]), reversed(observations)):
-                reward = abs(reward-1)
-                # short_term.remember([observation, current.get_priorities(), reward])
-                short_term.remember([observation, flatten_move(action), reward])
-                current = current.parent
+            timestep += 1
             
-            trainer.memory.remember(short_term.memory)
+            if not info["legal"]:
+                quadrant = env.node.buildQuadrant()
+                printBoard(observation, quadrant)
+                print(getLegalMovesField(quadrant, observation, env.moves[-1]))
+                print(getLegalMoves1D(quadrant, observation, env.moves[-1]))
+                print(getLegalMoves2D(quadrant, observation, env.moves[-1]))
+                print(env.moves[-1])
+                print(action)
+                raise Exception("Illegal Move")
+
+        if timestep > 81 and not done:
+            raise Exception("Invalid Game")
 
 
-            print(f"\rEp: {episode}".ljust(15), end="")
-            loss = trainer.experience_replay()
+        short_term = Memory(None, buckets=True)
 
-            if loss is not None:
-                losses.append(loss)
-                mean = np.mean(losses[-average:])
-                print(f"  Mean Loss:  {round(mean, 6)}".ljust(25), end="")
-            
-                with open(f"{model_instance_directory}/log.csv", "a") as file:
-                    # file.write(f"{episode},{mean},{''.join(map(lambda m:str(m[0])+str(m[1]), env.moves))}\n")
-                    file.write(f"{episode},{mean},\n")
+        current = env.node.parent
+        reward = 1
+        for action, observation in zip(reversed(env.moves[2:]), reversed(observations)):
+            reward = abs(reward-1)
+            # short_term.remember([observation, current.get_priorities(), reward])
+            short_term.remember([observation, action, reward])
+            current = current.parent
+        
+        trainer.memory.remember(short_term.memory)
 
-            episode += 1
 
-            if episode%50 == 0:
-                model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
-                del losses[:-average]
-                print(f"  Time:  {round(np.mean(times[-average:]), 6)}".ljust(25), end="")
-                del times[:-average]
+        print(f"\rEp: {episode}".ljust(15), end="")
+        loss = trainer.experience_replay()
 
-        except Exception as e:
-            # printBoard(observation, env.node.buildQuadrant())
-            # print(env.moves[-1])
-            # print(action)
-            # raise(e)
-            print(e)
-            # exit(1)
+        if loss is not None:
+            losses.append(loss)
+            mean = np.mean(losses[-average:])
+            print(f"  Mean Loss:  {round(mean, 6)}".ljust(25), end="")
+        
+            with open(f"{model_instance_directory}/log.csv", "a") as file:
+                # file.write(f"{episode},{mean},{''.join(map(lambda m:str(m[0])+str(m[1]), env.moves))}\n")
+                file.write(f"{episode},{mean},\n")
+
+        episode += 1
+
+        if episode%50 == 0:
+            model.save_weights(f"{model_instance_directory}/most_recent_uttt_model")
+            del losses[:-average]
+            print(f"  Time:  {round(np.mean(times[-average:]), 6)}".ljust(25), end="")
+            del times[:-average]
+
+        # except Exception as e:
+        #     # printBoard(observation, env.node.buildQuadrant())
+        #     # print(env.moves[-1])
+        #     # print(action)
+        #     # raise(e)
+        #     print(e)
+        #     # exit(1)
 
         end = current_time_milli()
         times.append((end-start)/1000.0)

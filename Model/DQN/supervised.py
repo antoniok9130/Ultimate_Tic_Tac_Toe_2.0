@@ -30,8 +30,9 @@ class Supervised_Environment(UTTT_Environment):
 
     def get_action(self, model, device):
         self.i += 1
-        g, l = self.currentGame[self.i][0], self.currentGame[self.i][1]
-        return rot90(g, l, k=self.rot, flip=self.flip)
+        # g, l = [0], self.currentGame[self.i][1]
+        # return rot90(g, l, k=self.rot, flip=self.flip)
+        return self.currentGame[self.i]
 
     def return_observation(self):
         return self.board, self.reward, self.done, {"legal": self.legal}
@@ -40,27 +41,46 @@ class Supervised_Environment(UTTT_Environment):
         if hasattr(self, "current"):
             self.current += 1
         else:
-            with open("./Data/TrainingGames.txt") as file:
-                self.games = [row.strip() for row in file]
+            self.games = []
+            with open("./Data/TrainingGames250k.txt") as file:
+                games = [row.strip() for row in file]
+                shuffle(games)
+                self.games.extend(games)
+            with open("./Data/TrainingGames500k.txt") as file:
+                games = [row.strip() for row in file]
+                shuffle(games)
+                self.games.extend(games)
+            with open("./Data/TrainingGames750k.txt") as file:
+                games = [row.strip() for row in file]
+                shuffle(games)
+                self.games.extend(games)
+            with open("./Data/TrainingGames1M.txt") as file:
+                games = [row.strip() for row in file]
+                shuffle(games)
+                self.games.extend(games)
+            with open("./Data/ValidationGames.txt") as file:
+                games = [row.strip() for row in file]
+                shuffle(games)
+                self.games.extend(games)
 
             print("Num Games:        ", len(self.games))
             self.games = list(set(self.games))
             print("Num Unique Games: ", len(self.games))
-            shuffle(self.games)
+            # shuffle(self.games)
             self.current = 0
-            self.flip = False
-            self.rot = 0
 
         if self.current >= len(self.games):
-            shuffle(self.games)
-            self.current = 0
-            self.rot += 1
-            if self.rot > 3:
-                self.rot = 0
-                if self.flip:
-                    self.finished = True
-                else:
-                    self.flip = True
+            self.finished = True
+            return
+            # shuffle(self.games)
+            # self.current = 0
+            # self.rot += 1
+            # if self.rot > 3:
+            #     self.rot = 0
+            #     if self.flip:
+            #         self.finished = True
+            #     else:
+            #         self.flip = True
 
         self.currentGame = getMoves(self.games[self.current])
         self.i = -1
@@ -73,18 +93,18 @@ if __name__ == "__main__":
     model = UTTT_Model(verbose=True).to(device)
     
     train(**{
-        "model_instance_directory": "./Attempts/supervised5",
+        "model_instance_directory": "./Attempts/supervised7",
         "model": model,
         "device": device,
         "environment": Supervised_Environment,
         
         "learning_rate": 0.01,
         "momentum": 0.9,
-        "milestones": [90000, 180000],
+        "milestones": [36570],
         "discount": 0.95,
         "max_memory_size": 1500,
-        "batch_size": 50,
-        "mini_batch_size": 32,
+        "batch_size": 100,
+        "mini_batch_size": 64,
         "num_episodes": 300000
     })
             
