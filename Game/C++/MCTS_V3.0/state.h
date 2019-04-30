@@ -3,28 +3,40 @@
 
 #define __UTTT_STORES_CHILDREN__
 #define __UTTT_HAS_MEMBERS__
+// #define STORE_UCT
+// #define REVERSE_BOARD
 
 constexpr int N = 0;
 constexpr int P1 = 1;
 constexpr int P2 = 2;
 constexpr int T = -1;
 
+#ifdef REVERSE_BOARD
 #define IS_EMPTY(x, y) ((((x) >> (8-y)) & 1) == 0)
 #define IS_FILLED(x, y) ((((x) >> (8-y)) & 1) == 1)
+#else
+#define IS_EMPTY(x, y) ((((x) >> (y)) & 1) == 0)
+#define IS_FILLED(x, y) ((((x) >> (y)) & 1) == 1)
+#endif
 #define IS_TIE(x) (((x) & 0x1ff) == 0x1ff)
 
 #include <iostream>
 
+bool check3InRow(const unsigned int& local,
+                 const unsigned int& quadrant);
+
 class State {
     State* parent = nullptr;
     #ifdef __UTTT_STORES_CHILDREN__
-    State* maxUCTChild = nullptr;
     State* children = nullptr;
-    unsigned int numChildren = 0;
+    int numChildren = 0;
     #endif
     
     unsigned long w = 0; // Number of Wins
-    unsigned long n = 0; // Number of Visits
+    unsigned long v = 0; // Number of Visits
+    #ifdef STORE_UCT
+    double UCT = 100;
+    #endif
     
     unsigned long long n1 = 0;
     unsigned long long n2 = 0;
@@ -61,25 +73,39 @@ class State {
         Bits 54-57 are Global Move
         Bits 58-61 are Local Move
         Bit 62 is current player; 0 if player 1; 1 if player 2
+        Bit 63 is the "dirty bit" that keeps track of if UCT needs to be updated
     */
     
 #ifdef __UTTT_HAS_MEMBERS__
     public:
     
         State();
-        State(State* parent);
+        State(State* other);
         State(State* parent, const unsigned int& global,
                              const unsigned int& local);
     
         ~State();
+        State& operator=(const State& other);
+        void init(State* parent, const unsigned int& global,
+                                 const unsigned int& local);
     
-        unsigned int& getNumChildren();
+        State* getParent();
+        void setParent(State* parent);
+        int& getNumChildren();
         State* getChildren();
-        unsigned int& getNumWins();
-        unsigned int& getNumVisits();
+        void setChildren(State* s);
+        unsigned long& getNumWins();
+        unsigned long& getNumVisits();
+#ifdef STORE_UCT
+        void setUCTbit();
+        double& getUCT();
+#endif
+    
+        bool empty();
     
     
         int getCurrentPlayer();
+        void setCurrentPlayer(const bool& player);
     
         // Set player to opposite of current
         void switchPlayer();
@@ -97,10 +123,10 @@ class State {
         int getPlayerAt(const unsigned int& global,
                         const unsigned int& local);
     
-        void setMove(const unsigned long long& global,
+        bool setMove(const unsigned long long& global,
                      const unsigned long long& local);
     
-        void updateBoard(const unsigned int& global,
+        bool updateBoard(const unsigned int& global,
                          const unsigned int& local);
 
         /*
@@ -113,7 +139,7 @@ class State {
         unsigned int getLocal();
         unsigned int getGlobal();
 #endif
-    friend std::ostream& operator<<(std::ostream&, State*);
+    friend std::ostream& operator<<(std::ostream&, State&);
 };
 
 

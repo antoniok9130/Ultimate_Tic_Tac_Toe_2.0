@@ -4,10 +4,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
-
-#ifdef DEBUG
+#include <cmath>
 #include <bitset>
-#endif
 
 using namespace std;
 
@@ -15,6 +13,7 @@ using namespace std;
 
 bool check3InRow(const unsigned int& local,
                  const unsigned int& quadrant){
+#ifdef REVERSE_BOARD
     switch(local){
         case 0:
             return ((quadrant & 0b111000000) == 0b111000000) ||
@@ -52,58 +51,178 @@ bool check3InRow(const unsigned int& local,
         default:
             return false;
     }
+#else
+    switch(local){
+        case 0:
+            return ((quadrant & 0b000000111) == 0b000000111) ||
+                   ((quadrant & 0b001001001) == 0b001001001) ||
+                   ((quadrant & 0b100010001) == 0b100010001);
+        case 1:
+            return ((quadrant & 0b000000111) == 0b000000111) ||
+                   ((quadrant & 0b010010010) == 0b010010010);
+        case 2:
+            return ((quadrant & 0b000000111) == 0b000000111) ||
+                   ((quadrant & 0b100100100) == 0b100100100) ||
+                   ((quadrant & 0b001010100) == 0b001010100);
+        case 3:
+            return ((quadrant & 0b001001001) == 0b001001001) ||
+                   ((quadrant & 0b000111000) == 0b000111000);
+        case 4:
+            return ((quadrant & 0b100010001) == 0b100010001) ||
+                   ((quadrant & 0b010010010) == 0b010010010) ||
+                   ((quadrant & 0b001010100) == 0b001010100) ||
+                   ((quadrant & 0b000111000) == 0b000111000);
+        case 5:
+            return ((quadrant & 0b100100100) == 0b100100100) ||
+                   ((quadrant & 0b000111000) == 0b000111000);
+        case 6:
+            return ((quadrant & 0b111000000) == 0b111000000) ||
+                   ((quadrant & 0b001010100) == 0b001010100) ||
+                   ((quadrant & 0b001001001) == 0b001001001);
+        case 7:
+            return ((quadrant & 0b010010010) == 0b010010010) ||
+                   ((quadrant & 0b111000000) == 0b111000000);
+        case 8:
+            return ((quadrant & 0b111000000) == 0b111000000) ||
+                   ((quadrant & 0b100010001) == 0b100010001) ||
+                   ((quadrant & 0b100100100) == 0b100100100);
+        default:
+            return false;
+    }
+#endif
 }
 
 #ifdef __UTTT_HAS_MEMBERS__
 
 State::State(){}
-State::State(State* parent):
-    parent {parent->parent},
-    w {parent->w},
-    n {parent->n},
-    n1 {parent->n1},
-    n2 {parent->n2},
-    n3 {parent->n3}{}
+State::State(State* other):
+    parent {other->parent},
+    #ifdef __UTTT_STORES_CHILDREN__
+    children {other->children},
+    numChildren {other->numChildren},
+    #endif
+    w {other->w},
+    v {other->v},
+    #ifdef STORE_UCT
+    UCT {other->UCT},
+    #endif
+    n1 {other->n1},
+    n2 {other->n2},
+    n3 {other->n3}{}
 State::State(State* parent, const unsigned int& global,
                              const unsigned int& local):
     parent {parent},
-    w {parent->w},
-    n {parent->n},
     n1 {parent->n1},
     n2 {parent->n2},
     n3 {parent->n3}{
-    switchPlayer();
+    setCurrentPlayer(1-parent->getCurrentPlayer());
     setMove(global, local);
 }
 State::~State(){
     #ifdef __UTTT_STORES_CHILDREN__
     if (children){
-//         for (int i = 0; i<numChildren; ++i){
-//             delete child[i];
-//         }
-        delete[] children;
-//         children = nullptr;
+        if (numChildren == -1){
+            delete children;
+        }
+        else{
+            delete[] children;
+        }
     }
     #endif
 }
-unsigned int& State::getNumChildren(){
+State& State::operator=(const State& other){
+    #ifdef __UTTT_STORES_CHILDREN__
+    if (children){
+        if (numChildren == -1){
+            delete children;
+        }
+        else{
+            delete[] children;
+        }
+    }
+    children = other.children;
+    numChildren = other.numChildren;
+    #endif
+    
+    parent = other.parent;
+    w = other.w;
+    v = other.v;
+    #ifdef STORE_UCT
+    UCT = other.UCT;
+    #endif
+    n1 = other.n1;
+    n2 = other.n2;
+    n3 = other.n3;
+    
+    return *this;
+}
+void State::init(State* parent, const unsigned int& global,
+                                const unsigned int& local){
+    this->parent = parent;
+    n1 = parent->n1;
+    n2 = parent->n2;
+    n3 = parent->n3;
+    setCurrentPlayer(1-parent->getCurrentPlayer());
+    setMove(global, local);
+}
+
+
+State* State::getParent(){
+    return parent;
+}
+void State::setParent(State* parent){
+    this->parent = parent;
+}
+int& State::getNumChildren(){
      return numChildren;
 }
 State* State::getChildren(){
-    return getChildren;
+    return children;
 }
-unsigned int& State::getNumWins(){
+void State::setChildren(State* s){
+    children = s;
+}
+unsigned long& State::getNumWins(){
     return w;
 }
-unsigned int& State::getNumVisits(){
+unsigned long& State::getNumVisits(){
     return v;
 }
+#ifdef STORE_UCT
+void State::setUCTbit(){
+    n3 |= (1ull << 63); // 0x8000000000000000; // 
+}
+double& State::getUCT(){
+    if (n3 >> 63){
+        UCT = v == 0 ? 100 : (parent ? (w+sqrt(2*v*log(parent->v)))/v : double(w)/v);
+        n3 &= ~(1ull << 63); // 0x7fffffffffffffff; // 
+    }
+    return UCT;
+}
+#endif
+
+bool State::empty(){ return ((n1 | n2 | n3) & 0x1fffffffffffff) == 0; }
 
 
-int State::getCurrentPlayer(){ return (n3 >> 62) & 1; }
+#define GET_BOARD(p) ((p ? n2 : n1) >> 54)
+#define GET_BOARD_P1 (n1 >> 54)
+#define GET_BOARD_P2 (n2 >> 54)
+#define GET_CURRENT_PLAYER ((n3 >> 62) & 1)
+
+int State::getCurrentPlayer(){ return GET_CURRENT_PLAYER; }
+/*
+setCurrentPlayer:  p == true iff P2
+*/
+void State::setCurrentPlayer(const bool& p){
+    if (p){
+        n3 |= (1ull << 62); // 0x4000000000000000; // 
+    } else{
+        n3 &= ~(1ull << 62); // 0xbfffffffffffffff; // 
+    }
+}
 
 void State::switchPlayer(){
-    n3 ^= 1ull << 62;
+    n3 ^= 1ull << 62; // 0x4000000000000000; // 
 }
 
 int State::getWinner(){
@@ -120,7 +239,7 @@ int State::getWinner(){
 }
 
 unsigned int State::getQuadrant(const unsigned int& quadrant){
-    return getQuadrant(quadrant, getCurrentPlayer());
+    return getQuadrant(quadrant, GET_CURRENT_PLAYER);
 }
 unsigned int State::getQuadrant(const unsigned int& quadrant, const int& player){
     if (quadrant < 3){
@@ -139,10 +258,9 @@ int State::getPlayerAt(const unsigned int& global){
     if (global > 8){
         throw "Invalid global:  getPlayerAt";
     }
-    unsigned int b1 = getBoard(0);
-    unsigned int b2 = getBoard(1);
+    unsigned int b1 = GET_BOARD_P1;
+    unsigned int b2 = GET_BOARD_P2;
     if (IS_FILLED(b1 & b2, global)){
-        cerr << "Returning Tie:  " << (b1 & 0x1ff) << " " << (b2 & 0x1ff) << " " << ((b1 & b2) & 0x1ff) << endl;
         return T;
     }
     if (IS_FILLED(b1, global)){
@@ -168,10 +286,10 @@ int State::getPlayerAt(const unsigned int& global,
 }
 
 unsigned int State::getBoard(){
-    return getBoard(getCurrentPlayer()) ;
+    return GET_BOARD(GET_CURRENT_PLAYER) ;
 }
 unsigned int State::getBoard(const int& player){
-    return (player ? n1 : n2) >> 54 ;
+    return GET_BOARD(player) ;
 }
 
 unsigned int State::getGlobal(){
@@ -182,10 +300,27 @@ unsigned int State::getLocal(){
     return (n3 >> 58) & 0xf;
 }
 
-void State::setMove(const unsigned long long& global,
+bool State::setMove(const unsigned long long& global,
                      const unsigned long long& local){
     if (global > 8 || local > 8){
         throw "Invalid global, local:  setMove";
+    }
+    
+    if (numChildren > 0){
+        for (int i = 0; i<numChildren; ++i){
+            if (children[i].getGlobal() == global && 
+                children[i].getLocal() == local){
+                State child {children+i};
+                children[i].children = nullptr;
+                *this = child;
+                child.children = nullptr;
+                parent = nullptr;
+                for (i = 0; i<numChildren; ++i){
+                    children[i].parent = this;
+                }
+                return false;
+            }
+        }
     }
             
     // clear global and local bits
@@ -194,88 +329,95 @@ void State::setMove(const unsigned long long& global,
     n3 |= (global << 54) | (local << 58);
                 
     // update quadrant
+#ifdef REVERSE_BOARD
     if (global < 3){
-        n1 |= 1ull << ((9*(global*2 + getCurrentPlayer())) + (8-local));
+        n1 |= 1ull << ((9*(global*2 + GET_CURRENT_PLAYER)) + (8-local));
     }
     else if (global < 6){
-        n2 |= 1ull << ((9*((global - 3)*2 + getCurrentPlayer())) + (8-local));
+        n2 |= 1ull << ((9*((global - 3)*2 + GET_CURRENT_PLAYER)) + (8-local));
     }
     else if (global < 9){
-        n3 |= 1ull << ((9*((global - 6)*2 + getCurrentPlayer())) + (8-local));
+        n3 |= 1ull << ((9*((global - 6)*2 + GET_CURRENT_PLAYER)) + (8-local));
     }
+#else
+    if (global < 3){
+        n1 |= 1ull << ((9*(global*2 + GET_CURRENT_PLAYER)) + local);
+    }
+    else if (global < 6){
+        n2 |= 1ull << ((9*((global - 3)*2 + GET_CURRENT_PLAYER)) + local);
+    }
+    else if (global < 9){
+        n3 |= 1ull << ((9*((global - 6)*2 + GET_CURRENT_PLAYER)) + local);
+    }
+#endif
             
-    updateBoard(global, local);
-            
+    return updateBoard(global, local); 
 }
 
-void State::updateBoard(const unsigned int& global,
+bool State::updateBoard(const unsigned int& global,
                          const unsigned int& local){
-    if (IS_EMPTY(getBoard(0) | getBoard(1), global)){
+    if (IS_EMPTY(GET_BOARD_P1 | GET_BOARD_P2, global)){
         unsigned int quadrant = getQuadrant(global);
         if (check3InRow(local, quadrant)){
-#ifdef DEBUG
-            cerr << "Setting Board:  " << global << " " << getCurrentPlayer() << endl;
-#endif
-            if (getCurrentPlayer()){
-                n1 |= 1ull << (62-global); // (8-global)+54
+            bool player = GET_CURRENT_PLAYER;
+#ifdef REVERSE_BOARD
+            if (player){
+                n2 |= 1ull << (62-global);
             }
             else{
-                n2 |= 1ull << (62-global); // (8-global)+54
+                n1 |= 1ull << (62-global);
             }
-            unsigned int bt = getBoard(0) & getBoard(1);
-            if (check3InRow(global, getBoard() & ~bt)){
-                if (getCurrentPlayer()){ //player 2
-#ifdef DEBUG
-                    cerr << "Winner P2:  " << bitset<9>(getBoard(0) & 0x1ff) << " "
-                                           << bitset<9>(getBoard(1) & 0x1ff) << "  "
-                                           << bitset<9>(bt) << endl;
+#else
+            if (player){
+                n2 |= 1ull << (54+global);
+            }
+            else{
+                n1 |= 1ull << (54+global);
+            }
 #endif
-                    n2 |= 1ull << 63;
+            unsigned long boards[2] = {GET_BOARD_P1, GET_BOARD_P2};
+            if (check3InRow(global, boards[player] & ~boards[!player])){
+//                 cout << "Winner:  " << player << endl;
+                if (player){ //player 2
+                    n2 |= 1ull << 63; // 0x8000000000000000; // 
                 }
                 else { // player 1
-#ifdef DEBUG 
-                    cerr << "Winner P2:  " << bitset<9>(getBoard(0) & 0x1ff) << " "
-                                           << bitset<9>(getBoard(1) & 0x1ff) << "  "
-                                           << bitset<9>(bt) << endl;
-#endif
-                    n1 |= 1ull << 63;                            
+                    n1 |= 1ull << 63; // 0x8000000000000000; //                 
                 }
             }
-            else if (IS_TIE(getBoard(0) | getBoard(1))){ // if tie, set for both
-#ifdef DEBUG
-                cerr << "Winner Tie:  " << bitset<9>(getBoard(0) & 0x1ff) << " "
-                                        << bitset<9>(getBoard(1) & 0x1ff) << "  "
-                                        << bitset<9>(bt) << endl;
-#endif
-                n1 |= 1ull << 63;
-                n2 |= 1ull << 63;
+            else if (IS_TIE(boards[0] | boards[1])){ // if tie, set for both
+//                 cout << "Winner:  Tie" << endl;
+                n1 |= 1ull << 63; // 0x8000000000000000; // 
+                n2 |= 1ull << 63; // 0x8000000000000000; // 
             }
+            return true;
         }
         else if (IS_TIE(getQuadrant(global, 0) | getQuadrant(global, 1))){ // if tie, set for both
-#ifdef DEBUG
-            cerr << "Setting Tie:  " << quadrant << endl;
-#endif
+#ifdef REVERSE_BOARD
             n1 |= 1ull << (62-global);
             n2 |= 1ull << (62-global);
-            
-            if (IS_TIE(getBoard(0) | getBoard(1))){ // if tie, set for both
-#ifdef DEBUG
-                cerr << "Winner Tie:  " << bitset<9>(getBoard(0) & 0x1ff) << " "
-                                        << bitset<9>(getBoard(1) & 0x1ff);
+#else
+            n1 |= 1ull << (54+global);
+            n2 |= 1ull << (54+global);
 #endif
-                n1 |= 1ull << 63;
-                n2 |= 1ull << 63;
+            
+            if (IS_TIE(GET_BOARD_P1 | GET_BOARD_P2)){ // if tie, set for both
+                n1 |= 1ull << 63; // 0x8000000000000000; // 
+                n2 |= 1ull << 63; // 0x8000000000000000; // 
             }
+            return true;
         }
     }
     else {
-#ifdef DEBUG
-        cerr << bitset<9>(getBoard(0) & 0x1ff) << endl;
-        cerr << bitset<9>(getBoard(1) & 0x1ff) << endl;
-        cerr << global << " " << local << endl;
-#endif
+        cout << *this << endl;
+        cout << endl << bitset<64>(n1) << endl;
+        cout << bitset<64>(n2) << endl;
+        cout << bitset<64>(n3) << endl;
+        cout << global << " " << local << endl << endl;
+        cout << "Trying to set move in filled quadrant" << endl;
         throw "Trying to set move in filled quadrant";
     }
+    return false;
 }
 
 
@@ -304,14 +446,14 @@ const char* verticalSpace2 = "    ║   ║   ";
 const char* bigVerticalDivide2 = " ═══╬═══╬═══ ";
 const char* minDivide = "  ";
 
-std::ostream& operator<<(ostream& out, State* state){
+std::ostream& operator<<(ostream& out, State& state){
     vector<string> endls (23, "");
     unsigned int i = 6;
     endls[i++] = verticalSpace2;
     ostringstream r1;
     r1 << "  ";
     for (int j = 0; j<3; ++j){
-        r1 << getBoardSymbol(state->getPlayerAt(j));
+        r1 << getBoardSymbol(state.getPlayerAt(j));
         if (j != 2){
             r1 << " ║ ";
         }
@@ -322,7 +464,7 @@ std::ostream& operator<<(ostream& out, State* state){
     ostringstream r2;
     r2 << "  ";
     for (int j = 3; j<6; ++j){
-        r2 << getBoardSymbol(state->getPlayerAt(j));
+        r2 << getBoardSymbol(state.getPlayerAt(j));
         if (j != 5){
             r2 << " ║ ";
         }
@@ -333,7 +475,7 @@ std::ostream& operator<<(ostream& out, State* state){
     ostringstream r3;
     r3 << "  ";
     for (int j = 6; j<9; ++j){
-        r3 << getBoardSymbol(state->getPlayerAt(j));
+        r3 << getBoardSymbol(state.getPlayerAt(j));
         if (j != 8){
             r3 << " ║ ";
         }
@@ -363,7 +505,7 @@ std::ostream& operator<<(ostream& out, State* state){
                     if (d != 0) {
                         out << "│";
                     }
-                    out << " " << getBoardSymbol(state->getPlayerAt(3 * a + c, 3 * b + d)) << " ";
+                    out << " " << getBoardSymbol(state.getPlayerAt(3 * a + c, 3 * b + d)) << " ";
                 }
             }
             out << minDivide << "  " << endls[i++] << endl;
@@ -373,14 +515,14 @@ std::ostream& operator<<(ostream& out, State* state){
     out << endl;
     
     
-#ifdef DEBUG
-    out << endl << bitset<64>(state->n1) << endl;
-    out << bitset<64>(state->n2) << endl;
-    out << bitset<64>(state->n3) << endl << endl;
-    for (int i = 0; i<9; ++i){
-        out << bitset<9>(state->getQuadrant(i, 0) & 0x1ff) << "  "
-            << bitset<9>(state->getQuadrant(i, 1) & 0x1ff) << endl;
-    }
+#ifdef CHECK_DEPTH
+    out << endl << bitset<64>(state.n1) << endl;
+    out << bitset<64>(state.n2) << endl;
+    out << bitset<64>(state.n3) << endl << endl;
+//     for (int i = 0; i<9; ++i){
+//         out << bitset<9>(state.getQuadrant(i, 0) & 0x1ff) << "  "
+//             << bitset<9>(state.getQuadrant(i, 1) & 0x1ff) << endl;
+//     }
 #endif
     
     return out;
