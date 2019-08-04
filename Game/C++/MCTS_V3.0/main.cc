@@ -3,10 +3,13 @@
 #include <bitset>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include "state.h"
 #include "mcts.h"
 
 using namespace std;
+
+#define ITERATIONS 2000000
 
 int main_seed = time(NULL);
 inline int fastrand() {
@@ -64,11 +67,17 @@ void getHumanMove(State* state, int& global, int& local){
     }
 }
 
-void getMCTSMove(State* state, int& global, int& local){
+
+void getAIMove(State* state, int& global, int& local){
+#ifndef GENERATE_MODE
     clock_t start = clock();
-    getMCTSMove(state, global, local, 2000000);
+#endif
+    getMCTSMove(state, global, local, ITERATIONS);
+#ifndef GENERATE_MODE
     clock_t end = clock();
+    cout << "Move:  " << global << " " << local << endl;
     cout << "Took " << double(end-start)/CLOCKS_PER_SEC << " seconds to compute move" << endl;
+#endif
 }
 
 
@@ -76,7 +85,7 @@ void playGame(void (*getP1Move)(State*, int&, int&),
               void (*getP2Move)(State*, int&, int&)){
     State s;
     int global = 4, local = 4;
-    s.setMove(global, local);
+    //s.setMove(global, local);
     
     cout << s << endl;
     
@@ -98,11 +107,75 @@ void playGame(void (*getP1Move)(State*, int&, int&),
     cout << &s << endl << endl;
 }
 
-int main(){
+
+
+void generateGame(ostream& out, int& global, int& local){
+    try{
+        State s;
+        out << global << local;
+        s.setMove(global, local);
+
+        while (s.getWinner() == N){
+            getAIMove(&s, global, local);
+            out << global << local;
+            s.setMove(global, local);
+        }
+
+        out << ":" << s.getWinner() << endl;
+    } catch (...){
+        cerr << "Error Completing Game" << endl;
+    }
+}
+constexpr int numMovePriorities = 172;
+const int movePriorities[numMovePriorities][2] = {
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 0}, {4, 0}, {4, 2}, {4, 2}, {4, 6}, {4, 6}, {4, 8}, {4, 8}, 
+    {0, 0}, {0, 2}, {0, 6}, {0, 8}, {2, 0}, {2, 2}, {2, 6}, {2, 8}, {6, 0}, {6, 2}, {6, 6}, {6, 8}, {8, 0}, {8, 2}, {8, 6}, {8, 8}, 
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 0}, {4, 0}, {4, 2}, {4, 2}, {4, 6}, {4, 6}, {4, 8}, {4, 8}, 
+    {0, 0}, {0, 2}, {0, 6}, {0, 8}, {2, 0}, {2, 2}, {2, 6}, {2, 8}, {6, 0}, {6, 2}, {6, 6}, {6, 8}, {8, 0}, {8, 2}, {8, 6}, {8, 8}, 
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 0}, {4, 0}, {4, 2}, {4, 2}, {4, 6}, {4, 6}, {4, 8}, {4, 8}, 
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, 
+    {4, 1}, {4, 3}, {4, 5}, {4, 7}, {1, 1}, {3, 3}, {5, 5}, {7, 7}, 
+    {0, 1}, {0, 3}, {0, 5}, {0, 7}, {1, 0}, {1, 2}, {1, 3}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {2, 1}, {2, 3}, {2, 5}, {2, 7}, 
+    {3, 0}, {3, 1}, {3, 2}, {3, 5}, {3, 6}, {3, 7}, {3, 8}, {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 6}, {5, 7}, {5, 8}, 
+    {6, 1}, {6, 3}, {6, 5}, {6, 7}, {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 5}, {7, 6}, {7, 8}, 
+    {8, 1}, {8, 3}, {8, 5}, {8, 7}, {0, 4}, {1, 4}, {2, 4}, {3, 4}, {5, 4}, {6, 4}, {7, 4}, {8, 4},
+    {0, 0}, {0, 2}, {0, 6}, {0, 8}, {2, 0}, {2, 2}, {2, 6}, {2, 8}, {6, 0}, {6, 2}, {6, 6}, {6, 8}, {8, 0}, {8, 2}, {8, 6}, {8, 8}, 
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 0}, {4, 0}, {4, 2}, {4, 2}, {4, 6}, {4, 6}, {4, 8}, {4, 8}, 
+    {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}, {4, 4}
+};
+
+int main(int argc, char** argv){
 #ifndef CHECK_DEPTH
     try{
 #endif
-        playGame(&getMCTSMove, &getMCTSMove);
+#ifdef GENERATE_MODE
+        int lognum = 0;
+        long numIterations = 0;
+        for (int i = 0; i < argc; ++i) {
+            string arg{argv[i]};
+            if (arg == "-l") {
+                istringstream iss {argv[++i]};
+                iss >> lognum;
+            } else if (arg == "-i") {
+                istringstream iss {argv[++i]};
+                iss >> numIterations;
+            }
+        }
+	cout << "Log Num:  " << lognum << endl;
+	    cout << "Num Iterations:  " << ITERATIONS << endl;
+        ostringstream logPath;
+        logPath << "Games/games-l-" << lognum << "-i-" << numIterations << ".txt";
+        
+        std::ofstream logout;
+        logout.open(logPath.str(), std::ios_base::app);
+        int global, local;
+        for (int i = 0; i<100000; ++i){
+            global = movePriorities[i%numMovePriorities][0];
+            local = movePriorities[i%numMovePriorities][1];
+            generateGame(logout, global, local, numIterations);
+        }
+#else
+        playGame(&getHumanMove, &getAIMove);
 //         srand(time(NULL));
 //         int n = 2000000;
         
@@ -116,6 +189,7 @@ int main(){
 //         cout << "Took " << (double(end-start)/CLOCKS_PER_SEC) << " to run " << n << " simulations" << endl;
         
 //         cout << sizeof(State) << endl;
+#endif
       
 #ifndef CHECK_DEPTH  
     } catch(const char* error1){

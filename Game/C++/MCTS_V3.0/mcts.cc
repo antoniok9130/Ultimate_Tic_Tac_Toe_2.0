@@ -166,8 +166,10 @@ void getMCTSMove(State* s, int& global, int& local, const unsigned int& numItera
     }
     global = mostVisitedChild->getGlobal();
     local = mostVisitedChild->getLocal();
-    cout << "w: " << mostVisitedChild->getNumWins() << "  v: " << mostVisitedChild->getNumVisits() << endl;
-    cout << "Confidence:  " << (double(mostVisitedChild->getNumWins())/mostVisitedChild->getNumVisits()) << endl;
+#ifndef GENERATE_MODE
+   cout << "w: " << mostVisitedChild->getNumWins() << "  v: " << mostVisitedChild->getNumVisits() << endl;
+   cout << "Confidence:  " << (double(mostVisitedChild->getNumWins())/mostVisitedChild->getNumVisits()) << endl;
+#endif
 //     child = s->getChildren();
 //     cout << child << " " << s->getNumChildren() << endl;
 //     State* onlyChild = new State{mostVisitedChild};
@@ -186,11 +188,11 @@ bool isWin(State* s, int& global, int& local){
     if (IS_FILLED(board, local)){ // Next Quadrant is already filled
         boardP = s->getBoard();
         for (int i = 0; i<9; ++i){
-            if (IS_EMPTY(board, i) && check2InRow(boardP, i)){
+            if (IS_EMPTY(board, i) && check2InRow(i, boardP)){
                 quadrant = s->getQuadrant(i, 0) | s->getQuadrant(i, 1);
                 quadrantP = s->getQuadrant(i);
                 for (int j = 0; j<9; ++j){
-                    if (IS_EMPTY(quadrant, j) && check2InRow(quadrantP, j)){
+                    if (IS_EMPTY(quadrant, j) && check2InRow(j, quadrantP)){
                         global = i;
                         local = j;
                         return true;
@@ -203,7 +205,7 @@ bool isWin(State* s, int& global, int& local){
         quadrant = s->getQuadrant(local, 0) | s->getQuadrant(local, 1);
         quadrantP = s->getQuadrant(local);
         for (int i = 0; i<9; ++i){
-            if (IS_EMPTY(quadrant, i) && check2InRow(quadrantP, i)){
+            if (IS_EMPTY(quadrant, i) && check2InRow(i, quadrantP)){
                 global = local;
                 local = i;
                 return true;
