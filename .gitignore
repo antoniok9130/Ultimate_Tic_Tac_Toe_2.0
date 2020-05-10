@@ -10,3 +10,11 @@ Game/Cython/build/*
 Model/Pytorch/Data/*.c
 Model/Pytorch/Data/*.pyd
 Model/Pytorch/Data/build/
+*ipynb_checkpoint*
+.ignore/
+*.o
+*.d
+*.so
+*.dll
+*.tar
+*.zip
