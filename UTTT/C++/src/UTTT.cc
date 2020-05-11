@@ -26,6 +26,7 @@ bool UTTT::empty(){ return ((n1 | n2 | n3) & 0x1fffffffffffff) == 0; }
 #define GET_BOARD(p) ((p ? n2 : n1) >> 54)
 #define GET_BOARD_P1 (n1 >> 54)
 #define GET_BOARD_P2 (n2 >> 54)
+#define GET_BOARD_OR ((n1 | n2) >> 54)
 #define GET_CURRENT_PLAYER ((n3 >> 62) & 1)
 
 int UTTT::getCurrentPlayer(){ return GET_CURRENT_PLAYER; }
@@ -123,7 +124,7 @@ unsigned int UTTT::getLocal(){
 bool UTTT::setMove(const unsigned long long quadrant,
                    const unsigned long long local){
     if (quadrant > 8 || local > 8){
-        throw runtime_error("Invalid global, local:  setMove");
+        throw runtime_error("Invalid quadrant, local:  setMove");
     }
 
     // clear global and local bits
@@ -146,8 +147,9 @@ bool UTTT::setMove(const unsigned long long quadrant,
 
 bool UTTT::updateBoard(const unsigned int global,
                        const unsigned int local){
-    if (IS_EMPTY(GET_BOARD_P1 | GET_BOARD_P2, global)){
-        if (check3InRow(getQuadrant(global), local)){
+    if (IS_EMPTY(GET_BOARD_OR, global)){
+        unsigned int quadrant = getQuadrant(global);
+        if (check3InRow(quadrant, local)){
             bool player = GET_CURRENT_PLAYER;
             if (player){
                 n2 |= 1ull << (54+global);
@@ -183,11 +185,29 @@ bool UTTT::updateBoard(const unsigned int global,
         }
     }
     else {
-        cout << *this << endl;
-        cout << endl << bitset<64>(n1) << endl;
-        cout << bitset<64>(n2) << endl;
-        cout << bitset<64>(n3) << endl;
-        cout << global << " " << local << endl << endl;
+        cout << *this << endl << endl;
+
+        cout << "n1: " << (n1 >> 63) << " ";
+        for (int i = 54; i >= 0; i -= 9){
+            cout << bitset<9>((n1 >> i) & 0x1FF) << " ";
+        }
+        cout << endl;
+
+        cout << "n2: " << (n2 >> 63) << " ";
+        for (int i = 54; i >= 0; i -= 9){
+            cout << bitset<9>((n2 >> i) & 0x1FF) << " ";
+        }
+        cout << endl;
+
+        cout << "n3: " << (n3 >> 63) << " ";
+        cout << ((n3 >> 62) & 1) << " ";
+        cout << ((n3 >> 58) & 0xF) << " ";
+        cout << ((n3 >> 54) & 0xF) << " ";
+        for (int i = 45; i >= 0; i -= 9){
+            cout << bitset<9>((n3 >> i) & 0x1FF) << " ";
+        }
+        cout << endl;
+
         throw runtime_error("Trying to set move in filled quadrant");
     }
     return false;

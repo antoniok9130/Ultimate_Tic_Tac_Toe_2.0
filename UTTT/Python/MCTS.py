@@ -14,14 +14,14 @@ lib.MCTS_setParent.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 
 lib.MCTS_getNumChildren.argtypes = [ctypes.c_void_p]
 
-lib.MCTS_setMove.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_uint64]
+lib.MCTS_makeMove.argtypes = [ctypes.c_void_p]
 
 lib.MCTS_getNumWins.argtypes = [ctypes.c_void_p]
 lib.MCTS_getNumWins.restype = ctypes.c_uint64
 lib.MCTS_getNumVisits.argtypes = [ctypes.c_void_p]
 lib.MCTS_getNumVisits.restype = ctypes.c_uint64
-lib.MCTS_incrementWins.argtypes = [ctypes.c_void_p]
-lib.MCTS_incrementVisits.argtypes = [ctypes.c_void_p]
+lib.MCTS_incrementWins.argtypes = [ctypes.c_void_p, ctypes.c_int32]
+lib.MCTS_incrementVisits.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 
 lib.MCTS_select.argtypes = [ctypes.c_void_p]
 lib.MCTS_select.restype = ctypes.c_void_p
@@ -29,6 +29,10 @@ lib.MCTS_expand.argtypes = [ctypes.c_void_p]
 lib.MCTS_expand.restype = ctypes.c_void_p
 lib.MCTS_simulate.argtypes = [ctypes.c_void_p]
 lib.MCTS_backprop.argtypes = [ctypes.c_void_p, ctypes.c_int32]
+lib.MCTS_select_expand.argtypes = [ctypes.c_void_p]
+lib.MCTS_select_expand.restype = ctypes.c_void_p
+lib.MCTS_runIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
+lib.MCTS_runParallelIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 
 
 class MCTS(UTTT):
@@ -56,15 +60,6 @@ class MCTS(UTTT):
         return lib.MCTS_getNumChildren(self.obj)
 
     @property
-    def move(self):
-        return (lib.UTTT_getGlobal(self.obj), lib.UTTT_getLocal(self.obj))
-
-    @move.setter
-    def move(self, move):
-        g, l = move  # noqa: E741
-        return lib.MCTS_setMove(self.obj, g, l)
-
-    @property
     def num_wins(self):
         return lib.MCTS_getNumWins(self.obj)
 
@@ -72,11 +67,15 @@ class MCTS(UTTT):
     def num_visits(self):
         return lib.MCTS_getNumVisits(self.obj)
 
-    def increment_wins(self):
-        lib.MCTS_incrementWins(self.obj)
+    def increment_wins(self, amount=1):
+        lib.MCTS_incrementWins(self.obj, amount)
 
-    def increment_visits(self):
-        lib.MCTS_incrementVisits(self.obj)
+    def increment_visits(self, amount=1):
+        lib.MCTS_incrementVisits(self.obj, amount)
+
+    def make_move(self):
+        lib.MCTS_makeMove(self.obj)
+        return self.move
 
     def select(self):
         return MCTS(lib.MCTS_select(self.obj))
@@ -89,3 +88,12 @@ class MCTS(UTTT):
 
     def backprop(self, winner):
         return lib.MCTS_backprop(self.obj, winner)
+
+    def select_expand(self):
+        return MCTS(lib.MCTS_select_expand(self.obj))
+
+    def runIterations(self, numIterations):
+        lib.MCTS_runIterations(self.obj, numIterations)
+
+    def runParallelIterations(self, numIterations):
+        lib.MCTS_runParallelIterations(self.obj, numIterations)

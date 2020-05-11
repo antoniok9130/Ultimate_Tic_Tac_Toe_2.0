@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Ofast -std=c++17 -fPIC -shared
+CXXFLAGS = -Ofast -g -std=c++17 -fPIC -shared -fopenmp
 LIB = libUTTT.so
 
 SOURCES = $(wildcard src/*.cc)

@@ -1,37 +1,37 @@
+#include <cassert>
 #include <bitset>
 #include <cmath>
 #include <ctime>
 #include <iostream>
+#include <utility>
 
 using namespace std;
 
 #include "../MCTS.h"
 
+int mcts_seed = time(NULL);
+inline int fastrand() {
+    mcts_seed = (214013 * mcts_seed + 2531011);
+    return (mcts_seed >> 16) & 0x7FFF;
+}
+
 MCTS::MCTS(){
 
 }
 
-    /*
-    operator=
-    w {other->w},
-    v {other->v},
+MCTS::MCTS(MCTS& other):
+    UTTT(other),
+    parent {other.parent},
+    numChildren {other.numChildren},
     #ifdef STORE_UCT
     UCT {other->UCT},
     #endif
-    UCT = other.UCT;
-    #endif
-    */
-MCTS::MCTS(const MCTS& other):
-    UTTT(other),
-    parent {other.parent},
-    children {other.children},
-    numChildren {other.numChildren},
     w {other.w},
-    v {other.v}
-    #ifdef STORE_UCT
-    , UCT {other->UCT}
-    #endif
-    {}
+    v {other.v} {
+    auto c = this->children;
+    children = other.children;
+}
+
 MCTS::MCTS(MCTS* parent, const unsigned int global, const unsigned int local):
     UTTT(*parent),
     parent {parent} {
@@ -40,17 +40,26 @@ MCTS::MCTS(MCTS* parent, const unsigned int global, const unsigned int local):
 }
 
 
-// UTTT& UTTT::operator=(const UTTT& other){
-//     children = other.children;
-//     numChildren = other.numChildren;
+MCTS& MCTS::operator=(const MCTS& other){
 
-//     parent = other.parent;
-//     n1 = other.n1;
-//     n2 = other.n2;
-//     n3 = other.n3;
+    parent = other.parent;
+    numChildren = other.numChildren;
 
-//     return *this;
-// }
+    auto c = this->children;
+    children = other.children;
+
+    n1 = other.n1;
+    n2 = other.n2;
+    n3 = other.n3;
+
+    w = other.w;
+    v = other.v;
+#ifdef STORE_UCT
+    UCT = other.UCT;
+#endif
+
+    return *this;
+}
 
 
 void MCTS::init(MCTS* parent, const unsigned int global,
@@ -73,32 +82,10 @@ void MCTS::allocateChildren(int numChildren){
     children = std::shared_ptr<MCTS[]>(new MCTS[numChildren]);
 }
 
-bool MCTS::setMove(const unsigned long long global,
-                   const unsigned long long local){
-    if (numChildren > 0){
-        for (int i = 0; i<numChildren; ++i){
-            if (children[i].getGlobal() == global &&
-                children[i].getLocal() == local){
-                *this = children[i];
-                parent = nullptr;
-                for (i = 0; i<numChildren; ++i){
-                    children[i].parent = this;
-                }
-                return false;
-            }
-        }
-    }
-    return UTTT::setMove(global, local);
-}
-
-unsigned long MCTS::getNumWins(){
-    return w;
-}
-unsigned long MCTS::getNumVisits(){
-    return v;
-}
-void MCTS::incrementWins(){ ++w; }
-void MCTS::incrementVisits(){ ++v; }
+unsigned long MCTS::getNumWins(){ return w; }
+unsigned long MCTS::getNumVisits(){ return v; }
+void MCTS::incrementWins(int amount){ w += amount; }
+void MCTS::incrementVisits(int amount){ v += amount; }
 
 #ifdef STORE_UCT
 void UTTT::setUCTbit(){
@@ -113,11 +100,54 @@ double& UTTT::getUCT(){
 }
 #endif
 
+MCTS* MCTS::bestChild(){
+    // Get Child with Max UCT
+#ifndef STORE_UCT
+    double s2lnpv = sqrt(2*log(this->v));
+#endif
+    MCTS* child = children.get();
+    MCTS* bestChild = nullptr;
+    double maxUCT = 0, UCT = 0;
+    for (int i = 0; i < numChildren; ++i){
+#ifndef STORE_UCT
+        unsigned long v = child->getNumVisits();
+        UCT = v == 0 ? fastrand() : (child->getNumWins()+sqrt(v)*s2lnpv)/v;
+#else
+        UCT = child->getUCT();
+#endif
+        if (UCT > maxUCT){
+            maxUCT = UCT;
+            bestChild = child;
+        }
+        ++child;
+    }
+    return bestChild;
+}
 
-int mcts_seed = time(NULL);
-inline int fastrand() {
-    mcts_seed = (214013 * mcts_seed + 2531011);
-    return (mcts_seed >> 16) & 0x7FFF;
+MCTS* MCTS::mostVisitedChild(){
+    // Get Child with most visits
+    MCTS* child = children.get();
+    MCTS* mostVisitedChild = nullptr;
+    double maxVisits = 0;
+    for (int i = 0; i < numChildren; ++i){
+        if (child->v > maxVisits){
+            maxVisits = child->v;
+            mostVisitedChild = child;
+        }
+        ++child;
+    }
+    return mostVisitedChild;
+}
+
+void MCTS::makeMove(){
+    MCTS* b = mostVisitedChild();
+    if (b){
+        *this = *b;
+        parent = nullptr;
+        for (int i = 0; i < numChildren; ++i){
+            children[i].parent = this;
+        }
+    }
 }
 
 bool check2InRow(const int& position, const unsigned int& quadrant){
@@ -163,26 +193,7 @@ bool check2InRow(const int& position, const unsigned int& quadrant){
 MCTS* MCTS::select(MCTS* m){
     if (m->getWinner() == N){
         while (m->getNumChildren() > 0){
-            // Get Child with Max UCT
-#ifndef STORE_UCT
-            double s2lnpv = sqrt(2*log(m->getNumVisits()));
-#endif
-            MCTS* child = m->getChildren().get();
-            const int numChildren = m->getNumChildren();
-            double maxUCT = 0, UCT = 0;
-            for (int i = 0; i < numChildren; ++i){
-#ifndef STORE_UCT
-                unsigned long v = child->getNumVisits();
-                UCT = v == 0 ? fastrand() : (child->getNumWins()+sqrt(v)*s2lnpv)/v;
-#else
-                UCT = child->getUCT();
-#endif
-                if (UCT > maxUCT){
-                    maxUCT = UCT;
-                    m = child;
-                }
-                ++child;
-            }
+            m = m->bestChild();
         }
     }
     return m;
@@ -340,4 +351,56 @@ void MCTS::backprop(MCTS* m, int winner){
 #endif
         current = current->getParent();
     }
+}
+
+
+MCTS* MCTS::select_expand(MCTS* m){ return MCTS::expand(MCTS::select(m)); }
+
+void MCTS::runIterations(MCTS* m, int numIterations){
+    for (int i = 0; i < numIterations; ++i){
+        MCTS* e = MCTS::select_expand(m);
+        MCTS::backprop(e, MCTS::simulate(e));
+    }
+}
+
+void MCTS::runParallelIterations(MCTS* m, int numIterations){
+    if (m->getNumChildren() == 0){
+        MCTS::runIterations(m, 1);
+    }
+    if (m->getNumChildren() == 1){
+        MCTS::runParallelIterations(m->getChildren().get(), numIterations);
+        return;
+    }
+
+    const int numChildren = m->getNumChildren();
+    MCTS* children = m->getChildren().get();
+    MCTS* roots = new MCTS[numChildren];
+
+    for (int i = 0; i < numChildren; ++i){
+        roots[i] = *m;
+        roots[i].setParent(nullptr);
+        roots[i].incrementWins(-roots[i].getNumWins());  // set to zero
+        roots[i].incrementVisits(-roots[i].getNumWins());  // set to zero
+        children[i].setParent(roots+i);
+    }
+
+    numIterations /= (numChildren - 1);
+
+    #pragma omp parallel num_threads(8)
+    {
+        #pragma omp for
+        for (int i = 0; i < numChildren; ++i){
+            MCTS::runIterations(children+i, numIterations);
+        }
+    }
+
+    for (int i = 0; i < numChildren; ++i){
+        m->incrementWins(roots[i].getNumWins());
+        m->incrementVisits(roots[i].getNumWins());
+        children[i].setParent(m);
+    }
+
+    MCTS::runIterations(m, 100);
+
+    delete[] roots;
 }

@@ -21,10 +21,10 @@ class MCTS: public UTTT {
 
     public:
         MCTS();
-        MCTS(const MCTS&);
+        MCTS(MCTS&);
         MCTS(MCTS* parent, const unsigned int global, const unsigned int local);
 
-        // UTTT& operator=(const UTTT& other);
+        MCTS& operator=(const MCTS& other);
 
         void init(MCTS* parent, const unsigned int global,
                                 const unsigned int local);
@@ -36,8 +36,9 @@ class MCTS: public UTTT {
         std::shared_ptr<MCTS[]> getChildren();
         void allocateChildren(int numChildren);
 
-        bool setMove(const unsigned long long global,
-                     const unsigned long long local) override;
+        MCTS* bestChild();
+        MCTS* mostVisitedChild();
+        void makeMove();
 
 #ifdef STORE_UCT
         void setUCTbit();
@@ -46,12 +47,15 @@ class MCTS: public UTTT {
 
         unsigned long getNumWins();
         unsigned long getNumVisits();
-        void incrementWins();
-        void incrementVisits();
-
+        void incrementWins(int amount = 1);
+        void incrementVisits(int amount = 1);
 
         static MCTS* select(MCTS*);
         static MCTS* expand(MCTS*);
         static int simulate(MCTS*);
         static void backprop(MCTS*, int winner);
+
+        static MCTS* select_expand(MCTS*);
+        static void runIterations(MCTS*, int numIterations);
+        static void runParallelIterations(MCTS*, int numIterations);
 };

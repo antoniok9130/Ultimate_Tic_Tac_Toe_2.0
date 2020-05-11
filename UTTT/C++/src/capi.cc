@@ -79,18 +79,19 @@ extern "C" {
 
     int MCTS_getNumChildren(MCTS* m){ return m->getNumChildren(); }
 
-    int MCTS_setMove(MCTS* m, const unsigned long long global, const unsigned long long local){
-        return m->setMove(global, local);
-    }
+    void MCTS_makeMove(MCTS* m){ m->makeMove(); }
 
     unsigned long MCTS_getNumWins(MCTS* m){ return m->getNumWins(); }
     unsigned long MCTS_getNumVisits(MCTS* m){ return m->getNumVisits(); }
-    void MCTS_incrementWins(MCTS* m){ m->incrementWins(); }
-    void MCTS_incrementVisits(MCTS* m){ m->incrementVisits(); }
+    void MCTS_incrementWins(MCTS* m, int amount){ m->incrementWins(amount); }
+    void MCTS_incrementVisits(MCTS* m, int amount){ m->incrementVisits(amount); }
 
     MCTS* MCTS_select(MCTS* m){ return MCTS::select(m); }
     MCTS* MCTS_expand(MCTS* m){ return MCTS::expand(m); }
     int MCTS_simulate(MCTS* m){ return MCTS::simulate(m); }
     void MCTS_backprop(MCTS* m, int winner){ MCTS::backprop(m, winner); }
 
+    MCTS* MCTS_select_expand(MCTS* m){ return MCTS::select_expand(m); }
+    void MCTS_runIterations(MCTS* m, int numIterations){ return MCTS::runIterations(m, numIterations); }
+    void MCTS_runParallelIterations(MCTS* m, int numIterations){ return MCTS::runParallelIterations(m, numIterations); }
 }

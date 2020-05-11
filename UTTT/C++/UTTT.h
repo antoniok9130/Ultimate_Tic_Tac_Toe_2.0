@@ -84,8 +84,8 @@ class UTTT {
         int getPlayerAt(const unsigned int quadrant,
                         const unsigned int local);
 
-        virtual bool setMove(const unsigned long long quadrant,
-                             const unsigned long long local);
+        bool setMove(const unsigned long long quadrant,
+                     const unsigned long long local);
 
         bool updateBoard(const unsigned int quadrant,
                          const unsigned int local);

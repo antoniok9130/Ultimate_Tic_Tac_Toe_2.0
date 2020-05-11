@@ -48,16 +48,20 @@ extern "C" {
 
     int MCTS_getNumChildren(MCTS*);
 
-    int MCTS_setMove(MCTS*, const unsigned long long global, const unsigned long long local);
+    void MCTS_makeMove(MCTS* m);
 
     unsigned long MCTS_getNumWins(MCTS*);
     unsigned long MCTS_getNumVisits(MCTS*);
-    void MCTS_incrementWins(MCTS*);
-    void MCTS_incrementVisits(MCTS*);
+    void MCTS_incrementWins(MCTS*, int amount);
+    void MCTS_incrementVisits(MCTS*, int amount);
 
     MCTS* MCTS_select(MCTS*);
     MCTS* MCTS_expand(MCTS*);
     int MCTS_simulate(MCTS*);
     void MCTS_backprop(MCTS*, int winner);
+
+    MCTS* MCTS_select_expand(MCTS*);
+    void MCTS_runIterations(MCTS*, int numIterations);
+    void MCTS_runParallelIterations(MCTS*, int numIterations);
 
 }
