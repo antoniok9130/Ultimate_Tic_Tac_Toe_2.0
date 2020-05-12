@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "../capi.h"
+#include "../hardcoded.h"
 
 using namespace std;
 
@@ -101,4 +102,10 @@ extern "C" {
     MCTS* MCTS_select_expand(MCTS* m){ return MCTS::select_expand(m); }
     void MCTS_runIterations(MCTS* m, int numIterations){ return MCTS::runIterations(m, numIterations); }
     void MCTS_runParallelIterations(MCTS* m, int numIterations){ return MCTS::runParallelIterations(m, numIterations); }
+
+    /*********************************************************************************************/
+
+    int MCTS_getHardcodedMove(const unsigned int quadrant, const unsigned int local){
+        return getHardcodedMove(quadrant, local);
+    }
 }

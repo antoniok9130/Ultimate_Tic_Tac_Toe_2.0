@@ -102,13 +102,16 @@ double& UTTT::getUCT(){
 #endif
 
 MCTS* MCTS::bestChild(){
+    if (numChildren == 1){
+        return children.get();
+    }
     // Get Child with Max UCT
 #ifndef STORE_UCT
     double s2lnpv = sqrt(2*log(this->v));
 #endif
     MCTS* child = children.get();
     MCTS* bestChild = nullptr;
-    double maxUCT = 0, UCT = 0;
+    double maxUCT = -1, UCT = 0;
     for (int i = 0; i < numChildren; ++i){
 #ifndef STORE_UCT
         unsigned long v = child->getNumVisits();

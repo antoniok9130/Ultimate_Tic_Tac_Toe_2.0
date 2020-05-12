@@ -39,6 +39,11 @@ lib.MCTS_select_expand.restype = ctypes.c_void_p
 lib.MCTS_runIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 lib.MCTS_runParallelIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 
+lib.MCTS_getHardcodedMove.argtypes = [
+    ctypes.c_uint32,
+    ctypes.c_uint32,
+]
+
 
 class MCTS(UTTT):
     def __init__(self, obj=None):
@@ -105,3 +110,7 @@ class MCTS(UTTT):
 
     def runParallelIterations(self, numIterations):
         lib.MCTS_runParallelIterations(self.obj, numIterations)
+
+
+def getHardcodedMove(g, l):
+    return lib.MCTS_getHardcodedMove(g, l)

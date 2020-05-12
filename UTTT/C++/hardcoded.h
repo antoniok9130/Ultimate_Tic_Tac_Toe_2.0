@@ -1,3 +1,3 @@
 #pragma once
 
-void getHardcodedMove(int* global, int* local);
+int getHardcodedMove(const unsigned int global, const unsigned int local);

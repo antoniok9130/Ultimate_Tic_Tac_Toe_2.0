@@ -11,12 +11,10 @@ using namespace std;
 
 int main(){
     MCTS m;
-    cout << m.getCurrentPlayer() << " == " << P2 << endl;
-    // MCTS::runParallelIterations(&m, 2000000);
-    m.chooseMove(4, 4);
-    cout << m.getCurrentPlayer() << " == " << P1 << endl;
-    cout << m << endl;
-    m.chooseMove(4, 6);
-    cout << m << endl;
-    cout << m.getPlayerAt(4, 4) << endl;
+    while (m.getWinner() == N){
+        MCTS::runIterations(&m, 10000);
+        m.makeMove();
+    }
+    cout << m << endl << endl;
+    cout << m.getWinner() << endl;
 }

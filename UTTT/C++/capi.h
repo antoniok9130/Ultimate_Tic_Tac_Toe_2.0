@@ -67,4 +67,8 @@ extern "C" {
     void MCTS_runIterations(MCTS*, int numIterations);
     void MCTS_runParallelIterations(MCTS*, int numIterations);
 
+    /*********************************************************************************************/
+
+    int MCTS_getHardcodedMove(const unsigned int quadrant, const unsigned int local);
+
 }

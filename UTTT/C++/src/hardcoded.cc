@@ -107,20 +107,16 @@ constexpr const int move_visit_counts[9][9][4][2] = {
     }
 };
 
-void getHardcodedMove(int& global, int& local){
+int getHardcodedMove(const unsigned int global, const unsigned int local){
     auto& counts = move_visit_counts[global][local];
     if (counts[0][0] > 1){
         int num = rand() % counts[0][1];
         for (int i = 1; i <= counts[0][0]; ++i){
             if (counts[i][1] < num){
-                global = counts[i][0] / 9;
-                local = counts[i][0] % 9;
-                return;
+                return counts[i][0];
             }
             num -= counts[i][1];
         }
     }
-    global = counts[1][0] / 9;
-    local = counts[1][0] % 9;
-    return;
+    return counts[1][0];
 }
