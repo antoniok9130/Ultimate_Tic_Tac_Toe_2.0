@@ -15,6 +15,11 @@ lib.MCTS_setParent.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 lib.MCTS_getNumChildren.argtypes = [ctypes.c_void_p]
 
 lib.MCTS_makeMove.argtypes = [ctypes.c_void_p]
+lib.MCTS_chooseMove.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_uint32,
+    ctypes.c_uint32,
+]
 
 lib.MCTS_getNumWins.argtypes = [ctypes.c_void_p]
 lib.MCTS_getNumWins.restype = ctypes.c_uint64
@@ -76,6 +81,9 @@ class MCTS(UTTT):
     def make_move(self):
         lib.MCTS_makeMove(self.obj)
         return self.move
+
+    def choose_move(self, g, l):
+        lib.MCTS_chooseMove(self.obj, g, l)
 
     def select(self):
         return MCTS(lib.MCTS_select(self.obj))

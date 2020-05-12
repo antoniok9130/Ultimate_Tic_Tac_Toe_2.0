@@ -39,6 +39,7 @@ class MCTS: public UTTT {
         MCTS* bestChild();
         MCTS* mostVisitedChild();
         void makeMove();
+        void chooseMove(const unsigned int quadrant, const unsigned int local);
 
 #ifdef STORE_UCT
         void setUCTbit();

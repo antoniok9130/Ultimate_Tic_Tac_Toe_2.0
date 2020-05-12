@@ -1,4 +1,4 @@
-#include <cassert>
+#include <exception>
 #include <bitset>
 #include <cmath>
 #include <ctime>
@@ -16,7 +16,7 @@ inline int fastrand() {
 }
 
 MCTS::MCTS(){
-
+    switchPlayer();
 }
 
 MCTS::MCTS(MCTS& other):
@@ -35,7 +35,8 @@ MCTS::MCTS(MCTS& other):
 MCTS::MCTS(MCTS* parent, const unsigned int global, const unsigned int local):
     UTTT(*parent),
     parent {parent} {
-    setCurrentPlayer(1-parent->getCurrentPlayer());
+    // setCurrentPlayer(1-parent->getCurrentPlayer());
+    switchPlayer();
     setMove(global, local);
 }
 
@@ -68,7 +69,7 @@ void MCTS::init(MCTS* parent, const unsigned int global,
     n1 = parent->n1;
     n2 = parent->n2;
     n3 = parent->n3;
-    setCurrentPlayer(1-parent->getCurrentPlayer());
+    switchPlayer();
     setMove(global, local);
 }
 
@@ -140,6 +141,9 @@ MCTS* MCTS::mostVisitedChild(){
 }
 
 void MCTS::makeMove(){
+    if (numChildren == 0){
+        MCTS::select_expand(this);
+    }
     MCTS* b = mostVisitedChild();
     if (b){
         *this = *b;
@@ -147,6 +151,25 @@ void MCTS::makeMove(){
         for (int i = 0; i < numChildren; ++i){
             children[i].parent = this;
         }
+    }
+}
+void MCTS::chooseMove(const unsigned int quadrant, const unsigned int local){
+    if (isLegal(quadrant, local)){
+        if (numChildren == 0){
+            MCTS::select_expand(this);
+        }
+        for (int i = 0; i < numChildren; ++i){
+            if (children[i].getGlobal() == quadrant &&
+                children[i].getLocal() == local){
+                *this = children[i];
+                parent = nullptr;
+                for (i = 0; i < numChildren; ++i){
+                    children[i].parent = this;
+                }
+                return;
+            }
+        }
+        throw std::runtime_error("Invalid Move.");
     }
 }
 
@@ -200,11 +223,7 @@ MCTS* MCTS::select(MCTS* m){
 }
 
 MCTS* MCTS::expand(MCTS* m){
-    if (m->getNumChildren() == 0){
-        if (m->getWinner() != N || (!m->empty() && m->getNumVisits() == 0)){
-            return m;
-        }
-
+    if (m->getWinner() == N && m->getNumChildren() == 0){  //  || (!m->empty() && m->getNumVisits() == 0)
         unsigned int board = m->getBoard(0) | m->getBoard(1);
         const unsigned int l = m->getLocal();
         if (!m->empty() && IS_EMPTY(board, l)){

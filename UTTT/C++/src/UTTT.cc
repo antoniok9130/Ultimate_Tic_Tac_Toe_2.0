@@ -92,8 +92,7 @@ int UTTT::getPlayerAt(const unsigned int global){
     }
     return N;
 }
-int UTTT::getPlayerAt(const unsigned int quadrant,
-                      const unsigned int local){
+int UTTT::getPlayerAt(const unsigned int quadrant, const unsigned int local){
     if (quadrant > 8 || local > 8){
         throw runtime_error("Invalid global, local:  getPlayerAt");
     }
@@ -104,6 +103,22 @@ int UTTT::getPlayerAt(const unsigned int quadrant,
         return P2;
     }
     return N;
+}
+bool UTTT::isLegal(const unsigned int quadrant, const unsigned int local){
+    if (empty()){
+        return true;
+    }
+    if (getWinner() != N){
+        return false;
+    }
+    if (getPlayerAt(quadrant, local) != N || getPlayerAt(quadrant) != N){
+        return false;
+    }
+    unsigned int last_local = getLocal();
+    if (quadrant == last_local || getPlayerAt(last_local) != N){
+        return true;
+    }
+    return false;
 }
 
 unsigned int UTTT::getBoard(){
@@ -123,8 +138,8 @@ unsigned int UTTT::getLocal(){
 
 bool UTTT::setMove(const unsigned long long quadrant,
                    const unsigned long long local){
-    if (quadrant > 8 || local > 8){
-        throw runtime_error("Invalid quadrant, local:  setMove");
+    if (quadrant > 8 || local > 8 || !isLegal(quadrant, local)){
+        throw runtime_error("Attempting to set illegal move.");
     }
 
     // clear global and local bits

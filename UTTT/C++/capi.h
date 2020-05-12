@@ -26,6 +26,8 @@ extern "C" {
     int UTTT_getPlayerAt(UTTT*, const unsigned int quadrant);
     int UTTT_getPlayerAtQuadrant(UTTT*, const unsigned int quadrant, const unsigned int local);
 
+    int UTTT_isLegal(UTTT*, const unsigned int quadrant, const unsigned int local);
+
     int UTTT_setMove(UTTT*, const unsigned long long quadrant, const unsigned long long local);
     int UTTT_updateBoard(UTTT*, const unsigned long long quadrant, const unsigned long long local);
 
@@ -49,6 +51,7 @@ extern "C" {
     int MCTS_getNumChildren(MCTS*);
 
     void MCTS_makeMove(MCTS* m);
+    void MCTS_setMove(MCTS* m, const unsigned long long quadrant, const unsigned long long local);
 
     unsigned long MCTS_getNumWins(MCTS*);
     unsigned long MCTS_getNumVisits(MCTS*);

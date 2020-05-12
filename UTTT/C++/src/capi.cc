@@ -36,6 +36,10 @@ extern "C" {
         return u->getPlayerAt(quadrant, local);
     }
 
+    int UTTT_isLegal(UTTT* u, const unsigned int quadrant, const unsigned int local){
+        return u->isLegal(quadrant, local);
+    }
+
     int UTTT_setMove(UTTT* u, const unsigned long long quadrant, const unsigned long long local){
         return u->setMove(quadrant, local);
     }
@@ -80,6 +84,9 @@ extern "C" {
     int MCTS_getNumChildren(MCTS* m){ return m->getNumChildren(); }
 
     void MCTS_makeMove(MCTS* m){ m->makeMove(); }
+    void MCTS_chooseMove(MCTS* m, const unsigned long long quadrant, const unsigned long long local){
+        m->chooseMove(quadrant, local);
+    }
 
     unsigned long MCTS_getNumWins(MCTS* m){ return m->getNumWins(); }
     unsigned long MCTS_getNumVisits(MCTS* m){ return m->getNumVisits(); }

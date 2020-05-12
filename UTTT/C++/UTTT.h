@@ -84,6 +84,9 @@ class UTTT {
         int getPlayerAt(const unsigned int quadrant,
                         const unsigned int local);
 
+        bool isLegal(const unsigned int quadrant,
+                     const unsigned int local);
+
         bool setMove(const unsigned long long quadrant,
                      const unsigned long long local);
 

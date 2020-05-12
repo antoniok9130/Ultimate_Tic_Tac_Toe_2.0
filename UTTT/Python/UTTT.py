@@ -44,6 +44,13 @@ lib.UTTT_getPlayerAtQuadrant.argtypes = [
     ctypes.c_uint32,
 ]
 
+lib.UTTT_isLegal.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_uint32,
+    ctypes.c_uint32,
+]
+lib.UTTT_isLegal.restype = ctypes.c_bool
+
 lib.UTTT_setMove.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_uint64]
 lib.UTTT_updateBoard.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_uint64]
 
@@ -113,6 +120,9 @@ class UTTT:
             return lib.UTTT_getPlayerAtQuadrant(self.obj, loc[0], loc[1])
         else:
             return lib.UTTT_getPlayerAt(self.obj, loc)
+
+    def is_legal(self, g, l):
+        return lib.UTTT_isLegal(self.obj, g, l)
 
     @property
     def move(self):
