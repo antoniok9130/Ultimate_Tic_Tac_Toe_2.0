@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
 import sys
 
 from PyQt5.QtGui import QPainter, QPen, QBrush, QColor, QFont
 from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtWidgets import QWidget
 
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
-
-from UTTT import UTTT
+from ..UTTT import UTTT
 
 P1 = UTTT.P1
 P2 = UTTT.P2

@@ -1,19 +1,7 @@
 # -*- coding: utf-8 -*-
 import ctypes
-import os
 
-file_dir = os.path.dirname(os.path.abspath(__file__))
-
-lib = ctypes.CDLL(os.path.join(file_dir, "..", "C++", "libUTTT.so"), mode=1)
-
-# try:
-#     if "Linux" in esmfos:
-#     _ESMF = ctypes.CDLL(libsdir+'/libesmf.so',mode=ctypes.RTLD_GLOBAL)
-#     else:
-#     _ESMF = numpy.ctypeslib.load_library('libesmf',libsdir)
-# except:
-#     traceback.print_exc(file=sys.stdout)
-#     sys.exit(ESMP_ERROR_SHAREDLIB)
+lib = ctypes.CDLL("libUTTT.so", mode=1)
 
 
 # Signatures

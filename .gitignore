@@ -18,3 +18,6 @@ Model/Pytorch/Data/build/
 *.dll
 *.tar
 *.zip
+*.spec
+dist/
+build/

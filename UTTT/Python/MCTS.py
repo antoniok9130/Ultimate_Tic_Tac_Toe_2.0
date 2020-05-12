@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import ctypes
 
-from UTTT import lib, UTTT
+from .UTTT import lib, UTTT
 
 
 # Signatures

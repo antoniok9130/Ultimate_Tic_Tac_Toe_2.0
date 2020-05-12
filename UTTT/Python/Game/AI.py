@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
-import sys
 from time import sleep
 
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
-
-from UTTT import UTTT
-from MCTS import getHardcodedMove
+from ..UTTT import UTTT
+from ..MCTS import getHardcodedMove
 
 P1 = UTTT.P1
 P2 = UTTT.P2

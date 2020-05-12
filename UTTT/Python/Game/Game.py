@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-import os
 import sys
 
 from PyQt5.QtWidgets import QApplication
 
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
+from .Human import HumanPlayer
+from .AI import MCTSPlayer
 
-from Human import HumanPlayer
-from AI import MCTSPlayer
-
-from MCTS import MCTS
-from UTTT import UTTT
+from ..MCTS import MCTS
+from ..UTTT import UTTT
 
 
 class Game:
@@ -55,7 +52,7 @@ class Game:
         return self.game.winner
 
 
-if __name__ == "__main__":
+def play():
     app = QApplication(sys.argv)
     game = Game(HumanPlayer, MCTSPlayer)
     game.start()
