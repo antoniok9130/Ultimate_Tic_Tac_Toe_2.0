@@ -2,4 +2,5 @@ numpy
 git+https://github.com/antoniojkim/multiprocessor.git
 git+https://github.com/antoniojkim/sandboxer.git
 git+https://github.com/antoniojkim/torchx.git
+PyQt5
 torch
