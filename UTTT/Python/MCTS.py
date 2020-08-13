@@ -37,7 +37,6 @@ lib.MCTS_backprop.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 lib.MCTS_select_expand.argtypes = [ctypes.c_void_p]
 lib.MCTS_select_expand.restype = ctypes.c_void_p
 lib.MCTS_runIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
-lib.MCTS_runParallelIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 
 lib.MCTS_getHardcodedMove.argtypes = [
     ctypes.c_uint32,
@@ -107,9 +106,6 @@ class MCTS(UTTT):
 
     def runIterations(self, numIterations):
         lib.MCTS_runIterations(self.obj, numIterations)
-
-    def runParallelIterations(self, numIterations):
-        lib.MCTS_runParallelIterations(self.obj, numIterations)
 
 
 def getHardcodedMove(g, l):

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <iostream>
 #include <memory>
 
@@ -7,14 +8,22 @@
 
 // #define STORE_UCT
 
+#if defined(ROOT_PARALLEL) && defined(_OPENMP)
+typedef std::atomic_ulong ULong;
+typedef std::atomic_int Int;
+#else
+typedef unsigned long ULong;
+typedef int Int;
+#endif
+
 class MCTS: public UTTT {
 
     MCTS* parent = nullptr;
     std::shared_ptr<MCTS[]> children = nullptr;
-    int numChildren = 0;
+    Int numChildren = 0;
 
-    unsigned long w = 0; // Number of Wins
-    unsigned long v = 0; // Number of Visits
+    ULong w = 0; // Number of Wins
+    ULong v = 0; // Number of Visits
 #ifdef STORE_UCT
     double UCT = 100;
 #endif
@@ -34,7 +43,7 @@ class MCTS: public UTTT {
 
         int getNumChildren();
         std::shared_ptr<MCTS[]> getChildren();
-        void allocateChildren(int numChildren);
+        bool allocateChildren(int numChildren);  // returns true iff allocated
 
         MCTS* bestChild();
         MCTS* mostVisitedChild();
@@ -58,5 +67,4 @@ class MCTS: public UTTT {
 
         static MCTS* select_expand(MCTS*);
         static void runIterations(MCTS*, int numIterations);
-        static void runParallelIterations(MCTS*, int numIterations);
 };

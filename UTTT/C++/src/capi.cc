@@ -101,7 +101,6 @@ extern "C" {
 
     MCTS* MCTS_select_expand(MCTS* m){ return MCTS::select_expand(m); }
     void MCTS_runIterations(MCTS* m, int numIterations){ return MCTS::runIterations(m, numIterations); }
-    void MCTS_runParallelIterations(MCTS* m, int numIterations){ return MCTS::runParallelIterations(m, numIterations); }
 
     /*********************************************************************************************/
 

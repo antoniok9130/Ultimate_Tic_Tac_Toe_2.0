@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-from time import sleep
+from time import time
 
-from ..UTTT import UTTT
 from ..MCTS import getHardcodedMove
+from .Player import Player
+from .UI import sleep
 
-P1 = UTTT.P1
-P2 = UTTT.P2
 
-
-class MCTSPlayer:
-    def __init__(self, game):
-        self.game = game
+class MCTSPlayer(Player):
+    def __init__(self, game, ui=False):
+        super().__init__(game, ui)
         self.first_turn = True
 
     def start_turn(self):
+        self.update()
+        sleep(0.1)
+
         if self.first_turn:
             self.first_turn = False
             if self.game.game.empty:
@@ -26,8 +27,20 @@ class MCTSPlayer:
 
             sleep(1)
         else:
+            start = time()
+
             # self.game.game.runParallelIterations(2500000)
-            self.game.game.runIterations(2000000)
+            self.game.game.runIterations(2500000)
+
+            end = time()
+
             self.game.game.make_move()
 
+            print("Thinking Time: ", (end - start), "seconds")
+            print(
+                f"Confidence:  {self.game.game.num_wins / self.game.game.num_visits:2%}"
+            )
+
+        self.update()
+        sleep(0.1)
         self.game.next()

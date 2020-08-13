@@ -1,6 +1,7 @@
 
 build:
 	cd UTTT/C++ && rm -f libUTTT.so && make
+.PHONY: build
 
 play: build
 	python -u UTTT/UTTT.py

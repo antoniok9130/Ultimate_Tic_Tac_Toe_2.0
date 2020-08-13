@@ -65,7 +65,6 @@ extern "C" {
 
     MCTS* MCTS_select_expand(MCTS*);
     void MCTS_runIterations(MCTS*, int numIterations);
-    void MCTS_runParallelIterations(MCTS*, int numIterations);
 
     /*********************************************************************************************/
 

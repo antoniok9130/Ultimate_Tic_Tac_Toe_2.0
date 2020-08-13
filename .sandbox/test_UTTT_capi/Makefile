@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Ofast -std=c++17 -Wall -MMD -Werror=vla -DDEBUG -I../../UTTT/C++/
+CXXFLAGS = -Ofast -std=c++17 -fopenmp -Wall -MMD -Werror=vla -DDEBUG -I../../UTTT/C++/
 EXEC = sandbox
 
 OBJECTS =  sandbox.o

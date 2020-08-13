@@ -12,9 +12,9 @@ from ..UTTT import UTTT
 
 class Game:
     def __init__(self, Player1, Player2):
-        self.player1 = Player1(self)
-        self.player2 = Player2(self)
         self.game = MCTS()
+        self.player1 = Player1(self, ui=True)
+        self.player2 = Player2(self, ui=False)
 
     def start(self):
         self.next()
