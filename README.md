@@ -2,7 +2,7 @@
 
 Ultimate Tic Tac Toe is a variation of the classic game Tic-Tac-Toe in which the game is played on a 9 by 9 board.
 
-![UTTT.gif](https://github.com/antoniojkim/Ultimate-Tic-Tac-Toe-Zero/tree/master/Images/UTTT.gif)
+![UTTT.gif](https://github.com/antoniojkim/Ultimate-Tic-Tac-Toe-Zero/blob/master/Images/UTTT.gif)
 
 The game logic was implemented in C++ for performance reasons and imported into python using ctypes to create a simple GUI using PyQT5.
 
