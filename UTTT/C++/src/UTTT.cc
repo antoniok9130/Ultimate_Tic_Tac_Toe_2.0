@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define F9 0x1ff // Gets first 9 bits
+#define F9 0x1ffUL // Gets first 9 bits
 
 #ifdef __UTTT_HAS_MEMBERS__
 
@@ -18,6 +18,14 @@ UTTT::UTTT(const UTTT& other):
     n1 {other.n1},
     n2 {other.n2},
     n3 {other.n3}{}
+
+
+UTTT& UTTT::operator=(const UTTT& other){
+    n1 = other.n1;
+    n2 = other.n2;
+    n3 = other.n3;
+    return *this;
+}
 
 
 bool UTTT::empty(){ return ((n1 | n2 | n3) & 0x1fffffffffffff) == 0; }
@@ -74,6 +82,20 @@ unsigned int UTTT::getQuadrant(const unsigned int quadrant, const int player){
     cerr << "Requested Quadrant: " << quadrant << endl;
     throw runtime_error("Invalid Quadrant requested");
 }
+void UTTT::setQuadrant(const unsigned int quadrant, const int player, const unsigned int newQuadrant){
+    if (quadrant < 3){
+        int s = (9 * (2 * quadrant + player));
+        n1 = (n1 & ~(F9 << s)) | ((newQuadrant & F9) << s);
+    }
+    else if (quadrant < 6){
+        int s = (9 * (2 * (quadrant - 3) + player));
+        n2 = (n2 & ~(F9 << s)) | ((newQuadrant & F9) << s);
+    }
+    else if (quadrant < 9){
+        int s = (9 * (2 * (quadrant - 6) + player));
+        n3 = (n3 & ~(F9 << s)) | ((newQuadrant & F9) << s);
+    }
+}
 
 int UTTT::getPlayerAt(const unsigned int global){
     if (global > 8){
@@ -126,6 +148,18 @@ unsigned int UTTT::getBoard(){
 }
 unsigned int UTTT::getBoard(const int player){
     return GET_BOARD(player) ;
+}
+void UTTT::setBoard(const int player, const unsigned int newBoard){
+    switch(player){
+        case 0:
+            n1 = (n1 & ~(F9 << 54)) | ((newBoard & F9) << 54);
+            break;
+        case 1:
+            n2 = (n2 & ~(F9 << 54)) | ((newBoard & F9) << 54);
+            break;
+        default:
+            break;
+    }
 }
 
 unsigned int UTTT::getGlobal(){

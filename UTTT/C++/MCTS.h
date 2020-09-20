@@ -67,4 +67,6 @@ class MCTS: public UTTT {
 
         static MCTS* select_expand(MCTS*);
         static void runIterations(MCTS*, int numIterations);
+
+        void save(const char* path, bool append=true);
 };

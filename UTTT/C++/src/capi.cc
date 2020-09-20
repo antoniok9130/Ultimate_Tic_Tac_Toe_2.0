@@ -3,6 +3,7 @@
 
 #include "../capi.h"
 #include "../hardcoded.h"
+#include "../utils.h"
 
 using namespace std;
 
@@ -73,6 +74,39 @@ extern "C" {
         return board;
     }
 
+    void UTTT_rotate(UTTT* uttt, int k, bool cw){
+        switch(k % 4){
+            case 1: {
+                if (cw){
+                    rotate_90_cw(*uttt);
+                }
+                else {
+                    rotate_90_ccw(*uttt);
+                }
+                break;
+            }
+            case 2: {
+                if (cw){
+                    rotate_180_cw(*uttt);
+                }
+                else {
+                    rotate_180_ccw(*uttt);
+                }
+                break;
+            }
+            case 3: {
+                if (cw){
+                    rotate_270_cw(*uttt);
+                }
+                else {
+                    rotate_270_ccw(*uttt);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
 
     /*********************************************************************************************/
 
@@ -104,7 +138,10 @@ extern "C" {
 
     /*********************************************************************************************/
 
-    int MCTS_getHardcodedMove(const unsigned int quadrant, const unsigned int local){
-        return getHardcodedMove(quadrant, local);
+    int MCTS_getHardcodedFirstMove(){
+        return getHardcodedFirstMove();
+    }
+    int MCTS_getHardcodedSecondMove(const unsigned int quadrant, const unsigned int local){
+        return getHardcodedSecondMove(quadrant, local);
     }
 }

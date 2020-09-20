@@ -40,6 +40,8 @@ extern "C" {
     int UTTT_check3InRow(const unsigned int quadrant, const unsigned int local);
     char* UTTT_printBoard(UTTT*);
 
+    void UTTT_rotate(UTTT*, int k, bool cw);
+
     /*********************************************************************************************/
 
     MCTS* new_MCTS();
@@ -68,6 +70,7 @@ extern "C" {
 
     /*********************************************************************************************/
 
-    int MCTS_getHardcodedMove(const unsigned int quadrant, const unsigned int local);
+    int MCTS_getHardcodedFirstMove();
+    int MCTS_getHardcodedSecondMove(const unsigned int quadrant, const unsigned int local);
 
 }

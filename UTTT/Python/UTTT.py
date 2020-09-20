@@ -56,6 +56,8 @@ lib.UTTT_check3InRow.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
 lib.UTTT_printBoard.argtypes = [ctypes.c_void_p]
 lib.UTTT_printBoard.restype = ctypes.c_char_p
 
+lib.UTTT_rotate.argtypes = [ctypes.c_void_p, ctypes.c_int32, ctypes.c_bool]
+
 
 class UTTT:
     N = lib.UTTT_N()
@@ -97,6 +99,10 @@ class UTTT:
     def winner(self):
         return lib.UTTT_getWinner(self.obj)
 
+    @property
+    def is_finished(self):
+        return lib.UTTT_getWinner(self.obj) != self.N
+
     def quadrant(self, quadrant, player=None):
         if player is None:
             return lib.UTTT_getQuadrant(self.obj, quadrant)
@@ -108,6 +114,14 @@ class UTTT:
             return lib.UTTT_getPlayerAtQuadrant(self.obj, loc[0], loc[1])
         else:
             return lib.UTTT_getPlayerAt(self.obj, loc)
+
+    def get_filled(self):
+        return {
+            (i, j, self[i, j])
+            for i in range(9)
+            for j in range(9)
+            if self[i, j] != UTTT.N
+        }
 
     def is_legal(self, g, l):
         return lib.UTTT_isLegal(self.obj, g, l)
@@ -139,3 +153,6 @@ class UTTT:
     @staticmethod
     def check3InRow(quadrant, local):
         return lib.UTTT_check3InRow(quadrant, local)
+
+    def rotate(self, k, cw=True):
+        lib.UTTT_rotate(self.obj, k, cw)

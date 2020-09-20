@@ -8,6 +8,7 @@ constexpr int P1 = 1;
 constexpr int P2 = 2;
 constexpr int T = -1;
 
+#define GET_VALUE(x, y) (((x) >> (y)) & 1)
 #define IS_EMPTY(x, y) ((((x) >> (y)) & 1) == 0)
 #define IS_FILLED(x, y) ((((x) >> (y)) & 1) == 1)
 #define IS_TIE(x) (((x) & 0x1ff) == 0x1ff)
@@ -63,6 +64,8 @@ class UTTT {
         UTTT();
         UTTT(const UTTT& other);
 
+        UTTT& operator=(const UTTT& other);
+
         bool empty();
 
         int getCurrentPlayer();
@@ -79,6 +82,7 @@ class UTTT {
         */
         unsigned int getQuadrant(const unsigned int quadrant);
         unsigned int getQuadrant(const unsigned int quadrant, const int player);
+        void setQuadrant(const unsigned int quadrant, const int player, const unsigned int newQuadrant);
 
         int getPlayerAt(const unsigned int quadrant);
         int getPlayerAt(const unsigned int quadrant,
@@ -99,6 +103,7 @@ class UTTT {
         */
         unsigned int getBoard();
         unsigned int getBoard(const int player);
+        void setBoard(const int player, const unsigned int newBoard);
 
         unsigned int getLocal();
         unsigned int getGlobal();

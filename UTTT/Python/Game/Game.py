@@ -38,12 +38,7 @@ class Game:
         return {(i, j) for i in range(9) for j in range(9) if self.game.is_legal(i, j)}
 
     def get_filled(self):
-        return {
-            (i, j, self.game[i, j])
-            for i in range(9)
-            for j in range(9)
-            if self.game[i, j] != UTTT.N
-        }
+        return self.game.get_filled()
 
     def get_quadrant_filled(self):
         return {(i, self.game[i]) for i in range(9) if self.game[i] != UTTT.N}

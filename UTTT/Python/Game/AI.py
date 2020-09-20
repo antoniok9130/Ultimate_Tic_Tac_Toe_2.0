@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from time import time
 
-from ..MCTS import getHardcodedMove
+from ..MCTS import getHardcodedSecondMove
 from .Player import Player
 from .UI import sleep
 
@@ -20,7 +20,7 @@ class MCTSPlayer(Player):
             if self.game.game.empty:
                 self.game.game.choose_move(4, 4)
             else:
-                ij = getHardcodedMove(*self.game.game.move)
+                ij = getHardcodedSecondMove(*self.game.game.move)
                 i = ij // 9
                 j = ij % 9
                 self.game.game.choose_move(i, j)

@@ -38,7 +38,8 @@ lib.MCTS_select_expand.argtypes = [ctypes.c_void_p]
 lib.MCTS_select_expand.restype = ctypes.c_void_p
 lib.MCTS_runIterations.argtypes = [ctypes.c_void_p, ctypes.c_int32]
 
-lib.MCTS_getHardcodedMove.argtypes = [
+lib.MCTS_getHardcodedFirstMove.argtypes = []
+lib.MCTS_getHardcodedSecondMove.argtypes = [
     ctypes.c_uint32,
     ctypes.c_uint32,
 ]
@@ -108,5 +109,11 @@ class MCTS(UTTT):
         lib.MCTS_runIterations(self.obj, numIterations)
 
 
-def getHardcodedMove(g, l):
-    return lib.MCTS_getHardcodedMove(g, l)
+def getHardcodedFirstMove():
+    gl = lib.MCTS_getHardcodedFirstMove()
+    return gl // 9, gl % 9
+
+
+def getHardcodedSecondMove(g, l):
+    gl = lib.MCTS_getHardcodedSecondMove(g, l)
+    return gl // 9, gl % 9

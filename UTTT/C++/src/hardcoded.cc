@@ -1,11 +1,116 @@
 
-#include <cstdlib>
+#include <ctime>
 
 #include "../hardcoded.h"
 
 using namespace std;
 
-constexpr const int move_visit_counts[9][9][4][2] = {
+int hardcode_seed = time(NULL);
+inline int fastrand() {
+    hardcode_seed = (214013 * hardcode_seed + 2531011);
+    return (hardcode_seed >> 16) & 0x7FFF;
+}
+
+constexpr const int first_move_distribution[81][2] = {
+    {40, 20},
+    {36, 10},
+    {38, 10},
+    {42, 10},
+    {44, 10},
+    {0, 5},
+    {2, 5},
+    {6, 5},
+    {8, 5},
+    {18, 5},
+    {20, 5},
+    {24, 5},
+    {26, 5},
+    {54, 5},
+    {56, 5},
+    {60, 5},
+    {62, 5},
+    {72, 5},
+    {74, 5},
+    {78, 5},
+    {80, 5},
+    {37, 2},
+    {39, 2},
+    {41, 2},
+    {43, 2},
+    {10, 2},
+    {30, 2},
+    {50, 2},
+    {70, 2},
+    {1, 2},
+    {3, 2},
+    {5, 2},
+    {7, 2},
+    {9, 2},
+    {11, 2},
+    {12, 2},
+    {14, 2},
+    {15, 2},
+    {16, 2},
+    {17, 2},
+    {19, 2},
+    {21, 2},
+    {23, 2},
+    {25, 2},
+    {27, 2},
+    {28, 2},
+    {29, 2},
+    {32, 2},
+    {33, 2},
+    {34, 2},
+    {35, 2},
+    {45, 2},
+    {46, 2},
+    {47, 2},
+    {48, 2},
+    {51, 2},
+    {52, 2},
+    {53, 2},
+    {55, 2},
+    {57, 2},
+    {59, 2},
+    {61, 2},
+    {63, 2},
+    {64, 2},
+    {65, 2},
+    {66, 2},
+    {68, 2},
+    {69, 2},
+    {71, 2},
+    {73, 1},
+    {75, 1},
+    {77, 1},
+    {79, 1},
+    {4, 1},
+    {13, 1},
+    {22, 1},
+    {31, 1},
+    {49, 1},
+    {58, 1},
+    {67, 1},
+    {76, 1}
+};
+constexpr const int first_move_sum = 248;
+
+
+int getHardcodedFirstMove(){
+    int num = fastrand() % first_move_sum;
+    for (int i = 0; i < 81; ++i){
+        if (num < first_move_distribution[i][1]){
+            return first_move_distribution[i][0];
+        }
+        num -= first_move_distribution[i][1];
+    }
+    return first_move_distribution[0][0];
+}
+
+
+
+constexpr const int second_move_distribution[9][9][4][2] = {
     {
         {{3, 66}, {6, 24}, {2, 21}, {8, 21}},
         {{3, 81}, {14, 75}, {12, 3}, {16, 3}},
@@ -107,12 +212,12 @@ constexpr const int move_visit_counts[9][9][4][2] = {
     }
 };
 
-int getHardcodedMove(const unsigned int global, const unsigned int local){
-    auto& counts = move_visit_counts[global][local];
+int getHardcodedSecondMove(const unsigned int global, const unsigned int local){
+    auto& counts = second_move_distribution[global][local];
     if (counts[0][0] > 1){
-        int num = rand() % counts[0][1];
+        int num = fastrand() % counts[0][1];
         for (int i = 1; i <= counts[0][0]; ++i){
-            if (counts[i][1] < num){
+            if (num < counts[i][1]){
                 return counts[i][0];
             }
             num -= counts[i][1];
