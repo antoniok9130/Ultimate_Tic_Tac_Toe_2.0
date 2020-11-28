@@ -76,6 +76,19 @@ MCTS& MCTS::operator=(const MCTS& other){
     return *this;
 }
 
+void MCTS::clear() {
+    parent = nullptr;
+    children = nullptr;
+    numChildren = 0;
+
+    w = 0;
+    v = 0;
+#ifdef STORE_UCT
+    UCT = 100;
+#endif
+
+    UTTT::clear();
+}
 
 void MCTS::init(MCTS* parent, const unsigned int global,
                               const unsigned int local){

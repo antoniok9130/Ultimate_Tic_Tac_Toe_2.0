@@ -27,6 +27,9 @@ UTTT& UTTT::operator=(const UTTT& other){
     return *this;
 }
 
+void UTTT::clear() {
+    n1 = n2 = n3 = 0;
+}
 
 bool UTTT::empty(){ return ((n1 | n2 | n3) & 0x1fffffffffffff) == 0; }
 
@@ -64,6 +67,9 @@ int UTTT::getWinner(){
         return P2;
     }
     return N;
+}
+bool UTTT::isFinished(){
+    return getWinner() != N;
 }
 
 unsigned int UTTT::getQuadrant(const unsigned int quadrant){
@@ -126,6 +132,24 @@ int UTTT::getPlayerAt(const unsigned int quadrant, const unsigned int local){
     }
     return N;
 }
+
+
+void UTTT::fillArray(int* array, int quadrant){
+    unsigned int p1quadrant = getQuadrant(quadrant, 0) & F9;
+    unsigned int p2quadrant = getQuadrant(quadrant, 1) & F9;
+    while (p1quadrant != 0 && p2quadrant != 0){
+        *(array++) = (p2quadrant & 1) - (p1quadrant & 1);
+        p1quadrant >>= 1;
+        p2quadrant >>= 1;
+    }
+}
+std::unique_ptr<int[]> UTTT::fillArray(int quadrant){
+    int* array = new int[9];
+    fillArray(array, quadrant);
+    return std::unique_ptr<int[]>(array);
+}
+
+
 bool UTTT::isLegal(const unsigned int quadrant, const unsigned int local){
     if (empty()){
         return true;

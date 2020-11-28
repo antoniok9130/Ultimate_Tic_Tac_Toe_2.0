@@ -35,6 +35,8 @@ class MCTS: public UTTT {
 
         MCTS& operator=(const MCTS& other);
 
+        void clear();
+
         void init(MCTS* parent, const unsigned int global,
                                 const unsigned int local);
 
@@ -53,7 +55,7 @@ class MCTS: public UTTT {
 #ifdef STORE_UCT
         void setUCTbit();
         double& getUCT();
-    #endif
+#endif
 
         unsigned long getNumWins();
         unsigned long getNumVisits();
